@@ -18,3 +18,12 @@
 plugins {
     id 'base'
 }
+
+allprojects {
+    group = 'mechabellum'
+    version = '0.1.0'
+
+    repositories {
+        jcenter()
+    }
+}
