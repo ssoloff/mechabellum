@@ -50,3 +50,8 @@ kotlin {
         coroutines 'enable'
     }
 }
+
+run {
+    String appArgs = project.findProperty('mechabellum.args') ?: ''
+    args = appArgs.split(/\s+/).toList()
+}

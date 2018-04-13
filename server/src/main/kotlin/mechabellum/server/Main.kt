@@ -17,6 +17,7 @@
 
 package mechabellum.server
 
+import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.http.ContentType
@@ -24,20 +25,23 @@ import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.ShutDownUrl
+import io.ktor.server.engine.commandLineEnvironment
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 
 fun main(args: Array<String>) {
-    val server = embeddedServer(Netty, port = 8080) {
-        install(ShutDownUrl.ApplicationCallFeature) // TODO: need to secure this so it's not open to world
-        routing {
-            get("/") {
-                call.respondText("Hello World!", ContentType.Text.Plain)
-            }
-            get("/demo") {
-                call.respondText("HELLO WORLD!")
-            }
+    val server = embeddedServer(Netty, commandLineEnvironment(args))
+    server.start(wait = true)
+}
+
+fun Application.mainApplication() {
+    install(ShutDownUrl.ApplicationCallFeature) // TODO: need to secure this so it's not open to world
+    routing {
+        get("/") {
+            call.respondText("Hello World!", ContentType.Text.Plain)
+        }
+        get("/demo") {
+            call.respondText("HELLO WORLD!")
         }
     }
-    server.start(wait = true)
 }
