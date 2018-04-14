@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
     server.start(wait = true)
 }
 
-fun Application.mainApplication() {
+fun Application.module() {
     install(ShutDownUrl.ApplicationCallFeature) // TODO: need to secure this so it's not open to world
     routing {
         get("/") {

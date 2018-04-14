@@ -28,7 +28,7 @@ import kotlin.test.assertFalse
 
 class MainTest {
     @Test
-    fun testRequest() = withTestApplication(Application::mainApplication) {
+    fun testRequest() = withTestApplication(Application::module) {
         with(handleRequest(HttpMethod.Get, "/")) {
             assertEquals(HttpStatusCode.OK, response.status())
             assertEquals("Hello World!", response.content)
