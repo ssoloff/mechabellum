@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server
+package mechabellum.server.app
 
 import io.ktor.application.Application
 import io.ktor.application.call

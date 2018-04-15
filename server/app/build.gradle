@@ -25,7 +25,7 @@ plugins {
     id 'application'
 }
 
-mainClassName = 'mechabellum.server.MainKt'
+mainClassName = 'mechabellum.server.app.MainKt'
 
 repositories {
     maven {
