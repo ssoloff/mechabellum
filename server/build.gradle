@@ -39,6 +39,11 @@ plugins {
     id 'base'
 }
 
+allprojects {
+    group = 'mechabellum-server'
+    version = '0.1.0'
+}
+
 subprojects {
     apply plugin: 'java-library'
     apply plugin: 'kotlin'
