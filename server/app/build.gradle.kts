@@ -15,7 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'mechabellum'
+plugins {
+    application
+}
 
-include 'server:app'
-include 'server:game-core'
+val ktorVersion by extra { "0.9.1" }
+
+repositories {
+    maven("https://dl.bintray.com/kotlin/ktor")
+}
+
+dependencies {
+    compile("ch.qos.logback", "logback-classic", "1.2.1")
+    compile("io.ktor", "ktor-server-netty", ktorVersion)
+    testCompile("io.ktor", "ktor-server-test-host", ktorVersion)
+}
+
+application {
+    mainClassName = "mechabellum.server.app.MainKt"
+}
+
+tasks {
+    "run"(JavaExec::class) {
+        val argsAsString = project.findProperty("mechabellum.args")?.toString().orEmpty()
+        args = argsAsString.split("""\s+""".toRegex())
+    }
+}

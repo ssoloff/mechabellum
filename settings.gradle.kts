@@ -15,6 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-    id 'base'
-}
+rootProject.name = "mechabellum"
+
+include("server")
+include("server:app")
+include("server:game-core")

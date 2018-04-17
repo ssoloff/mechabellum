@@ -15,31 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-buildscript {
-    ext {
-        ktorVersion = '0.9.1'
-    }
-}
-
 plugins {
-    id 'application'
-}
-
-mainClassName = 'mechabellum.server.app.MainKt'
-
-repositories {
-    maven {
-        url = 'https://dl.bintray.com/kotlin/ktor'
-    }
-}
-
-dependencies {
-    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.1'
-    compile group: 'io.ktor', name: 'ktor-server-netty', version: ktorVersion
-    testCompile group: 'io.ktor', name: 'ktor-server-test-host', version: ktorVersion
-}
-
-run {
-    String appArgs = project.findProperty('mechabellum.args') ?: ''
-    args = appArgs.split(/\s+/).toList()
+    base
 }
