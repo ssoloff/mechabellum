@@ -18,7 +18,7 @@
 package mechabellum.server.game.core
 
 /**
- * A direction on a hex grid.
+ * A direction on a hexagonal grid.
  */
 enum class Direction {
     NORTH,
