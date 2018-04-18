@@ -40,7 +40,9 @@ plugins {
 
 val javaVersion by extra { JavaVersion.VERSION_1_8 }
 val junitVersion by extra { "5.1.1" }
+val kluentVersion by extra { "1.36" }
 val kotlinVersion: String by extra
+val spekVersion by extra { "1.1.5" }
 
 allprojects {
     group = "mechabellum-server"
@@ -60,7 +62,19 @@ subprojects {
 
     dependencies {
         "api"(kotlin("stdlib-jdk8", kotlinVersion))
-        "testImplementation"("org.junit.jupiter", "junit-jupiter-api", junitVersion)
+        "testImplementation"(kotlin("reflect", kotlinVersion)) // required by Spek
+        "testImplementation"("org.amshove.kluent", "kluent", kluentVersion)
+        "testImplementation"("org.jetbrains.spek", "spek-api", spekVersion) {
+            exclude("org.jetbrains.kotlin")
+        }
+        "testImplementation"("org.jetbrains.spek", "spek-subject-extension", spekVersion) {
+            exclude("org.jetbrains.kotlin")
+        }
+        "testRuntimeOnly"("org.jetbrains.spek", "spek-junit-platform-engine", spekVersion) {
+            exclude("org.jetbrains.kotlin")
+            exclude("org.junit.platform")
+
+        }
         "testRuntimeOnly"("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
     }
 
@@ -79,6 +93,8 @@ subprojects {
     }
 
     tasks.withType<Test> {
-        useJUnitPlatform()
+        useJUnitPlatform {
+            includeEngines("spek")
+        }
     }
 }

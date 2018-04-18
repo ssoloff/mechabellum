@@ -17,9 +17,6 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.core.AbstractGridTestCase
-import mechabellum.server.game.core.Grid
+import mechabellum.server.game.core.GridSpec
 
-class InternalGridAsGridTest : AbstractGridTestCase() {
-    override fun createGrid(cols: Int, rows: Int): Grid = InternalGrid(cols, rows)
-}
+object InternalGridBehavesAsGridSpec : GridSpec(::InternalGrid)

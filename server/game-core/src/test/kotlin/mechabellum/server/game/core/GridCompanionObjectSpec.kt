@@ -17,21 +17,19 @@
 
 package mechabellum.server.game.core
 
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.amshove.kluent.shouldThrow
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
 
-class GridTest {
-    @Nested
-    inner class NewInstance {
-        @Test
-        fun `should throw exception when cols not positive`() {
-            assertThrows<IllegalArgumentException> { Grid.newInstance(0, 1) }
+object GridCompanionObjectSpec : Spek({
+    describe("newInstance") {
+        it("should throw exception when cols not positive") {
+            ({ Grid.newInstance(0, 1) }) shouldThrow IllegalArgumentException::class
         }
 
-        @Test
-        fun `should throw exception when rows not positive`() {
-            assertThrows<IllegalArgumentException> { Grid.newInstance(1, 0) }
+        it("should throw exception when rows not positive") {
+            ({ Grid.newInstance(1, 0) }) shouldThrow IllegalArgumentException::class
         }
     }
-}
+})
