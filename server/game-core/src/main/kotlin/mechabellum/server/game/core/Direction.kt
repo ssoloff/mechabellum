@@ -20,39 +20,43 @@ package mechabellum.server.game.core
 /**
  * A direction on a hexagonal grid.
  */
-enum class Direction {
-    NORTH,
-    NORTHEAST,
-    SOUTHEAST,
-    SOUTH,
-    SOUTHWEST,
-    NORTHWEST;
+enum class Direction(private val clockwiseOffsetFromNorth: Int) {
+    NORTH(0),
+    NORTHEAST(1),
+    SOUTHEAST(2),
+    SOUTH(3),
+    SOUTHWEST(4),
+    NORTHWEST(5);
+
+    init {
+        assert(clockwiseOffsetFromNorth >= 0)
+    }
 
     /**
      * The direction immediately clockwise (-60 degrees) from this direction.
      */
     val clockwise: Direction
-        get() = getDirectionAtOffset(1)
+        get() = getDirectionAtRelativeClockwiseOffset(1)
 
     /**
      * The direction immediately counterclockwise (+60 degrees) from this direction.
      */
     val counterclockwise: Direction
-        get() = getDirectionAtOffset(DIRECTION_COUNT - 1)
+        get() = getDirectionAtRelativeClockwiseOffset(DIRECTION_COUNT - 1)
 
     /**
      * The direction directly opposite (±180 degrees) from this direction.
      */
     val opposite: Direction
-        get() = getDirectionAtOffset(DIRECTION_COUNT / 2)
+        get() = getDirectionAtRelativeClockwiseOffset(DIRECTION_COUNT / 2)
 
-    private fun getDirectionAtOffset(offset: Int): Direction {
+    private fun getDirectionAtRelativeClockwiseOffset(offset: Int): Direction {
         assert(offset >= 0)
-        return DIRECTIONS[(ordinal + offset) % DIRECTION_COUNT]
+        return DIRECTIONS_IN_CLOCKWISE_ORDER_FROM_NORTH[(clockwiseOffsetFromNorth + offset) % DIRECTION_COUNT]
     }
 
     private companion object {
-        val DIRECTIONS = values()
-        val DIRECTION_COUNT = DIRECTIONS.size
+        val DIRECTIONS_IN_CLOCKWISE_ORDER_FROM_NORTH = values().sortedBy(Direction::clockwiseOffsetFromNorth)
+        val DIRECTION_COUNT = DIRECTIONS_IN_CLOCKWISE_ORDER_FROM_NORTH.size
     }
 }
