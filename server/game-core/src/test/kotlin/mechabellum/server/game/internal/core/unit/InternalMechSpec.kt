@@ -15,12 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core.unit
+package mechabellum.server.game.internal.core.unit
 
-/**
- * The data describing a type of Mech.
- */
-interface MechType {
-    /** The number of movement points available to a Mech of this type when walking during a turn. */
-    val walkingMovementPoints: Int
-}
+import org.amshove.kluent.shouldEqualTo
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+
+object InternalMechSpec : Spek({
+    describe("walkingMovementPoints") {
+        it("should return walking movement points of type") {
+            val mechType = InternalMechType(walkingMovementPoints = 6)
+            val subject = InternalMech(mechType)
+
+            subject.walkingMovementPoints shouldEqualTo mechType.walkingMovementPoints
+        }
+    }
+})

@@ -18,9 +18,9 @@
 package mechabellum.server.game.core.unit
 
 /**
- * The data describing a type of Mech.
+ * A Mech.
  */
-interface MechType {
-    /** The number of movement points available to a Mech of this type when walking during a turn. */
+interface Mech {
+    /** The number of movement points available to the Mech when walking during a turn. */
     val walkingMovementPoints: Int
 }
