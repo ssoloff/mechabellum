@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
-    val kotlinVersion by extra { "1.2.31" }
+    val kotlinVersion by extra { "1.2.40" }
 
     repositories {
         jcenter()
