@@ -15,9 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core
+package mechabellum.server.game.core.grid
 
-import mechabellum.server.game.internal.core.InternalGrid
+import mechabellum.server.game.internal.core.grid.InternalGrid
 
 /**
  * A hexagonal grid.

@@ -15,12 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core
+package mechabellum.server.game.core.grid
 
-/**
- * The data describing a type of Mech.
- */
-interface MechType {
-    /** The number of movement points available to Mechs of this type when walking. */
-    val walkingMovementPoints: Int
-}
+import org.amshove.kluent.shouldThrow
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+
+object GridCompanionObjectSpec : Spek({
+    describe("newInstance") {
+        it("should throw exception when cols not positive") {
+            ({ Grid.newInstance(0, 1) }) shouldThrow IllegalArgumentException::class
+        }
+
+        it("should throw exception when rows not positive") {
+            ({ Grid.newInstance(1, 0) }) shouldThrow IllegalArgumentException::class
+        }
+    }
+})

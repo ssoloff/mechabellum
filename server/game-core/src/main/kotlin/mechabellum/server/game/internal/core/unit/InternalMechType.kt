@@ -15,21 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core
+package mechabellum.server.game.internal.core.unit
 
-import org.amshove.kluent.shouldThrow
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.it
+import mechabellum.server.game.core.unit.MechType
 
-object GridCompanionObjectSpec : Spek({
-    describe("newInstance") {
-        it("should throw exception when cols not positive") {
-            ({ Grid.newInstance(0, 1) }) shouldThrow IllegalArgumentException::class
-        }
-
-        it("should throw exception when rows not positive") {
-            ({ Grid.newInstance(1, 0) }) shouldThrow IllegalArgumentException::class
-        }
-    }
-})
+internal class InternalMechType(override val walkingMovementPoints: Int) : MechType

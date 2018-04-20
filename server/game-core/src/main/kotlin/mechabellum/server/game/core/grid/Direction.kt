@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core
+package mechabellum.server.game.core.grid
 
 /**
  * A direction on a hexagonal grid.

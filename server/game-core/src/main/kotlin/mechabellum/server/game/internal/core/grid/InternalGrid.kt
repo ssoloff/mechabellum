@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.game.core.Cell
-import mechabellum.server.game.core.CellId
-import mechabellum.server.game.core.Grid
+import mechabellum.server.game.core.grid.Cell
+import mechabellum.server.game.core.grid.CellId
+import mechabellum.server.game.core.grid.Grid
 
 internal class InternalGrid(override val cols: Int, override val rows: Int) : Grid {
     private val _cellsById: Map<CellId, InternalCell> = mutableMapOf<CellId, InternalCell>().apply {

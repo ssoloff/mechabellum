@@ -15,8 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.core.unit
 
-import mechabellum.server.game.core.MechType
-
-internal class InternalMechType(override val walkingMovementPoints: Int) : MechType
+/**
+ * The data describing a type of Mech.
+ */
+interface MechType {
+    /** The number of movement points available to Mechs of this type when walking. */
+    val walkingMovementPoints: Int
+}

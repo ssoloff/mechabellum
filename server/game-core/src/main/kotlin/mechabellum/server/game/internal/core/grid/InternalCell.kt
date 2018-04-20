@@ -15,8 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.game.core.GridSpec
+import mechabellum.server.game.core.grid.Cell
+import mechabellum.server.game.core.grid.CellId
 
-object InternalGridBehavesAsGridSpec : GridSpec(::InternalGrid)
+internal class InternalCell(override val id: CellId) : Cell
