@@ -17,8 +17,6 @@
 
 package mechabellum.server.game.core.grid
 
-import mechabellum.server.game.internal.core.grid.InternalGrid
-
 /**
  * A hexagonal grid.
  *
@@ -38,20 +36,4 @@ interface Grid {
      * @throws IllegalArgumentException If no cell exists at the specified coordinates.
      */
     fun getCell(col: Int, row: Int): Cell
-
-    companion object {
-        /**
-         * Returns a new grid of size [cols] by [rows]. The first cell will be at offset (0, 0). The last cell will be
-         * at offset ([cols]-1, [rows]-1).
-         *
-         * @throws IllegalArgumentException If [cols] or [rows] is not positive.
-         */
-        // TODO: eventually replace factory method with a service
-        fun newInstance(cols: Int, rows: Int): Grid {
-            require(cols > 0) { "cols must be positive" }
-            require(rows > 0) { "rows must be positive" }
-
-            return InternalGrid(cols, rows)
-        }
-    }
 }
