@@ -19,6 +19,7 @@ import org.gradle.api.tasks.testing.Test
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 buildscript {
     val kotlinVersion by extra { "1.2.40" }
@@ -73,7 +74,6 @@ subprojects {
         "testRuntimeOnly"("org.jetbrains.spek", "spek-junit-platform-engine", spekVersion) {
             exclude("org.jetbrains.kotlin")
             exclude("org.junit.platform")
-
         }
         "testRuntimeOnly"("org.junit.jupiter", "junit-jupiter-engine", junitVersion)
     }
@@ -98,3 +98,19 @@ subprojects {
         }
     }
 }
+
+val lintBuildScripts = task<LintTask>("lintBuildScripts") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+    description = "Runs lint on the Kotlin build scripts."
+
+    reports = mapOf(
+        "checkstyle" to file("$buildDir/reports/ktlint/buildScripts-lint.xml"),
+        "plain" to file("$buildDir/reports/ktlint/buildScripts-lint.txt")
+    )
+    source = fileTree(projectDir) {
+        include("**/*.gradle.kts")
+    }
+}
+
+val check by tasks
+check.dependsOn(lintBuildScripts)
