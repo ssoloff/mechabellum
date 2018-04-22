@@ -17,9 +17,7 @@
 
 package mechabellum.server.game.core.grid
 
-/**
- * A direction on a hexagonal grid.
- */
+/** A direction on a hexagonal grid. */
 enum class Direction(private val clockwiseOffsetFromNorth: Int) {
     NORTH(0),
     NORTHEAST(1),
@@ -32,21 +30,15 @@ enum class Direction(private val clockwiseOffsetFromNorth: Int) {
         assert(clockwiseOffsetFromNorth >= 0)
     }
 
-    /**
-     * The direction immediately clockwise (-60 degrees) from this direction.
-     */
+    /** The direction immediately clockwise (-60 degrees) from this direction. */
     val clockwise: Direction
         get() = getDirectionAtRelativeClockwiseOffset(1)
 
-    /**
-     * The direction immediately counterclockwise (+60 degrees) from this direction.
-     */
+    /** The direction immediately counterclockwise (+60 degrees) from this direction. */
     val counterclockwise: Direction
         get() = getDirectionAtRelativeClockwiseOffset(DIRECTION_COUNT - 1)
 
-    /**
-     * The direction directly opposite (±180 degrees) from this direction.
-     */
+    /** The direction directly opposite (±180 degrees) from this direction. */
     val opposite: Direction
         get() = getDirectionAtRelativeClockwiseOffset(DIRECTION_COUNT / 2)
 

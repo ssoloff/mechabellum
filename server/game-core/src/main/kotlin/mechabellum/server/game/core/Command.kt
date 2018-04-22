@@ -17,9 +17,7 @@
 
 package mechabellum.server.game.core
 
-/**
- * An abstract representation of some semantic game behavior.
- */
+/** An abstract representation of some semantic game behavior. */
 interface Command<T : Any> {
     /**
      * Returns the result of executing the command. The command can access the game state and behavior via [context].

@@ -17,9 +17,7 @@
 
 package mechabellum.server.game.core.unit
 
-/**
- * A Mech.
- */
+/** A Mech. */
 interface Mech {
     /** The number of movement points available to the Mech when walking during a turn. */
     val walkingMovementPoints: Int

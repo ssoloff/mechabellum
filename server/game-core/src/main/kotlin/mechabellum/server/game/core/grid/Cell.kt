@@ -25,9 +25,7 @@ package mechabellum.server.game.core.grid
  */
 data class CellId(val col: Int, val row: Int)
 
-/**
- * A cell in a hexagonal grid.
- */
+/** A cell in a hexagonal grid. */
 interface Cell {
     /** The cell identifier. */
     val id: CellId

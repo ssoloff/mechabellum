@@ -17,9 +17,7 @@
 
 package mechabellum.server.game.core
 
-/**
- * A BattleTech game session.
- */
+/** A BattleTech game session. */
 interface Game {
     /**
      * Executes [command] synchronously.
@@ -31,9 +29,7 @@ interface Game {
     fun <T : Any> executeCommand(command: Command<T>): T
 }
 
-/**
- * A checked exception that indicates an error occurred within a game.
- */
+/** A checked exception that indicates an error occurred within a game. */
 class GameException : Exception {
     constructor(message: String, cause: Throwable) : super(message, cause)
 }

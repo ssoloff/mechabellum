@@ -17,41 +17,29 @@
 
 package mechabellum.server.game.core.util
 
-/**
- * A container for a value that may or may not be present.
- */
+/** A container for a value that may or may not be present. */
 sealed class Option<out T : Any> {
-    /**
-     * Returns the value if present; otherwise throws [NoSuchElementException].
-     */
+    /** Returns the value if present; otherwise throws [NoSuchElementException]. */
     abstract fun getOrThrow(): T
 
     companion object {
         private val NONE = None()
 
-        /**
-         * Returns the empty container.
-         */
+        /** Returns the empty container. */
         fun <T : Any> none(): Option<T> = NONE
 
-        /**
-         * Returns a new container containing [value].
-         */
+        /** Returns a new container containing [value]. */
         fun <T : Any> some(value: T): Option<T> = Some(value)
     }
 
-    /**
-     * Option that represents the absence of a value.
-     */
+    /** Option that represents the absence of a value. */
     class None internal constructor() : Option<Nothing>() {
         override fun getOrThrow(): Nothing = throw NoSuchElementException("no value present")
 
         override fun toString(): String = "None"
     }
 
-    /**
-     * Option that represents the presence of [value].
-     */
+    /** Option that represents the presence of [value]. */
     data class Some<out T : Any> internal constructor(val value: T) : Option<T>() {
         override fun getOrThrow(): T = value
 
@@ -59,9 +47,7 @@ sealed class Option<out T : Any> {
     }
 }
 
-/**
- * Returns the value if present; otherwise returns [defaultValue].
- */
+/** Returns the value if present; otherwise returns [defaultValue]. */
 fun <T : Any> Option<T>.getOrElse(defaultValue: T): T = when (this) {
     is Option.Some -> value
     else -> defaultValue

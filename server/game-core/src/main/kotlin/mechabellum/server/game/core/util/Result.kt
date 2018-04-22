@@ -63,9 +63,7 @@ sealed class Result<out T : Any, out E : Exception> {
     }
 }
 
-/**
- * Returns the value if [Result.Success]; otherwise returns [defaultValue].
- */
+/** Returns the value if [Result.Success]; otherwise returns [defaultValue]. */
 fun <T : Any, E : Exception> Result<T, E>.getOrElse(defaultValue: T): T = when (this) {
     is Result.Success -> value
     else -> defaultValue
