@@ -22,7 +22,7 @@ package mechabellum.server.game.core.util
  */
 sealed class Option<out T : Any> {
     /**
-     * Returns the value if present; otherwise throws [IllegalStateException].
+     * Returns the value if present; otherwise throws [NoSuchElementException].
      */
     abstract fun getOrThrow(): T
 
@@ -44,13 +44,13 @@ sealed class Option<out T : Any> {
      * Option that represents the absence of a value.
      */
     class None internal constructor() : Option<Nothing>() {
-        override fun getOrThrow(): Nothing = throw IllegalStateException("no value present")
+        override fun getOrThrow(): Nothing = throw NoSuchElementException("no value present")
 
         override fun toString(): String = "None"
     }
 
     /**
-     * Option that represents the presence of a value.
+     * Option that represents the presence of [value].
      */
     data class Some<out T : Any> internal constructor(val value: T) : Option<T>() {
         override fun getOrThrow(): T = value
@@ -64,5 +64,5 @@ sealed class Option<out T : Any> {
  */
 fun <T : Any> Option<T>.getOrElse(defaultValue: T): T = when (this) {
     is Option.Some -> value
-    is Option.None -> defaultValue
+    else -> defaultValue
 }

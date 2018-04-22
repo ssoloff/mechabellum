@@ -23,9 +23,11 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
+typealias SpecOption = Option<Number>
+
 object OptionSpec : Spek({
     describe("None") {
-        val subject: Option<Number> = Option.none()
+        val subject: SpecOption = Option.none()
 
         describe("getOrElse") {
             it("should return default value") {
@@ -35,7 +37,7 @@ object OptionSpec : Spek({
 
         describe("getOrThrow") {
             it("should throw exception") {
-                ({ subject.getOrThrow() }) shouldThrow IllegalStateException::class
+                ({ subject.getOrThrow() }) shouldThrow NoSuchElementException::class
             }
         }
 
@@ -54,9 +56,10 @@ object OptionSpec : Spek({
             }
 
             it("should take None branch when target is None instance") {
+                val option: SpecOption = Option.none()
                 when (subject) {
-                    Option.none<Number>() -> Unit
-                    else -> throw AssertionError("expected None but was $subject")
+                    option -> Unit
+                    else -> throw AssertionError("expected $option but was $subject")
                 }
             }
         }
@@ -65,7 +68,7 @@ object OptionSpec : Spek({
     describe("Some") {
         val value = 42
         val otherValue = 2112.0
-        val subject: Option<Number> = Option.some(value)
+        val subject: SpecOption = Option.some(value)
 
         describe("getOrElse") {
             it("should return value") {
@@ -94,15 +97,17 @@ object OptionSpec : Spek({
             }
 
             it("should take Some branch when target is equal Some instance") {
+                val option: SpecOption = Option.some(value)
                 when (subject) {
-                    Option.some(value) -> Unit
-                    else -> throw AssertionError("expected Some($value) but was $subject")
+                    option -> Unit
+                    else -> throw AssertionError("expected $option but was $subject")
                 }
             }
 
             it("should take else branch when target is unequal Some instance") {
+                val option: SpecOption = Option.some(otherValue)
                 when (subject) {
-                    Option.some(otherValue) -> throw AssertionError("expected $subject but was Some($otherValue)")
+                    option -> throw AssertionError("expected $subject but was $option")
                     else -> Unit
                 }
             }
