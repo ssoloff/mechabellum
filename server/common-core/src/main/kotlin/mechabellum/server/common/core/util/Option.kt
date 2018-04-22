@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core.util
+package mechabellum.server.common.core.util
 
 /** A container for a value that may or may not be present. */
 sealed class Option<out T : Any> {

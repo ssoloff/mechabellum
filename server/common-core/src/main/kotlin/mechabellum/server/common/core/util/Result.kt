@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core.util
+package mechabellum.server.common.core.util
 
 /**
  * A container for the result of a computation that may complete successfully and provide a value (success), complete

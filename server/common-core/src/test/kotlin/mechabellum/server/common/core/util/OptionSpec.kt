@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.core.util
+package mechabellum.server.common.core.util
 
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
