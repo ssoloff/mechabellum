@@ -15,21 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.core.unit.MechId
-import org.amshove.kluent.shouldEqualTo
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.it
+import mechabellum.server.game.core.CommandContextSpec
+import mechabellum.server.game.core.features.DeploymentFeature
 
-object InternalMechSpec : Spek({
-    describe("walkingMovementPoints") {
-        it("should return walking movement points of type") {
-            val mechType = InternalMechType(walkingMovementPoints = 6)
-            val subject = InternalMech(id = MechId(0), type = mechType)
-
-            subject.walkingMovementPoints shouldEqualTo mechType.walkingMovementPoints
-        }
-    }
-})
+object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
+    presentFeatureType = DeploymentFeature::class.java,
+    subjectFactory = ::InternalGame
+)

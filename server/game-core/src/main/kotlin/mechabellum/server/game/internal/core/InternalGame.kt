@@ -17,15 +17,29 @@
 
 package mechabellum.server.game.internal.core
 
+import mechabellum.server.common.core.util.Option
 import mechabellum.server.game.core.Command
 import mechabellum.server.game.core.CommandContext
 import mechabellum.server.game.core.Game
 import mechabellum.server.game.core.GameException
+import mechabellum.server.game.core.features.DeploymentFeature
+import mechabellum.server.game.core.grid.CellId
+import mechabellum.server.game.core.unit.Mech
+import mechabellum.server.game.core.unit.MechId
 
-internal class InternalGame : Game {
+internal class InternalGame : CommandContext, DeploymentFeature, Game {
+    private val mechDatasById: MutableMap<MechId, MechData> = hashMapOf()
+
+    override fun deployMech(mech: Mech, position: CellId) {
+        // TODO: we need to enforce that [mech] is of type InternalMech
+        require(mech.id !in mechDatasById, { "Mech with ID ${mech.id} already present" })
+
+        mechDatasById[mech.id] = MechData(mech, position)
+    }
+
     override fun <T : Any> executeCommand(command: Command<T>): T {
         try {
-            return command.execute(object : CommandContext {})
+            return command.execute(this)
         } catch (e: RuntimeException) {
             throw e
         } catch (e: Exception) {
@@ -33,4 +47,20 @@ internal class InternalGame : Game {
             throw GameException("failed to execute game command", e)
         }
     }
+
+    override fun <T : Any> getFeature(type: Class<T>): Option<T> {
+        @Suppress("UNCHECKED_CAST")
+        return when (type) {
+            DeploymentFeature::class.java -> Option.some(this as T)
+            else -> Option.none()
+        }
+    }
+
+    // TODO: change to return InternalMech
+    fun getMech(id: MechId): Mech = mechDatasById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+
+    fun getMechPosition(id: MechId): CellId = mechDatasById[id]?.position
+        ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+
+    private class MechData(val mech: Mech, val position: CellId)
 }

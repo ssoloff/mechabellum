@@ -15,21 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.core.features
 
-import mechabellum.server.game.core.unit.MechId
-import org.amshove.kluent.shouldEqualTo
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.it
+import mechabellum.server.game.core.grid.CellId
+import mechabellum.server.game.core.unit.Mech
 
-object InternalMechSpec : Spek({
-    describe("walkingMovementPoints") {
-        it("should return walking movement points of type") {
-            val mechType = InternalMechType(walkingMovementPoints = 6)
-            val subject = InternalMech(id = MechId(0), type = mechType)
-
-            subject.walkingMovementPoints shouldEqualTo mechType.walkingMovementPoints
-        }
-    }
-})
+/** A game feature that provides behavior to deploy units to a game. */
+interface DeploymentFeature {
+    /** Deploys [mech] to [position] on the game grid. */
+    fun deployMech(mech: Mech, position: CellId)
+}

@@ -18,26 +18,25 @@
 package mechabellum.server.game.core
 
 import mechabellum.server.common.core.util.Option
+import org.amshove.kluent.shouldBeInstanceOf
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.subject.SubjectSpek
 
-/** An abstract representation of some semantic game behavior. */
-interface Command<T : Any> {
-    /**
-     * Returns the result of executing the command. The command can access the game state and behavior via [context].
-     *
-     * @throws CommandException If an error occurs while running the command.
-     */
-    fun execute(context: CommandContext): T
-}
+abstract class CommandContextSpec(
+    presentFeatureType: Class<*>,
+    subjectFactory: () -> CommandContext
+) : SubjectSpek<CommandContext>({
+    subject { subjectFactory() }
 
-/**
- * The context within which a game command is executed.
- *
- * A command uses an instance of this context to access the game state and behavior.
- */
-interface CommandContext {
-    /** Returns the game feature of the specified [type]. */
-    fun <T : Any> getFeature(type: Class<T>): Option<T>
-}
+    describe("getFeature") {
+        it("should return Some when feature exists") {
+            subject.getFeature(presentFeatureType) shouldBeInstanceOf Option.Some::class
+        }
 
-/** A checked exception that indicates an error occurred while executing a command. */
-class CommandException(message: String) : Exception(message)
+        it("should return None when feature does not exist") {
+            class DummyFeature
+            subject.getFeature(DummyFeature::class.java) shouldBeInstanceOf Option.None::class
+        }
+    }
+})

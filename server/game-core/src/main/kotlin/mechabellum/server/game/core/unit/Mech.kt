@@ -17,8 +17,14 @@
 
 package mechabellum.server.game.core.unit
 
+/** The unique identifier of a Mech within a game. */
+data class MechId(private val id: Int)
+
 /** A Mech. */
 interface Mech {
+    /** The Mech identifier. */
+    val id: MechId
+
     /** The number of movement points available to the Mech when walking during a turn. */
     val walkingMovementPoints: Int
 }
