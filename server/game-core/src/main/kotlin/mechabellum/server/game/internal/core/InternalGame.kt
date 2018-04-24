@@ -59,8 +59,8 @@ internal class InternalGame : CommandContext, DeploymentFeature, Game {
     // TODO: change to return InternalMech
     fun getMech(id: MechId): Mech = mechDatasById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
-    fun getMechPosition(id: MechId): CellId = mechDatasById[id]?.position
-        ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+    fun getMechPosition(id: MechId): CellId =
+        mechDatasById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     private class MechData(val mech: Mech, val position: CellId)
 }
