@@ -16,6 +16,8 @@
  */
 
 import org.gradle.api.tasks.testing.Test
+import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
+import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -52,6 +54,7 @@ allprojects {
 
 subprojects {
     apply {
+        plugin("jacoco")
         plugin("java-library")
         plugin("kotlin")
         plugin("org.jmailen.kotlinter")
@@ -86,15 +89,39 @@ subprojects {
         experimental.coroutines = Coroutines.ENABLE
     }
 
-    tasks.withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = javaVersion.toString()
+    tasks {
+        withType<JacocoCoverageVerification> {
+            violationRules {
+                rule {
+                    limit {
+                        counter = "INSTRUCTION"
+                        minimum = BigDecimal(0.8)
+                    }
+                }
+            }
         }
-    }
 
-    tasks.withType<Test> {
-        useJUnitPlatform {
-            includeEngines("spek")
+        withType<JacocoReport> {
+            reports {
+                html.isEnabled = true
+                xml.isEnabled = true
+            }
+        }
+
+        withType<KotlinCompile> {
+            kotlinOptions {
+                jvmTarget = javaVersion.toString()
+            }
+        }
+
+        withType<Test> {
+            useJUnitPlatform {
+                includeEngines("spek")
+            }
+        }
+
+        "check" {
+            dependsOn("jacocoTestCoverageVerification")
         }
     }
 }
