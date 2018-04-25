@@ -32,7 +32,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "mechabellum.server.app.MainKt"
+    mainClassName = "mechabellum.server.app.internal.MainKt"
 }
 
 tasks {

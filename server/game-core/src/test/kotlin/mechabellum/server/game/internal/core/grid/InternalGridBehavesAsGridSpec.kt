@@ -17,6 +17,6 @@
 
 package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.game.core.grid.GridSpec
+import mechabellum.server.game.api.core.grid.GridSpec
 
 object InternalGridBehavesAsGridSpec : GridSpec(::InternalGrid)

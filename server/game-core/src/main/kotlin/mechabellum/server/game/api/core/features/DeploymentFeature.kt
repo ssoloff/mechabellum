@@ -15,12 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.features
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
+import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.unit.Mech
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = ::InternalGame
-)
+/** A game feature that provides behavior to deploy units to a game. */
+interface DeploymentFeature {
+    /** Deploys [mech] to [position] on the game grid. */
+    fun deployMech(mech: Mech, position: CellId)
+}

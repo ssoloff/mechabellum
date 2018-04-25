@@ -17,9 +17,9 @@
 
 package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.game.core.grid.Cell
-import mechabellum.server.game.core.grid.CellId
-import mechabellum.server.game.core.grid.Grid
+import mechabellum.server.game.api.core.grid.Cell
+import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.Grid
 
 internal class InternalGrid(override val cols: Int, override val rows: Int) : Grid {
     private val _cellsById: Map<CellId, InternalCell> = mutableMapOf<CellId, InternalCell>().apply {

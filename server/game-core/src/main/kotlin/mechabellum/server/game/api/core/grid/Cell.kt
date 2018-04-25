@@ -15,12 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.grid
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
+/**
+ * The unique identifier of a cell in a hexagonal grid.
+ *
+ * @property col The cell column.
+ * @property row The cell row.
+ */
+data class CellId(val col: Int, val row: Int)
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = ::InternalGame
-)
+/** A cell in a hexagonal grid. */
+interface Cell {
+    /** The cell identifier. */
+    val id: CellId
+}

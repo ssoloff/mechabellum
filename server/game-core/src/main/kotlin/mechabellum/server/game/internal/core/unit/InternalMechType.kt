@@ -17,6 +17,6 @@
 
 package mechabellum.server.game.internal.core.unit
 
-import mechabellum.server.game.core.unit.MechType
+import mechabellum.server.game.api.core.unit.MechType
 
 internal class InternalMechType(override val walkingMovementPoints: Int) : MechType

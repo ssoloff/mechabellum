@@ -15,12 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
+/** A BattleTech game session. */
+interface Game {
+    /**
+     * Executes [command] synchronously.
+     *
+     * @throws GameException If [command] fails by throwing a checked exception (the original exception thrown by the
+     * command will be the cause). If [command] fails by throwing an unchecked exception, that exception will be thrown
+     * directly.
+     */
+    fun <T : Any> executeCommand(command: Command<T>): T
+}
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = ::InternalGame
-)
+/** A checked exception that indicates an error occurred within a game. */
+class GameException(message: String, cause: Throwable) : Exception(message, cause)

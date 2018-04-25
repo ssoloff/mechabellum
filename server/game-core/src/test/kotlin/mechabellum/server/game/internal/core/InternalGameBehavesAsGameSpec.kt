@@ -17,6 +17,6 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.core.GameSpec
+import mechabellum.server.game.api.core.GameSpec
 
 object InternalGameBehavesAsGameSpec : GameSpec(::InternalGame)

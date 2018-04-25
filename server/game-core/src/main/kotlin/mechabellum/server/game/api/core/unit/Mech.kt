@@ -15,12 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.unit
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
+/** The unique identifier of a Mech within a game. */
+data class MechId(private val id: Int)
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = ::InternalGame
-)
+/** A Mech. */
+interface Mech {
+    /** The Mech identifier. */
+    val id: MechId
+
+    /** The number of movement points available to the Mech when walking during a turn. */
+    val walkingMovementPoints: Int
+}

@@ -15,12 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.unit
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
-
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = ::InternalGame
-)
+/** The data describing a type of Mech. */
+interface MechType {
+    /** The number of movement points available to a Mech of this type when walking during a turn. */
+    val walkingMovementPoints: Int
+}

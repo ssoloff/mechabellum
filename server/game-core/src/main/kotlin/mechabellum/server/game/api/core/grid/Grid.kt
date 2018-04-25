@@ -15,12 +15,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.grid
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
+/**
+ * A hexagonal grid.
+ *
+ * The grid uses an odd-q vertical layout. "odd-q" means each odd column is shifted down (positive y) a half-cell.
+ * "Vertical" layout means each cell is a flat-topped hex (rather than a pointy-topped hex).
+ */
+interface Grid {
+    /** The count of columns in the grid. */
+    val cols: Int
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = ::InternalGame
-)
+    /** The count of rows in the grid. */
+    val rows: Int
+
+    /**
+     * Returns the cell at the coordinates ([col], [row]).
+     *
+     * @throws IllegalArgumentException If no cell exists at the specified coordinates.
+     */
+    fun getCell(col: Int, row: Int): Cell
+}

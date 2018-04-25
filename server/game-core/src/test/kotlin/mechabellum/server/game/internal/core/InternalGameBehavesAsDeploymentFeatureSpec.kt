@@ -19,9 +19,9 @@ package mechabellum.server.game.internal.core
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.game.core.grid.CellId
-import mechabellum.server.game.core.unit.Mech
-import mechabellum.server.game.core.unit.MechId
+import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.unit.MechId
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe

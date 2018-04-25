@@ -17,15 +17,15 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.common.core.util.Option
-import mechabellum.server.game.core.Command
-import mechabellum.server.game.core.CommandContext
-import mechabellum.server.game.core.Game
-import mechabellum.server.game.core.GameException
-import mechabellum.server.game.core.features.DeploymentFeature
-import mechabellum.server.game.core.grid.CellId
-import mechabellum.server.game.core.unit.Mech
-import mechabellum.server.game.core.unit.MechId
+import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.Command
+import mechabellum.server.game.api.core.CommandContext
+import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.GameException
+import mechabellum.server.game.api.core.features.DeploymentFeature
+import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.unit.MechId
 
 internal class InternalGame : CommandContext, DeploymentFeature, Game {
     private val mechDatasById: MutableMap<MechId, MechData> = hashMapOf()

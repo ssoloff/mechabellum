@@ -15,21 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.unit.MechId
-import org.amshove.kluent.shouldEqualTo
-import org.jetbrains.spek.api.Spek
+import mechabellum.server.common.api.core.util.Option
+import org.amshove.kluent.shouldBeInstanceOf
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.subject.SubjectSpek
 
-object InternalMechSpec : Spek({
-    describe("walkingMovementPoints") {
-        it("should return walking movement points of type") {
-            val mechType = InternalMechType(walkingMovementPoints = 6)
-            val subject = InternalMech(id = MechId(0), type = mechType)
+abstract class CommandContextSpec(
+    presentFeatureType: Class<*>,
+    subjectFactory: () -> CommandContext
+) : SubjectSpek<CommandContext>({
+    subject { subjectFactory() }
 
-            subject.walkingMovementPoints shouldEqualTo mechType.walkingMovementPoints
+    describe("getFeature") {
+        it("should return Some when feature exists") {
+            subject.getFeature(presentFeatureType) shouldBeInstanceOf Option.Some::class
+        }
+
+        it("should return None when feature does not exist") {
+            class DummyFeature
+            subject.getFeature(DummyFeature::class.java) shouldBeInstanceOf Option.None::class
         }
     }
 })

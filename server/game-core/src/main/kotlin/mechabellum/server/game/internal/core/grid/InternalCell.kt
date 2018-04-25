@@ -17,7 +17,7 @@
 
 package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.game.core.grid.Cell
-import mechabellum.server.game.core.grid.CellId
+import mechabellum.server.game.api.core.grid.Cell
+import mechabellum.server.game.api.core.grid.CellId
 
 internal class InternalCell(override val id: CellId) : Cell
