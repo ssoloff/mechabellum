@@ -26,6 +26,16 @@ import org.jetbrains.spek.api.dsl.it
 typealias SpecOption = Option<Number>
 
 object OptionSpec : Spek({
+    describe("of") {
+        it("should return None when value is null") {
+            Option.of(null) shouldEqual Option.none()
+        }
+
+        it("should return Some when value is not null") {
+            Option.of(42) shouldEqual Option.some(42)
+        }
+    }
+
     describe("None") {
         val subject: SpecOption = Option.none()
 

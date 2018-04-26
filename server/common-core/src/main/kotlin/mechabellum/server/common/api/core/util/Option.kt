@@ -29,9 +29,11 @@ sealed class Option<out T : Any> {
         fun <T : Any> none(): Option<T> =
             NONE
 
+        /** Returns a new container containing [value] if it is not null; otherwise returns the empty container. */
+        fun <T : Any> of(value: T?): Option<T> = if (value != null) some(value) else none()
+
         /** Returns a new container containing [value]. */
-        fun <T : Any> some(value: T): Option<T> =
-            Some(value)
+        fun <T : Any> some(value: T): Option<T> = Some(value)
     }
 
     /** Option that represents the absence of a value. */

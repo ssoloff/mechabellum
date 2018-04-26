@@ -29,7 +29,5 @@ internal class InternalUnitTypeRegistry : UnitTypeRegistry {
         MechType("HBK-4G Hunchback")
     )
 
-    override fun findMechTypeByName(name: String): Option<MechType> = _mechTypes
-        .find { it.name == name }
-        .let { if (it != null) Option.some(it) else Option.none() }
+    override fun findMechTypeByName(name: String): Option<MechType> = Option.of(_mechTypes.find { it.name == name })
 }
