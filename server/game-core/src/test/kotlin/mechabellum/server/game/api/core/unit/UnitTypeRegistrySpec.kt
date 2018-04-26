@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core
+package mechabellum.server.game.api.core.unit
 
 import mechabellum.server.common.api.core.util.Option
 import org.amshove.kluent.shouldBeInstanceOf

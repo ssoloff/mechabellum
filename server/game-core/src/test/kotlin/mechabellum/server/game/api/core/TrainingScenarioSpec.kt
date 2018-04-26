@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.game.api.core.unit.UnitTypeRegistry
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import java.util.ServiceLoader

@@ -15,12 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core
+package mechabellum.server.game.api.core.unit
 
 import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.unit.MechType
 
-/** A registry of available unit types. */
+/**
+ * A registry of available unit types.
+ *
+ * Clients are expected to obtain an instance of this interface using the Java [java.util.ServiceLoader] framework.
+ */
 interface UnitTypeRegistry {
     /** Returns the [MechType] with the specified [name]. */
     fun findMechTypeByName(name: String): Option<MechType>

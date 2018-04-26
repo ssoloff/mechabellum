@@ -15,19 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.internal.core.unit
 
-import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.UnitTypeRegistry
-import mechabellum.server.game.api.core.unit.MechType
+import mechabellum.server.game.api.core.unit.UnitTypeRegistrySpec
 
-internal class InternalUnitTypeRegistry : UnitTypeRegistry {
-    private val _mechTypes: Collection<MechType> = listOf(
-        MechType("CDA-2A Cicada"),
-        MechType("ENF-4R Enforcer"),
-        MechType("HER-2S Hermes II"),
-        MechType("HBK-4G Hunchback")
-    )
-
-    override fun findMechTypeByName(name: String): Option<MechType> = Option.of(_mechTypes.find { it.name == name })
-}
+object InternalUnitTypeRegistryBehavesAsUnitTypeRegistrySpec : UnitTypeRegistrySpec(
+    absentMechTypeName = "__unknown__",
+    presentMechTypeName = "HER-2S Hermes II",
+    subjectFactory = ::InternalUnitTypeRegistry
+)
