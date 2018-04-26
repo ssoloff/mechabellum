@@ -15,8 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.internal.core
 
+import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.UnitTypeRegistry
 import mechabellum.server.game.api.core.unit.MechType
 
-internal class InternalMechType(override val walkingMovementPoints: Int) : MechType
+internal class InternalUnitTypeRegistry : UnitTypeRegistry {
+    private val _mechTypes: Collection<MechType> = listOf(
+        MechType("CDA-2A Cicada"),
+        MechType("ENF-4R Enforcer"),
+        MechType("HER-2S Hermes II"),
+        MechType("HBK-4G Hunchback")
+    )
+
+    override fun findMechTypeByName(name: String): Option<MechType> = _mechTypes
+        .find { it.name == name }
+        .let { if (it != null) Option.some(it) else Option.none() }
+}

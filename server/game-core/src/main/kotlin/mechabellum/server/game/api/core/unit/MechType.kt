@@ -17,8 +17,9 @@
 
 package mechabellum.server.game.api.core.unit
 
-/** The data describing a type of Mech. */
-interface MechType {
-    /** The number of movement points available to a Mech of this type when walking during a turn. */
-    val walkingMovementPoints: Int
-}
+/**
+ * The data describing a type of Mech.
+ *
+ * @property name The unique name for this type of Mech (e.g. "HBK-4G Hunchback").
+ */
+data class MechType(val name: String)

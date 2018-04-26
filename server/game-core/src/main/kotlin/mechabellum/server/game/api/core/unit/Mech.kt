@@ -24,7 +24,4 @@ data class MechId(private val id: Int)
 interface Mech {
     /** The Mech identifier. */
     val id: MechId
-
-    /** The number of movement points available to the Mech when walking during a turn. */
-    val walkingMovementPoints: Int
 }

@@ -28,6 +28,16 @@ object TrainingScenarioSpec : Spek({
         @Suppress("UNUSED_VARIABLE")
         val game = gameFactory.newGame()
 
+        val unitTypeRegistry = ServiceLoader.load(UnitTypeRegistry::class.java).first()
+        @Suppress("UNUSED_VARIABLE")
+        val cicadaMechType = unitTypeRegistry.findMechTypeByName("CDA-2A Cicada").getOrThrow()
+        @Suppress("UNUSED_VARIABLE")
+        val enforcerMechType = unitTypeRegistry.findMechTypeByName("ENF-4R Enforcer").getOrThrow()
+        @Suppress("UNUSED_VARIABLE")
+        val hermesIIMechType = unitTypeRegistry.findMechTypeByName("HER-2S Hermes II").getOrThrow()
+        @Suppress("UNUSED_VARIABLE")
+        val hunchbackMechType = unitTypeRegistry.findMechTypeByName("HBK-4G Hunchback").getOrThrow()
+
         // TODO: implement remainder of scenario
     }
 })

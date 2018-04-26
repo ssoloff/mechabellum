@@ -15,21 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.unit.MechId
-import org.amshove.kluent.shouldEqualTo
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.it
+import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.unit.MechType
 
-object InternalMechSpec : Spek({
-    describe("walkingMovementPoints") {
-        it("should return walking movement points of type") {
-            val mechType = InternalMechType(walkingMovementPoints = 6)
-            val subject = InternalMech(id = MechId(0), type = mechType)
-
-            subject.walkingMovementPoints shouldEqualTo mechType.walkingMovementPoints
-        }
-    }
-})
+/** A registry of available unit types. */
+interface UnitTypeRegistry {
+    /** Returns the [MechType] with the specified [name]. */
+    fun findMechTypeByName(name: String): Option<MechType>
+}

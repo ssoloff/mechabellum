@@ -15,9 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechId
+import mechabellum.server.game.api.core.UnitTypeRegistrySpec
 
-internal class InternalMech(override val id: MechId) : Mech
+object InternalUnitTypeRegistryBehavesAsUnitTypeRegistrySpec : UnitTypeRegistrySpec(
+    absentMechTypeName = "__unknown__",
+    presentMechTypeName = "HER-2S Hermes II",
+    subjectFactory = ::InternalUnitTypeRegistry
+)
