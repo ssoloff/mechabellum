@@ -15,19 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.unit
 
-import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.GameFactory
-import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechId
-import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.internal.core.unit.InternalMech
-
-internal class InternalGameFactory : GameFactory {
-    private var _nextMechId: Int = 0
-
-    override fun newGame(): Game = InternalGame()
-
-    override fun newMech(specification: MechSpecification): Mech = InternalMech(MechId(_nextMechId++))
-}
+/**
+ * A specification for creating a new [Mech].
+ *
+ * @property type The type of Mech to create.
+ */
+data class MechSpecification(val type: MechType)

@@ -17,18 +17,25 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
+import mechabellum.server.game.api.core.unit.MechType
+import org.amshove.kluent.shouldNotEqual
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.subject.SubjectSpek
 
-/**
- * Factory for creating [Game] implementations.
- *
- * Clients are expected to obtain an instance of this interface using the Java [java.util.ServiceLoader] framework.
- */
-interface GameFactory {
-    /** Returns a new [Game]. */
-    fun newGame(): Game
+abstract class GameFactorySpec(subjectFactory: () -> GameFactory) : SubjectSpek<GameFactory>({
+    subject { subjectFactory() }
 
-    /** Returns a new [Mech] for the specified [MechSpecification]. */
-    fun newMech(specification: MechSpecification): Mech
-}
+    describe("newMech") {
+        it("should return instances with different identifiers") {
+            // when
+            val mechSpecification = MechSpecification(MechType("MechType"))
+            val mech1 = subject.newMech(mechSpecification)
+            val mech2 = subject.newMech(mechSpecification)
+
+            // then
+            mech1.id shouldNotEqual mech2.id
+        }
+    }
+})

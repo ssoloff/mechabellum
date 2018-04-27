@@ -17,28 +17,40 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.UnitTypeRegistry
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.util.ServiceLoader
 
 /** This spec attempts to play an entire game using the training scenario from the Quick-Start rules. */
 object TrainingScenarioSpec : Spek({
-    it("should be able to play the training scenario from the Quick-Start rules") {
+    describe("game implementation") {
         val gameFactory = ServiceLoader.load(GameFactory::class.java).first()
-        @Suppress("UNUSED_VARIABLE")
-        val game = gameFactory.newGame()
-
         val unitTypeRegistry = ServiceLoader.load(UnitTypeRegistry::class.java).first()
-        @Suppress("UNUSED_VARIABLE")
-        val cicadaMechType = unitTypeRegistry.findMechTypeByName("CDA-2A Cicada").getOrThrow()
-        @Suppress("UNUSED_VARIABLE")
-        val enforcerMechType = unitTypeRegistry.findMechTypeByName("ENF-4R Enforcer").getOrThrow()
-        @Suppress("UNUSED_VARIABLE")
-        val hermesIIMechType = unitTypeRegistry.findMechTypeByName("HER-2S Hermes II").getOrThrow()
-        @Suppress("UNUSED_VARIABLE")
-        val hunchbackMechType = unitTypeRegistry.findMechTypeByName("HBK-4G Hunchback").getOrThrow()
 
-        // TODO: implement remainder of scenario
+        fun newMech(name: String): Mech = gameFactory.newMech(
+            MechSpecification(
+                type = unitTypeRegistry.findMechTypeByName(name).getOrThrow()
+            )
+        )
+
+        it("should be able to play the training scenario from the Quick-Start rules") {
+            @Suppress("UNUSED_VARIABLE")
+            val game = gameFactory.newGame()
+
+            @Suppress("UNUSED_VARIABLE")
+            val cicadaMech = newMech("CDA-2A Cicada")
+            @Suppress("UNUSED_VARIABLE")
+            val enforcerMech = newMech("ENF-4R Enforcer")
+            @Suppress("UNUSED_VARIABLE")
+            val hermesIIMech = newMech("HER-2S Hermes II")
+            @Suppress("UNUSED_VARIABLE")
+            val hunchbackMech = newMech("HBK-4G Hunchback")
+
+            // TODO: implement remainder of scenario
+        }
     }
 })

@@ -17,17 +17,6 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.GameFactory
-import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechId
-import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.internal.core.unit.InternalMech
+import mechabellum.server.game.api.core.GameFactorySpec
 
-internal class InternalGameFactory : GameFactory {
-    private var _nextMechId: Int = 0
-
-    override fun newGame(): Game = InternalGame()
-
-    override fun newMech(specification: MechSpecification): Mech = InternalMech(MechId(_nextMechId++))
-}
+object InternalGameFactoryBehavesAsGameFactorySpec : GameFactorySpec(::InternalGameFactory)
