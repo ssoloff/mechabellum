@@ -24,9 +24,10 @@ import mechabellum.server.game.api.core.unit.MechSpecification
 /** A game feature that provides behavior to deploy units in the game. */
 interface DeploymentFeature {
     /**
-     * Creates a new Mech based on [specification] and deploys it to [position] on the game grid.
+     * Creates a new Mech based on [specification], deploys it to [position] on the game grid, and returns the deployed
+     * Mech.
      *
-     * @return The deployed Mech.
+     * @throws IllegalArgumentException If [position] does not exist on the game grid.
      */
     fun deployMech(specification: MechSpecification, position: CellId): Mech
 }

@@ -19,7 +19,7 @@ package mechabellum.server.game.internal.core.grid
 
 import mechabellum.server.game.api.core.grid.GridType
 
-internal fun newTestGrid(): InternalGrid = InternalGrid(newTestGridType())
+internal fun newTestGrid(gridType: GridType = newTestGridType()): InternalGrid = InternalGrid(gridType)
 
 internal fun newTestGridType(cols: Int = 1, rows: Int = 1): GridType = GridType(
     cols = cols,

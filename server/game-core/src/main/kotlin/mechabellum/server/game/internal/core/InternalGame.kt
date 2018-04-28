@@ -36,6 +36,10 @@ internal class InternalGame(override val grid: InternalGrid) : CommandContext, D
     private var _nextMechId: Int = 0
 
     override fun deployMech(specification: MechSpecification, position: CellId): Mech {
+        require((position.col in 0 until grid.type.cols) && (position.row in 0 until grid.type.rows)) {
+            "position $position does not exist in grid of type ${grid.type}"
+        }
+
         val mech = InternalMech(MechId(_nextMechId++))
         _mechDatasById[mech.id] = MechData(mech, position)
         return mech

@@ -19,16 +19,19 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.internal.core.grid.newTestGrid
+import mechabellum.server.game.internal.core.grid.newTestGridType
 import mechabellum.server.game.internal.core.unit.newTestMechSpecification
 import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotEqual
+import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
 internal object InternalGameBehavesAsDeploymentFeatureSpec : SubjectSpek<InternalGame>({
-    subject { InternalGame(newTestGrid()) }
+    subject { InternalGame(newTestGrid(newTestGridType(8, 10))) }
 
     describe("deployMech") {
         it("should add Mech to game") {
@@ -46,6 +49,16 @@ internal object InternalGameBehavesAsDeploymentFeatureSpec : SubjectSpek<Interna
 
             // then
             subject.getMechPosition(mech.id) shouldEqual position
+        }
+
+        it("should throw exception when position is invalid") {
+            // when
+            val grid = subject.grid
+            val func = { subject.deployMech(newTestMechSpecification(), CellId(grid.type.cols, grid.type.rows)) }
+
+            // then
+            val exceptionResult = func shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain "position"
         }
 
         it("should create Mechs with distinct identifiers") {

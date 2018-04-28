@@ -28,12 +28,14 @@ import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 
 /**
- * Creates a new Mech based on [specification] and deploys it to [position] on the game grid. Returns the deployed Mech.
+ * Creates a new Mech based on [specification], deploys it to [position] on the game grid, and returns the deployed
+ * Mech.
  */
 class DeployMechCommand(
     private val specification: MechSpecification,
     private val position: CellId
 ) : Command<Mech> {
+    /** @throws IllegalArgumentException If [position] does not exist on the game grid. */
     override fun execute(context: CommandContext): Mech =
         getDeploymentFeature(context).deployMech(specification, position)
 
@@ -47,9 +49,10 @@ class DeployMechCommand(
 }
 
 /**
- * Creates a new Mech based on [specification] and deploys it to [position] on the game grid.
+ * Creates a new Mech based on [specification], deploys it to [position] on the game grid, and returns the deployed
+ * Mech.
  *
- * @return The deployed Mech.
+ * @throws IllegalArgumentException If [position] does not exist on the game grid.
  */
 fun Game.deployMech(specification: MechSpecification, position: CellId): Mech =
     executeCommand(DeployMechCommand(specification, position))

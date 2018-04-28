@@ -54,14 +54,14 @@ object TrainingScenarioSpec : Spek({
             val game = newQuickStartGame()
 
             @Suppress("UNUSED_VARIABLE")
-            val cicada = game.deployMech(newMechSpecification("CDA-2A Cicada"), CellId(1, 17))
+            val defender1 = game.deployMech(newMechSpecification("CDA-2A Cicada"), CellId(0, 16))
             @Suppress("UNUSED_VARIABLE")
-            val hunchback = game.deployMech(newMechSpecification("HBK-4G Hunchback"), CellId(15, 17))
+            val defender2 = game.deployMech(newMechSpecification("HBK-4G Hunchback"), CellId(14, 16))
 
             @Suppress("UNUSED_VARIABLE")
-            val enforcer = game.deployMech(newMechSpecification("ENF-4R Enforcer"), CellId(1, 1))
+            val attacker1 = game.deployMech(newMechSpecification("ENF-4R Enforcer"), CellId(0, 0))
             @Suppress("UNUSED_VARIABLE")
-            val hermesII = game.deployMech(newMechSpecification("HER-2S Hermes II"), CellId(15, 1))
+            val attacker2 = game.deployMech(newMechSpecification("HER-2S Hermes II"), CellId(14, 0))
 
             // TODO: implement remainder of scenario
         }
