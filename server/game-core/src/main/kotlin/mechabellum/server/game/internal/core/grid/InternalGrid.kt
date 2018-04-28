@@ -20,11 +20,12 @@ package mechabellum.server.game.internal.core.grid
 import mechabellum.server.game.api.core.grid.Cell
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.Grid
+import mechabellum.server.game.api.core.grid.GridType
 
-internal class InternalGrid(override val cols: Int, override val rows: Int) : Grid {
+internal class InternalGrid(override val type: GridType) : Grid {
     private val _cellsById: Map<CellId, InternalCell> = mutableMapOf<CellId, InternalCell>().apply {
-        for (col in 0 until cols) {
-            for (row in 0 until rows) {
+        for (col in 0 until type.cols) {
+            for (row in 0 until type.rows) {
                 val cellId = CellId(col, row)
                 put(cellId, InternalCell(cellId))
             }

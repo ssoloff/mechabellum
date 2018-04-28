@@ -17,6 +17,8 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.grid.GridTypeRegistry
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.UnitTypeRegistry
@@ -29,6 +31,7 @@ import java.util.ServiceLoader
 object TrainingScenarioSpec : Spek({
     describe("game implementation") {
         val gameFactory = ServiceLoader.load(GameFactory::class.java).first()
+        val gridTypeRegistry = ServiceLoader.load(GridTypeRegistry::class.java).first()
         val unitTypeRegistry = ServiceLoader.load(UnitTypeRegistry::class.java).first()
 
         fun newMech(name: String): Mech = gameFactory.newMech(
@@ -37,9 +40,17 @@ object TrainingScenarioSpec : Spek({
             )
         )
 
+        fun newQuickStartGame(): Game = gameFactory.newGame(
+            GameSpecification(
+                gridSpecification = GridSpecification(
+                    type = gridTypeRegistry.findByName("Quick-Start Map").getOrThrow()
+                )
+            )
+        )
+
         it("should be able to play the training scenario from the Quick-Start rules") {
             @Suppress("UNUSED_VARIABLE")
-            val game = gameFactory.newGame()
+            val game = newQuickStartGame()
 
             @Suppress("UNUSED_VARIABLE")
             val cicadaMech = newMech("CDA-2A Cicada")

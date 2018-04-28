@@ -21,19 +21,23 @@ import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.CommandException
-import mechabellum.server.game.api.core.features.DeploymentFeature
-import mechabellum.server.game.api.core.grid.CellId
-import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.features.GridFeature
+import mechabellum.server.game.api.core.grid.Grid
 
-/** Deploys [mech] to [position] on the game grid. */
-class DeployMechCommand(private val mech: Mech, private val position: CellId) : Command<Unit> {
-    override fun execute(context: CommandContext) = getDeploymentFeature(context).deployMech(mech, position)
+/** Returns the game grid. */
+class GetGridCommand : Command<Grid> {
+    override fun execute(context: CommandContext): Grid = getGridFeature(context).grid
 
-    private fun getDeploymentFeature(context: CommandContext): DeploymentFeature {
-        val featureOption = context.getFeature(DeploymentFeature::class.java)
+    private fun getGridFeature(context: CommandContext): GridFeature {
+        val featureOption = context.getFeature(GridFeature::class.java)
         return when (featureOption) {
             is Option.Some -> featureOption.value
-            else -> throw CommandException("required feature 'DeploymentFeature' not available")
+            else -> throw CommandException("required feature 'GridFeature' not available")
         }
     }
 }
+
+/** The game grid. */
+val Game.grid: Grid
+    get() = executeCommand(GetGridCommand())

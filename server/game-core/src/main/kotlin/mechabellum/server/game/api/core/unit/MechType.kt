@@ -18,7 +18,7 @@
 package mechabellum.server.game.api.core.unit
 
 /**
- * The data describing a type of Mech.
+ * The data describing a type of [Mech].
  *
  * @property name The unique name for this type of Mech (e.g. "HBK-4G Hunchback").
  */

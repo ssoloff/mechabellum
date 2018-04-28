@@ -17,20 +17,25 @@
 
 package mechabellum.server.game.api.core.grid
 
-/**
- * A hexagonal grid.
- *
- * The grid uses an odd-q vertical layout. "odd-q" means each odd column is shifted down (positive y) a half-cell.
- * "Vertical" layout means each cell is a flat-topped hex (rather than a pointy-topped hex).
- */
-interface Grid {
-    /** The grid type. */
-    val type: GridType
+import org.amshove.kluent.shouldThrow
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
 
-    /**
-     * Returns the cell at the coordinates ([col], [row]).
-     *
-     * @throws IllegalArgumentException If no cell exists at the specified coordinates.
-     */
-    fun getCell(col: Int, row: Int): Cell
-}
+object GridTypeSpec : Spek({
+    describe("constructor") {
+        fun newGridType(): GridType = GridType(
+            cols = 1,
+            name = "name",
+            rows = 1
+        )
+
+        it("should throw exception when cols is non-positive") {
+            ({ newGridType().copy(cols = 0) }) shouldThrow IllegalArgumentException::class
+        }
+
+        it("should throw exception when rows is non-positive") {
+            ({ newGridType().copy(rows = 0) }) shouldThrow IllegalArgumentException::class
+        }
+    }
+})

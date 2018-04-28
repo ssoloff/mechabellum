@@ -15,13 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.features
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
-import mechabellum.server.game.internal.core.grid.newTestGrid
+import mechabellum.server.game.api.core.grid.Grid
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = { InternalGame(newTestGrid()) }
-)
+/** A game feature that provides access to the game grid. */
+interface GridFeature {
+    /** The game grid. */
+    val grid: Grid
+}

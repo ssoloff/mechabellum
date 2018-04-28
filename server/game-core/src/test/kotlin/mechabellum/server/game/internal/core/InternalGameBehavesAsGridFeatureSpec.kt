@@ -17,11 +17,20 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
 import mechabellum.server.game.internal.core.grid.newTestGrid
+import org.amshove.kluent.shouldBe
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.subject.SubjectSpek
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = { InternalGame(newTestGrid()) }
-)
+internal object InternalGameBehavesAsGridFeatureSpec : SubjectSpek<InternalGame>({
+    val grid = newTestGrid()
+
+    subject { InternalGame(grid) }
+
+    describe("grid") {
+        it("should return game grid") {
+            subject.grid shouldBe grid
+        }
+    }
+})

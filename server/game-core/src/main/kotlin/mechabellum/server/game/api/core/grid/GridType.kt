@@ -15,13 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.grid
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
-import mechabellum.server.game.internal.core.grid.newTestGrid
-
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = { InternalGame(newTestGrid()) }
-)
+/**
+ * The data describing a type of [Grid].
+ *
+ * @property cols The count of columns in the grid.
+ * @property name The unique name for this type of grid (e.g. "Quick-Start Map").
+ * @property rows The count of rows in the grid.
+ *
+ * @throws IllegalArgumentException If [cols] or [rows] is non-positive.
+ */
+data class GridType(
+    val cols: Int,
+    val name: String,
+    val rows: Int
+) {
+    init {
+        require(cols > 0) { "cols must be positive" }
+        require(rows > 0) { "rows must be positive" }
+    }
+}

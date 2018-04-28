@@ -23,11 +23,13 @@ import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.features.DeploymentFeature
+import mechabellum.server.game.api.core.features.GridFeature
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
+import mechabellum.server.game.internal.core.grid.InternalGrid
 
-internal class InternalGame : CommandContext, DeploymentFeature, Game {
+internal class InternalGame(override val grid: InternalGrid) : CommandContext, DeploymentFeature, Game, GridFeature {
     private val mechDatasById: MutableMap<MechId, MechData> = hashMapOf()
 
     override fun deployMech(mech: Mech, position: CellId) {
@@ -52,6 +54,7 @@ internal class InternalGame : CommandContext, DeploymentFeature, Game {
         @Suppress("UNCHECKED_CAST")
         return when (type) {
             DeploymentFeature::class.java -> Option.some(this as T)
+            GridFeature::class.java -> Option.some(this as T)
             else -> Option.none()
         }
     }

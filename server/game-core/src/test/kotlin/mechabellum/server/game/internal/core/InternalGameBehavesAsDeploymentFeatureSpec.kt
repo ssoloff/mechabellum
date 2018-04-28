@@ -22,6 +22,7 @@ import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
+import mechabellum.server.game.internal.core.grid.newTestGrid
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
@@ -29,7 +30,7 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
 internal object InternalGameBehavesAsDeploymentFeatureSpec : SubjectSpek<InternalGame>({
-    subject { InternalGame() }
+    subject { InternalGame(newTestGrid()) }
 
     describe("deployMech") {
         it("should add Mech to game when Mech ID does not exist") {

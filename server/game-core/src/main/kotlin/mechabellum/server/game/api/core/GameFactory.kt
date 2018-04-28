@@ -26,8 +26,8 @@ import mechabellum.server.game.api.core.unit.MechSpecification
  * Clients are expected to obtain an instance of this interface using the Java [java.util.ServiceLoader] framework.
  */
 interface GameFactory {
-    /** Returns a new [Game]. */
-    fun newGame(): Game
+    /** Returns a new [Game] for the specified [GameSpecification]. */
+    fun newGame(specification: GameSpecification): Game
 
     /** Returns a new [Mech] for the specified [MechSpecification]. */
     fun newMech(specification: MechSpecification): Mech

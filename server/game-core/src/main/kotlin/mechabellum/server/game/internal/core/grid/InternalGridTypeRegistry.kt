@@ -15,13 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.game.api.core.CommandContextSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
-import mechabellum.server.game.internal.core.grid.newTestGrid
+import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.grid.GridType
+import mechabellum.server.game.api.core.grid.GridTypeRegistry
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = { InternalGame(newTestGrid()) }
-)
+internal class InternalGridTypeRegistry : GridTypeRegistry {
+    private val _gridTypes: Collection<GridType> = listOf(GridType(cols = 15, name = "Quick-Start Map", rows = 17))
+
+    override fun findByName(name: String): Option<GridType> = Option.of(_gridTypes.find { it.name == name })
+}
