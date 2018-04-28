@@ -19,11 +19,8 @@ package mechabellum.server.game.api.core
 
 import mechabellum.server.game.api.core.commands.grid
 import mechabellum.server.game.api.core.grid.GridSpecification
-import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.api.core.unit.MechType
 import mechabellum.server.game.internal.core.grid.newTestGridType
 import org.amshove.kluent.shouldEqual
-import org.amshove.kluent.shouldNotEqual
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
@@ -39,18 +36,6 @@ abstract class GameFactorySpec(subjectFactory: () -> GameFactory) : SubjectSpek<
 
             // then
             game.grid.type shouldEqual gridType
-        }
-    }
-
-    describe("newMech") {
-        it("should return instances with different identifiers") {
-            // when
-            val mechSpecification = MechSpecification(MechType("MechType"))
-            val mech1 = subject.newMech(mechSpecification)
-            val mech2 = subject.newMech(mechSpecification)
-
-            // then
-            mech1.id shouldNotEqual mech2.id
         }
     }
 })

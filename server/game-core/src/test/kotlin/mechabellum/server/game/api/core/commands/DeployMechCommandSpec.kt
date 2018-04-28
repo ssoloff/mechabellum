@@ -25,9 +25,12 @@ import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.features.DeploymentFeature
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.internal.core.unit.newTestMechSpecification
 import org.amshove.kluent.Verify
+import org.amshove.kluent.any
 import org.amshove.kluent.called
 import org.amshove.kluent.on
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.that
@@ -38,21 +41,25 @@ import org.jetbrains.spek.api.dsl.it
 
 object DeployMechCommandSpec : Spek({
     describe("execute") {
-        it("should deploy mech to specified position") {
+        it("should deploy Mech to specified position and return new Mech") {
             // given
-            val deploymentFeature = mock<DeploymentFeature>()
+            val expectedMech = mock<Mech>()
+            val deploymentFeature = mock<DeploymentFeature> {
+                on { deployMech(any(), any()) } doReturn expectedMech
+            }
             val context = mock<CommandContext> {
                 on { getFeature(DeploymentFeature::class.java) } doReturn Option.some(deploymentFeature)
             }
-            val mech = mock<Mech>()
+            val specification = newTestMechSpecification()
             val position = CellId(3, 6)
-            val subject = DeployMechCommand(mech, position)
+            val subject = DeployMechCommand(specification, position)
 
             // when
-            subject.execute(context)
+            val actualMech = subject.execute(context)
 
             // then
-            Verify on deploymentFeature that deploymentFeature.deployMech(mech, position) was called
+            Verify on deploymentFeature that deploymentFeature.deployMech(specification, position) was called
+            actualMech shouldBe expectedMech
         }
 
         it("should throw exception when context does not provide required features") {
@@ -60,7 +67,7 @@ object DeployMechCommandSpec : Spek({
             val context = mock<CommandContext> {
                 on { getFeature(DeploymentFeature::class.java) } doReturn Option.none()
             }
-            val subject = DeployMechCommand(mock(), CellId(3, 6))
+            val subject = DeployMechCommand(newTestMechSpecification(), CellId(3, 6))
 
             // when
             val func = { subject.execute(context) }

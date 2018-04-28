@@ -15,14 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core
+package mechabellum.server.game.internal.core.unit
 
-/**
- * Factory for creating [Game] implementations.
- *
- * Clients are expected to obtain an instance of this interface using the Java [java.util.ServiceLoader] framework.
- */
-interface GameFactory {
-    /** Returns a new [Game] for the specified [GameSpecification]. */
-    fun newGame(specification: GameSpecification): Game
-}
+import mechabellum.server.game.api.core.unit.MechSpecification
+import mechabellum.server.game.api.core.unit.MechType
+
+internal fun newTestMechSpecification(): MechSpecification = MechSpecification(newTestMechType())
+
+internal fun newTestMechType(): MechType = MechType("TST-001 Test Mech")

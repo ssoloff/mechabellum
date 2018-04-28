@@ -27,16 +27,18 @@ import mechabellum.server.game.api.core.features.GridFeature
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
+import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.grid.InternalGrid
+import mechabellum.server.game.internal.core.unit.InternalMech
 
 internal class InternalGame(override val grid: InternalGrid) : CommandContext, DeploymentFeature, Game, GridFeature {
-    private val mechDatasById: MutableMap<MechId, MechData> = hashMapOf()
+    private val _mechDatasById: MutableMap<MechId, MechData> = hashMapOf()
+    private var _nextMechId: Int = 0
 
-    override fun deployMech(mech: Mech, position: CellId) {
-        // TODO: we need to enforce that [mech] is of type InternalMech
-        require(mech.id !in mechDatasById, { "Mech with ID ${mech.id} already present" })
-
-        mechDatasById[mech.id] = MechData(mech, position)
+    override fun deployMech(specification: MechSpecification, position: CellId): Mech {
+        val mech = InternalMech(MechId(_nextMechId++))
+        _mechDatasById[mech.id] = MechData(mech, position)
+        return mech
     }
 
     override fun <T : Any> executeCommand(command: Command<T>): T {
@@ -59,11 +61,11 @@ internal class InternalGame(override val grid: InternalGrid) : CommandContext, D
         }
     }
 
-    // TODO: change to return InternalMech
-    fun getMech(id: MechId): Mech = mechDatasById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+    fun getMech(id: MechId): InternalMech =
+        _mechDatasById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     fun getMechPosition(id: MechId): CellId =
-        mechDatasById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+        _mechDatasById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
-    private class MechData(val mech: Mech, val position: CellId)
+    private class MechData(val mech: InternalMech, val position: CellId)
 }

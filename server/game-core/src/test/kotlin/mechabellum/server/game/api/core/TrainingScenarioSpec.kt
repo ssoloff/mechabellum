@@ -17,9 +17,10 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.game.api.core.commands.deployMech
+import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridTypeRegistry
-import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.UnitTypeRegistry
 import org.jetbrains.spek.api.Spek
@@ -30,36 +31,37 @@ import java.util.ServiceLoader
 /** This spec attempts to play an entire game using the training scenario from the Quick-Start rules. */
 object TrainingScenarioSpec : Spek({
     describe("game implementation") {
-        val gameFactory = ServiceLoader.load(GameFactory::class.java).first()
-        val gridTypeRegistry = ServiceLoader.load(GridTypeRegistry::class.java).first()
-        val unitTypeRegistry = ServiceLoader.load(UnitTypeRegistry::class.java).first()
-
-        fun newMech(name: String): Mech = gameFactory.newMech(
-            MechSpecification(
+        fun newMechSpecification(name: String): MechSpecification {
+            val unitTypeRegistry = ServiceLoader.load(UnitTypeRegistry::class.java).first()
+            return MechSpecification(
                 type = unitTypeRegistry.findMechTypeByName(name).getOrThrow()
             )
-        )
+        }
 
-        fun newQuickStartGame(): Game = gameFactory.newGame(
-            GameSpecification(
-                gridSpecification = GridSpecification(
-                    type = gridTypeRegistry.findByName("Quick-Start Map").getOrThrow()
+        fun newQuickStartGame(): Game {
+            val gameFactory = ServiceLoader.load(GameFactory::class.java).first()
+            val gridTypeRegistry = ServiceLoader.load(GridTypeRegistry::class.java).first()
+            return gameFactory.newGame(
+                GameSpecification(
+                    gridSpecification = GridSpecification(
+                        type = gridTypeRegistry.findByName("Quick-Start Map").getOrThrow()
+                    )
                 )
             )
-        )
+        }
 
         it("should be able to play the training scenario from the Quick-Start rules") {
-            @Suppress("UNUSED_VARIABLE")
             val game = newQuickStartGame()
 
             @Suppress("UNUSED_VARIABLE")
-            val cicadaMech = newMech("CDA-2A Cicada")
+            val cicada = game.deployMech(newMechSpecification("CDA-2A Cicada"), CellId(1, 17))
             @Suppress("UNUSED_VARIABLE")
-            val enforcerMech = newMech("ENF-4R Enforcer")
+            val hunchback = game.deployMech(newMechSpecification("HBK-4G Hunchback"), CellId(15, 17))
+
             @Suppress("UNUSED_VARIABLE")
-            val hermesIIMech = newMech("HER-2S Hermes II")
+            val enforcer = game.deployMech(newMechSpecification("ENF-4R Enforcer"), CellId(1, 1))
             @Suppress("UNUSED_VARIABLE")
-            val hunchbackMech = newMech("HBK-4G Hunchback")
+            val hermesII = game.deployMech(newMechSpecification("HER-2S Hermes II"), CellId(15, 1))
 
             // TODO: implement remainder of scenario
         }

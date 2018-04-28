@@ -21,13 +21,21 @@ import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.CommandException
+import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.features.DeploymentFeature
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.unit.MechSpecification
 
-/** Deploys [mech] to [position] on the game grid. */
-class DeployMechCommand(private val mech: Mech, private val position: CellId) : Command<Unit> {
-    override fun execute(context: CommandContext) = getDeploymentFeature(context).deployMech(mech, position)
+/**
+ * Creates a new Mech based on [specification] and deploys it to [position] on the game grid. Returns the deployed Mech.
+ */
+class DeployMechCommand(
+    private val specification: MechSpecification,
+    private val position: CellId
+) : Command<Mech> {
+    override fun execute(context: CommandContext): Mech =
+        getDeploymentFeature(context).deployMech(specification, position)
 
     private fun getDeploymentFeature(context: CommandContext): DeploymentFeature {
         val featureOption = context.getFeature(DeploymentFeature::class.java)
@@ -37,3 +45,11 @@ class DeployMechCommand(private val mech: Mech, private val position: CellId) : 
         }
     }
 }
+
+/**
+ * Creates a new Mech based on [specification] and deploys it to [position] on the game grid.
+ *
+ * @return The deployed Mech.
+ */
+fun Game.deployMech(specification: MechSpecification, position: CellId): Mech =
+    executeCommand(DeployMechCommand(specification, position))

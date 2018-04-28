@@ -17,14 +17,12 @@
 
 package mechabellum.server.game.internal.core
 
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.grid.CellId
-import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.grid.newTestGrid
+import mechabellum.server.game.internal.core.unit.newTestMechSpecification
 import org.amshove.kluent.shouldBe
-import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.shouldEqual
+import org.amshove.kluent.shouldNotEqual
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
@@ -33,51 +31,30 @@ internal object InternalGameBehavesAsDeploymentFeatureSpec : SubjectSpek<Interna
     subject { InternalGame(newTestGrid()) }
 
     describe("deployMech") {
-        it("should add Mech to game when Mech ID does not exist") {
-            // given
-            val mechId = MechId(42)
-            val mech = mock<Mech> {
-                on { id } doReturn mechId
-            }
-
+        it("should add Mech to game") {
             // when
-            subject.deployMech(mech, CellId(3, 6))
+            val mech = subject.deployMech(newTestMechSpecification(), CellId(3, 6))
 
             // then
-            subject.getMech(mechId) shouldBe mech
-        }
-
-        it("should throw exception when Mech ID exists") {
-            // given
-            val mechId = MechId(42)
-            val mech1 = mock<Mech> {
-                on { id } doReturn mechId
-            }
-            val mech2 = mock<Mech> {
-                on { id } doReturn mechId
-            }
-
-            // when
-            subject.deployMech(mech1, CellId(3, 6))
-            val func = { subject.deployMech(mech2, CellId(2, 4)) }
-
-            // then
-            func shouldThrow IllegalArgumentException::class
+            subject.getMech(mech.id) shouldBe mech
         }
 
         it("should place Mech at specified position") {
-            // given
-            val mechId = MechId(42)
-            val mech = mock<Mech> {
-                on { id } doReturn mechId
-            }
-            val position = CellId(3, 6)
-
             // when
-            subject.deployMech(mech, position)
+            val position = CellId(3, 6)
+            val mech = subject.deployMech(newTestMechSpecification(), position)
 
             // then
-            subject.getMechPosition(mechId) shouldBe position
+            subject.getMechPosition(mech.id) shouldEqual position
+        }
+
+        it("should create Mechs with distinct identifiers") {
+            // when
+            val mech1 = subject.deployMech(newTestMechSpecification(), CellId(3, 6))
+            val mech2 = subject.deployMech(newTestMechSpecification(), CellId(4, 6))
+
+            // then
+            mech1.id shouldNotEqual mech2.id
         }
     }
 })
