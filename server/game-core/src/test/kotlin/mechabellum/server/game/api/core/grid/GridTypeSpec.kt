@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.api.core.grid
 
+import mechabellum.server.common.api.test.DataClassSpec
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -24,18 +25,14 @@ import org.jetbrains.spek.api.dsl.it
 
 object GridTypeSpec : Spek({
     describe("constructor") {
-        fun newGridType(): GridType = GridType(
-            cols = 1,
-            name = "name",
-            rows = 1
-        )
-
         it("should throw exception when cols is non-positive") {
-            ({ newGridType().copy(cols = 0) }) shouldThrow IllegalArgumentException::class
+            ({ newTestGridType().copy(cols = 0) }) shouldThrow IllegalArgumentException::class
         }
 
         it("should throw exception when rows is non-positive") {
-            ({ newGridType().copy(rows = 0) }) shouldThrow IllegalArgumentException::class
+            ({ newTestGridType().copy(rows = 0) }) shouldThrow IllegalArgumentException::class
         }
     }
 })
+
+object GridTypeBehavesAsDataClassSpec : DataClassSpec({ newTestGridType() })

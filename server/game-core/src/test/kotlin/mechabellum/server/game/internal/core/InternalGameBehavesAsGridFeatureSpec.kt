@@ -17,14 +17,15 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.internal.core.grid.newTestGrid
+import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.internal.core.grid.InternalGrid
 import org.amshove.kluent.shouldBe
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
 internal object InternalGameBehavesAsGridFeatureSpec : SubjectSpek<InternalGame>({
-    val grid = newTestGrid()
+    val grid = InternalGrid(newTestGridType())
 
     subject { InternalGame(grid) }
 

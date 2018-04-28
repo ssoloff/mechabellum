@@ -20,4 +20,5 @@ rootProject.name = "mechabellum"
 include("server")
 include("server:app")
 include("server:common-core")
+include("server:common-test")
 include("server:game-core")

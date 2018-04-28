@@ -19,9 +19,10 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.CommandContextSpec
 import mechabellum.server.game.api.core.features.DeploymentFeature
-import mechabellum.server.game.internal.core.grid.newTestGrid
+import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.internal.core.grid.InternalGrid
 
 object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
     presentFeatureType = DeploymentFeature::class.java,
-    subjectFactory = { InternalGame(newTestGrid()) }
+    subjectFactory = { InternalGame(InternalGrid(newTestGridType())) }
 )

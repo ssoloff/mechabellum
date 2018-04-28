@@ -15,6 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    "testImplementation"(project(":server:common-test"))
-}
+package mechabellum.server.game.api.core.grid
+
+fun newTestGridSpecification(): GridSpecification = GridSpecification(newTestGridType())
+
+fun newTestGridType(cols: Int = 1, rows: Int = 1): GridType = GridType(
+    cols = cols,
+    name = "Test Grid",
+    rows = rows
+)

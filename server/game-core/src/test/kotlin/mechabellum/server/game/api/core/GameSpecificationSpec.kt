@@ -15,6 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    "testImplementation"(project(":server:common-test"))
-}
+package mechabellum.server.game.api.core
+
+import mechabellum.server.common.api.test.DataClassSpec
+import mechabellum.server.game.api.core.grid.newTestGridSpecification
+
+object GameSpecificationBehavesAsDataClassSpec : DataClassSpec({ GameSpecification(newTestGridSpecification()) })

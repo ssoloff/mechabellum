@@ -17,6 +17,7 @@
 
 package mechabellum.server.common.api.core.util
 
+import mechabellum.server.common.api.test.DataClassSpec
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.Spek
@@ -162,3 +163,7 @@ object ResultSpec : Spek({
         }
     }
 })
+
+object ResultFailureBehavesAsDataClassSpec : DataClassSpec({ Result.Failure(Exception()) })
+
+object ResultSuccessBehavesAsDataClassSpec : DataClassSpec({ Result.Success(42) })

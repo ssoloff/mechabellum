@@ -18,5 +18,6 @@
 package mechabellum.server.game.internal.core.grid
 
 import mechabellum.server.game.api.core.grid.GridSpec
+import mechabellum.server.game.api.core.grid.newTestGridType
 
 object InternalGridBehavesAsGridSpec : GridSpec({ cols, rows -> InternalGrid(newTestGridType(cols, rows)) })

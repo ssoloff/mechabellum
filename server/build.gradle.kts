@@ -95,7 +95,7 @@ subprojects {
                 rule {
                     limit {
                         counter = "INSTRUCTION"
-                        minimum = BigDecimal(0.7)
+                        minimum = BigDecimal(0.8)
                     }
                 }
             }

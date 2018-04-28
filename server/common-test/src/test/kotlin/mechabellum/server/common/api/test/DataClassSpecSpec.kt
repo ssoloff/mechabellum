@@ -15,6 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    "testImplementation"(project(":server:common-test"))
-}
+package mechabellum.server.common.api.test
+
+data class FakeDataClass(val first: String, val second: Int)
+
+object FakeDataClassBehavesAsDataClassSpec : DataClassSpec({ FakeDataClass("first", 2) })

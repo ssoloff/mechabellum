@@ -18,7 +18,7 @@
 package mechabellum.server.game.api.core.unit
 
 /** The unique identifier of a Mech within a game. */
-data class MechId(private val id: Int)
+data class MechId(val value: Int)
 
 /** A Mech. */
 interface Mech {

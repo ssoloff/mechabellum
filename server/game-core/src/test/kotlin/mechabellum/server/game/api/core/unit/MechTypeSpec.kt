@@ -15,11 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.api.core.unit
 
-import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.api.core.unit.MechType
+import mechabellum.server.common.api.test.DataClassSpec
 
-internal fun newTestMechSpecification(): MechSpecification = MechSpecification(newTestMechType())
-
-internal fun newTestMechType(): MechType = MechType("TST-001 Test Mech")
+object MechTypeBehavesAsDataClassSpec : DataClassSpec({ newTestMechType() })

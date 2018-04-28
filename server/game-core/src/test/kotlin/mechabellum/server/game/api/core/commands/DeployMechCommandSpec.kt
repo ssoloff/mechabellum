@@ -25,7 +25,7 @@ import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.features.DeploymentFeature
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.internal.core.unit.newTestMechSpecification
+import mechabellum.server.game.api.core.unit.newTestMechSpecification
 import org.amshove.kluent.Verify
 import org.amshove.kluent.any
 import org.amshove.kluent.called

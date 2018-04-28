@@ -15,14 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.grid
+package mechabellum.server.game.api.core.unit
 
-import mechabellum.server.game.api.core.grid.GridType
+fun newTestMechSpecification(): MechSpecification = MechSpecification(newTestMechType())
 
-internal fun newTestGrid(gridType: GridType = newTestGridType()): InternalGrid = InternalGrid(gridType)
-
-internal fun newTestGridType(cols: Int = 1, rows: Int = 1): GridType = GridType(
-    cols = cols,
-    name = "Test Grid",
-    rows = rows
-)
+fun newTestMechType(): MechType = MechType("TST-001 Test Mech")

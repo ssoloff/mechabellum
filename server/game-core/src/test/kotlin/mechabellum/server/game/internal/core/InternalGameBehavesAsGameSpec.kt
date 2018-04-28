@@ -18,6 +18,7 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.GameSpec
-import mechabellum.server.game.internal.core.grid.newTestGrid
+import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.internal.core.grid.InternalGrid
 
-object InternalGameBehavesAsGameSpec : GameSpec({ InternalGame(newTestGrid()) })
+object InternalGameBehavesAsGameSpec : GameSpec({ InternalGame(InternalGrid(newTestGridType())) })

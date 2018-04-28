@@ -17,4 +17,5 @@
 
 dependencies {
     "api"(project(":server:common-core"))
+    "testImplementation"(project(":server:common-test"))
 }
