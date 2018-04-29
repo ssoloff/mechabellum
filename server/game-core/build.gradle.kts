@@ -16,6 +16,6 @@
  */
 
 dependencies {
-    "api"(project(":server:common-core"))
-    "testImplementation"(project(":server:common-test"))
+    "api"(project(":common-core"))
+    "testImplementation"(project(":common-test"))
 }

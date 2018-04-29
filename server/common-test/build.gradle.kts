@@ -15,13 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-val kluentVersion by extra { "1.36" }
-val kotlinVersion by extra { "1.2.40" }
-val spekVersion by extra { "1.1.5" }
-// TODO: Move rootProject to /server
-//val kluentVersion: String by rootProject
-//val kotlinVersion: String by rootProject
-//val spekVersion: String by rootProject
+val kluentVersion: String by rootProject
+val kotlinVersion: String by rootProject
+val spekVersion: String by rootProject
 
 dependencies {
     "implementation"(kotlin("reflect", kotlinVersion)) // required by Spek

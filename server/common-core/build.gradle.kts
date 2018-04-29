@@ -16,5 +16,5 @@
  */
 
 dependencies {
-    "testImplementation"(project(":server:common-test"))
+    "testImplementation"(project(":common-test"))
 }
