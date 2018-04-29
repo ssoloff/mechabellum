@@ -17,6 +17,9 @@
 
 package mechabellum.server.game.internal.core
 
+import mechabellum.server.game.api.core.CommandContextSpec
+import mechabellum.server.game.api.core.GameSpec
+import mechabellum.server.game.api.core.features.DeploymentFeature
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.newTestGridType
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
@@ -29,6 +32,11 @@ import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
+
+object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
+    presentFeatureType = DeploymentFeature::class.java,
+    subjectFactory = { InternalGame(InternalGrid(newTestGridType())) }
+)
 
 internal object InternalGameBehavesAsDeploymentFeatureSpec : SubjectSpek<InternalGame>({
     subject { InternalGame(InternalGrid(newTestGridType(8, 10))) }
@@ -68,6 +76,20 @@ internal object InternalGameBehavesAsDeploymentFeatureSpec : SubjectSpek<Interna
 
             // then
             mech1.id shouldNotEqual mech2.id
+        }
+    }
+})
+
+object InternalGameBehavesAsGameSpec : GameSpec({ InternalGame(InternalGrid(newTestGridType())) })
+
+internal object InternalGameBehavesAsGridFeatureSpec : SubjectSpek<InternalGame>({
+    val grid = InternalGrid(newTestGridType())
+
+    subject { InternalGame(grid) }
+
+    describe("grid") {
+        it("should return game grid") {
+            subject.grid shouldBe grid
         }
     }
 })

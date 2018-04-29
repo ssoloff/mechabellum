@@ -26,144 +26,142 @@ import org.jetbrains.spek.api.dsl.it
 
 typealias SpecResult = Result<Number, RuntimeException>
 
-object ResultSpec : Spek({
-    describe("Empty") {
-        val subject: SpecResult = Result.empty()
+object ResultEmptySpec : Spek({
+    val subject: SpecResult = Result.empty()
 
-        describe("getOrElse") {
-            it("should return default value") {
-                subject.getOrElse(2112) shouldEqual 2112
-            }
-        }
-
-        describe("getOrThrow") {
-            it("should throw exception") {
-                ({ subject.getOrThrow() }) shouldThrow NoSuchElementException::class
-            }
-        }
-
-        describe("toString") {
-            it("should return Empty") {
-                subject.toString() shouldEqual "Empty"
-            }
-        }
-
-        describe("when") {
-            it("should take Empty branch when target is Empty type") {
-                when (subject) {
-                    is Result.Empty -> Unit
-                    else -> throw AssertionError("expected Empty but was $subject")
-                }
-            }
-
-            it("should take Empty branch when target is Empty instance") {
-                when (subject) {
-                    Result.empty<Number, RuntimeException>() -> Unit
-                    else -> throw AssertionError("expected Empty but was $subject")
-                }
-            }
+    describe("getOrElse") {
+        it("should return default value") {
+            subject.getOrElse(2112) shouldEqual 2112
         }
     }
 
-    describe("Failure") {
-        val exception = NumberFormatException("message")
-        val otherException = IllegalStateException("otherMessage")
-        val subject: SpecResult = Result.failure(exception)
-
-        describe("getOrElse") {
-            it("should return default value") {
-                subject.getOrElse(2112) shouldEqual 2112
-            }
-        }
-
-        describe("getOrThrow") {
-            it("should throw exception") {
-                ({ subject.getOrThrow() }) shouldThrow exception
-            }
-        }
-
-        describe("toString") {
-            it("should return Failure(exception.message)") {
-                subject.toString() shouldEqual "Failure(${exception.message})"
-            }
-        }
-
-        describe("when") {
-            it("should take Failure branch when target is Failure type") {
-                when (subject) {
-                    is Result.Failure -> subject.exception shouldEqual exception
-                    else -> throw AssertionError("expected Failure but was $subject")
-                }
-            }
-
-            it("should take Failure branch when target is equal Failure instance") {
-                val result: SpecResult = Result.failure(exception)
-                when (subject) {
-                    result -> Unit
-                    else -> throw AssertionError("expected $result but was $subject")
-                }
-            }
-
-            it("should take else branch when target is unequal Failure instance") {
-                val result: SpecResult = Result.failure(otherException)
-                when (subject) {
-                    result -> throw AssertionError("expected $subject but was $result")
-                    else -> Unit
-                }
-            }
+    describe("getOrThrow") {
+        it("should throw exception") {
+            ({ subject.getOrThrow() }) shouldThrow NoSuchElementException::class
         }
     }
 
-    describe("Success") {
-        val value = 42
-        val otherValue = 2112.0
-        val subject: SpecResult = Result.success(value)
+    describe("toString") {
+        it("should return Empty") {
+            subject.toString() shouldEqual "Empty"
+        }
+    }
 
-        describe("getOrElse") {
-            it("should return value") {
-                subject.getOrElse(otherValue) shouldEqual value
+    describe("when") {
+        it("should take Empty branch when target is Empty type") {
+            when (subject) {
+                is Result.Empty -> Unit
+                else -> throw AssertionError("expected Empty but was $subject")
             }
         }
 
-        describe("getOrThrow") {
-            it("should return value") {
-                subject.getOrThrow() shouldEqual value
+        it("should take Empty branch when target is Empty instance") {
+            when (subject) {
+                Result.empty<Number, RuntimeException>() -> Unit
+                else -> throw AssertionError("expected Empty but was $subject")
+            }
+        }
+    }
+})
+
+object ResultFailureSpec : Spek({
+    val exception = NumberFormatException("message")
+    val otherException = IllegalStateException("otherMessage")
+    val subject: SpecResult = Result.failure(exception)
+
+    describe("getOrElse") {
+        it("should return default value") {
+            subject.getOrElse(2112) shouldEqual 2112
+        }
+    }
+
+    describe("getOrThrow") {
+        it("should throw exception") {
+            ({ subject.getOrThrow() }) shouldThrow exception
+        }
+    }
+
+    describe("toString") {
+        it("should return Failure(exception.message)") {
+            subject.toString() shouldEqual "Failure(${exception.message})"
+        }
+    }
+
+    describe("when") {
+        it("should take Failure branch when target is Failure type") {
+            when (subject) {
+                is Result.Failure -> subject.exception shouldEqual exception
+                else -> throw AssertionError("expected Failure but was $subject")
             }
         }
 
-        describe("toString") {
-            it("should return Success(value)") {
-                subject.toString() shouldEqual "Success($value)"
+        it("should take Failure branch when target is equal Failure instance") {
+            val result: SpecResult = Result.failure(exception)
+            when (subject) {
+                result -> Unit
+                else -> throw AssertionError("expected $result but was $subject")
             }
         }
 
-        describe("when") {
-            it("should take Success branch when target is Success type") {
-                when (subject) {
-                    is Result.Success -> subject.value shouldEqual value
-                    else -> throw AssertionError("expected Success but was $subject")
-                }
-            }
-
-            it("should take Success branch when target is equal Success instance") {
-                val result: SpecResult = Result.success(value)
-                when (subject) {
-                    result -> Unit
-                    else -> throw AssertionError("expected $result but was $subject")
-                }
-            }
-
-            it("should take else branch when target is unequal Success instance") {
-                val result: SpecResult = Result.success(otherValue)
-                when (subject) {
-                    result -> throw AssertionError("expected $subject but was $result")
-                    else -> Unit
-                }
+        it("should take else branch when target is unequal Failure instance") {
+            val result: SpecResult = Result.failure(otherException)
+            when (subject) {
+                result -> throw AssertionError("expected $subject but was $result")
+                else -> Unit
             }
         }
     }
 })
 
 object ResultFailureBehavesAsDataClassSpec : DataClassSpec({ Result.Failure(Exception()) })
+
+object ResultSuccessSpec : Spek({
+    val value = 42
+    val otherValue = 2112.0
+    val subject: SpecResult = Result.success(value)
+
+    describe("getOrElse") {
+        it("should return value") {
+            subject.getOrElse(otherValue) shouldEqual value
+        }
+    }
+
+    describe("getOrThrow") {
+        it("should return value") {
+            subject.getOrThrow() shouldEqual value
+        }
+    }
+
+    describe("toString") {
+        it("should return Success(value)") {
+            subject.toString() shouldEqual "Success($value)"
+        }
+    }
+
+    describe("when") {
+        it("should take Success branch when target is Success type") {
+            when (subject) {
+                is Result.Success -> subject.value shouldEqual value
+                else -> throw AssertionError("expected Success but was $subject")
+            }
+        }
+
+        it("should take Success branch when target is equal Success instance") {
+            val result: SpecResult = Result.success(value)
+            when (subject) {
+                result -> Unit
+                else -> throw AssertionError("expected $result but was $subject")
+            }
+        }
+
+        it("should take else branch when target is unequal Success instance") {
+            val result: SpecResult = Result.success(otherValue)
+            when (subject) {
+                result -> throw AssertionError("expected $subject but was $result")
+                else -> Unit
+            }
+        }
+    }
+})
 
 object ResultSuccessBehavesAsDataClassSpec : DataClassSpec({ Result.Success(42) })

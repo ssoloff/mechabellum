@@ -26,7 +26,7 @@ import org.jetbrains.spek.api.dsl.it
 
 typealias SpecOption = Option<Number>
 
-object OptionSpec : Spek({
+object OptionCompanionSpec : Spek({
     describe("of") {
         it("should return None when value is null") {
             Option.of(null) shouldEqual Option.none()
@@ -36,91 +36,91 @@ object OptionSpec : Spek({
             Option.of(42) shouldEqual Option.some(42)
         }
     }
+})
 
-    describe("None") {
-        val subject: SpecOption = Option.none()
+object OptionNoneSpec : Spek({
+    val subject: SpecOption = Option.none()
 
-        describe("getOrElse") {
-            it("should return default value") {
-                subject.getOrElse(2112) shouldEqual 2112
-            }
-        }
-
-        describe("getOrThrow") {
-            it("should throw exception") {
-                ({ subject.getOrThrow() }) shouldThrow NoSuchElementException::class
-            }
-        }
-
-        describe("toString") {
-            it("should return None") {
-                subject.toString() shouldEqual "None"
-            }
-        }
-
-        describe("when") {
-            it("should take None branch when target is None type") {
-                when (subject) {
-                    is Option.None -> Unit
-                    else -> throw AssertionError("expected None but was $subject")
-                }
-            }
-
-            it("should take None branch when target is None instance") {
-                val option: SpecOption = Option.none()
-                when (subject) {
-                    option -> Unit
-                    else -> throw AssertionError("expected $option but was $subject")
-                }
-            }
+    describe("getOrElse") {
+        it("should return default value") {
+            subject.getOrElse(2112) shouldEqual 2112
         }
     }
 
-    describe("Some") {
-        val value = 42
-        val otherValue = 2112.0
-        val subject: SpecOption = Option.some(value)
+    describe("getOrThrow") {
+        it("should throw exception") {
+            ({ subject.getOrThrow() }) shouldThrow NoSuchElementException::class
+        }
+    }
 
-        describe("getOrElse") {
-            it("should return value") {
-                subject.getOrElse(otherValue) shouldEqual value
+    describe("toString") {
+        it("should return None") {
+            subject.toString() shouldEqual "None"
+        }
+    }
+
+    describe("when") {
+        it("should take None branch when target is None type") {
+            when (subject) {
+                is Option.None -> Unit
+                else -> throw AssertionError("expected None but was $subject")
             }
         }
 
-        describe("getOrThrow") {
-            it("should return value") {
-                subject.getOrThrow() shouldEqual value
+        it("should take None branch when target is None instance") {
+            val option: SpecOption = Option.none()
+            when (subject) {
+                option -> Unit
+                else -> throw AssertionError("expected $option but was $subject")
+            }
+        }
+    }
+})
+
+object OptionSomeSpec : Spek({
+    val value = 42
+    val otherValue = 2112.0
+    val subject: SpecOption = Option.some(value)
+
+    describe("getOrElse") {
+        it("should return value") {
+            subject.getOrElse(otherValue) shouldEqual value
+        }
+    }
+
+    describe("getOrThrow") {
+        it("should return value") {
+            subject.getOrThrow() shouldEqual value
+        }
+    }
+
+    describe("toString") {
+        it("should return Some(value)") {
+            subject.toString() shouldEqual "Some($value)"
+        }
+    }
+
+    describe("when") {
+        it("should take Some branch when target is Some type") {
+            when (subject) {
+                is Option.Some -> subject.value shouldEqual value
+                else -> throw AssertionError("expected Some but was $subject")
             }
         }
 
-        describe("toString") {
-            it("should return Some(value)") {
-                subject.toString() shouldEqual "Some($value)"
+        it("should take Some branch when target is equal Some instance") {
+            val option: SpecOption = Option.some(value)
+            when (subject) {
+                option -> Unit
+                else -> throw AssertionError("expected $option but was $subject")
             }
         }
 
-        describe("when") {
-            it("should take Some branch when target is Some type") {
-                when (subject) {
-                    is Option.Some -> subject.value shouldEqual value
-                    else -> throw AssertionError("expected Some but was $subject")
-                }
-            }
-
-            it("should take Some branch when target is equal Some instance") {
-                val option: SpecOption = Option.some(value)
-                when (subject) {
-                    option -> Unit
-                    else -> throw AssertionError("expected $option but was $subject")
-                }
-            }
-
-            it("should take else branch when target is unequal Some instance") {
-                val option: SpecOption = Option.some(otherValue)
-                when (subject) {
-                    option -> throw AssertionError("expected $subject but was $option")
-                    else -> Unit
-                }
+        it("should take else branch when target is unequal Some instance") {
+            val option: SpecOption = Option.some(otherValue)
+            when (subject) {
+                option -> throw AssertionError("expected $subject but was $option")
+                else -> Unit
             }
         }
     }
