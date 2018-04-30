@@ -72,6 +72,9 @@ subprojects {
         "testImplementation"("org.jetbrains.spek", "spek-api", spekVersion) {
             exclude("org.jetbrains.kotlin")
         }
+        "testImplementation"("org.jetbrains.spek", "spek-data-driven-extension", spekVersion) {
+            exclude("org.jetbrains.kotlin")
+        }
         "testImplementation"("org.jetbrains.spek", "spek-subject-extension", spekVersion) {
             exclude("org.jetbrains.kotlin")
         }

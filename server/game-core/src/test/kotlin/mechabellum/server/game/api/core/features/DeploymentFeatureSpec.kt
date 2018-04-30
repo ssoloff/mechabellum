@@ -31,6 +31,8 @@ import org.amshove.kluent.shouldNotEqual
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.data_driven.data
+import org.jetbrains.spek.data_driven.on
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class DeploymentFeatureSpec(
@@ -60,15 +62,16 @@ abstract class DeploymentFeatureSpec(
             getMechPosition(subject, mech.id) shouldEqual position
         }
 
-        listOf(
-            CellId(-1, 0),
-            CellId(0, -1),
-            CellId(gridType.cols, 0),
-            CellId(0, gridType.rows)
-        ).forEach {
-            it("should throw exception when position is invalid ($it)") {
+        on(
+            "invalid position %s",
+            data(CellId(-1, 0), expected = Unit),
+            data(CellId(0, -1), expected = Unit),
+            data(CellId(gridType.cols, 0), expected = Unit),
+            data(CellId(0, gridType.rows), expected = Unit)
+        ) { position, _ ->
+            it("should throw exception") {
                 // when
-                val func = { subject.deployMech(newTestMechSpecification(), it) }
+                val func = { subject.deployMech(newTestMechSpecification(), position) }
 
                 // then
                 val exceptionResult = func shouldThrow IllegalArgumentException::class
