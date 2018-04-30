@@ -17,7 +17,7 @@
 
 package mechabellum.server.game.api.core.grid
 
-fun newTestGridSpecification(): GridSpecification = GridSpecification(newTestGridType())
+fun newTestGridSpecification(type: GridType = newTestGridType()): GridSpecification = GridSpecification(type)
 
 fun newTestGridType(cols: Int = 1, rows: Int = 1): GridType = GridType(
     cols = cols,
