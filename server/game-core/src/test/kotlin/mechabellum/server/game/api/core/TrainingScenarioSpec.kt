@@ -17,8 +17,7 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.commands.deployMech
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.commands.initialization.newMech
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridTypeRegistry
 import mechabellum.server.game.api.core.unit.MechSpecification
@@ -54,14 +53,13 @@ object TrainingScenarioSpec : Spek({
             val game = newQuickStartGame()
 
             @Suppress("UNUSED_VARIABLE")
-            val defender1 = game.deployMech(newMechSpecification("CDA-2A Cicada"), CellId(0, 16))
+            val defender1 = game.newMech(newMechSpecification("CDA-2A Cicada"))
             @Suppress("UNUSED_VARIABLE")
-            val defender2 = game.deployMech(newMechSpecification("HBK-4G Hunchback"), CellId(14, 16))
-
+            val defender2 = game.newMech(newMechSpecification("HBK-4G Hunchback"))
             @Suppress("UNUSED_VARIABLE")
-            val attacker1 = game.deployMech(newMechSpecification("ENF-4R Enforcer"), CellId(0, 0))
+            val attacker1 = game.newMech(newMechSpecification("ENF-4R Enforcer"))
             @Suppress("UNUSED_VARIABLE")
-            val attacker2 = game.deployMech(newMechSpecification("HER-2S Hermes II"), CellId(14, 0))
+            val attacker2 = game.newMech(newMechSpecification("HER-2S Hermes II"))
 
             // TODO: implement remainder of scenario
         }

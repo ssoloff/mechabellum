@@ -15,27 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.commands
+package mechabellum.server.game.api.core.commands.general
 
-import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandContext
-import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.features.GridFeature
 import mechabellum.server.game.api.core.grid.Grid
 
 /** Returns the game grid. */
 class GetGridCommand : Command<Grid> {
-    override fun execute(context: CommandContext): Grid = getGridFeature(context).grid
-
-    private fun getGridFeature(context: CommandContext): GridFeature {
-        val featureOption = context.getFeature(GridFeature::class.java)
-        return when (featureOption) {
-            is Option.Some -> featureOption.value
-            else -> throw CommandException("required feature 'GridFeature' not available")
-        }
-    }
+    override fun execute(context: CommandContext): Grid = context.getActivePhase().grid
 }
 
 /** The game grid. */

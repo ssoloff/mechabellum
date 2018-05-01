@@ -17,7 +17,7 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.commands.grid
+import mechabellum.server.game.api.core.commands.general.grid
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridType
 import org.amshove.kluent.shouldEqual

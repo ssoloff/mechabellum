@@ -22,28 +22,19 @@ import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
-import mechabellum.server.game.api.core.features.DeploymentFeature
-import mechabellum.server.game.api.core.features.GridFeature
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.grid.Grid
+import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.grid.InternalGrid
 import mechabellum.server.game.internal.core.unit.InternalMech
 
-internal class InternalGame(override val grid: InternalGrid) : CommandContext, DeploymentFeature, Game, GridFeature {
-    private val _mechDatasById: MutableMap<MechId, MechData> = hashMapOf()
+internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
+    private val _mechsById: MutableMap<MechId, InternalMech> = hashMapOf()
     private var _nextMechId: Int = 0
-
-    override fun deployMech(specification: MechSpecification, position: CellId): Mech {
-        require((position.col in 0 until grid.type.cols) && (position.row in 0 until grid.type.rows)) {
-            "position $position does not exist in grid of type ${grid.type}"
-        }
-
-        val mech = InternalMech(MechId(_nextMechId++))
-        _mechDatasById[mech.id] = MechData(mech, position)
-        return mech
-    }
+    private var _phase: Phase = InternalInitializationPhase()
 
     override fun <T : Any> executeCommand(command: Command<T>): T {
         try {
@@ -56,20 +47,26 @@ internal class InternalGame(override val grid: InternalGrid) : CommandContext, D
         }
     }
 
-    override fun <T : Any> getFeature(type: Class<T>): Option<T> {
-        @Suppress("UNCHECKED_CAST")
-        return when (type) {
-            DeploymentFeature::class.java -> Option.some(this as T)
-            GridFeature::class.java -> Option.some(this as T)
-            else -> Option.none()
-        }
+    override fun getActivePhase(): Phase = _phase
+
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : Phase> getActivePhaseAs(type: Class<T>): Option<T> =
+        if (type.isInstance(_phase)) Option.some(_phase as T) else Option.none()
+
+    fun getMech(id: MechId): InternalMech = _mechsById[id] ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+
+    open inner class InternalPhase : Phase {
+        override val grid: Grid
+            get() = this@InternalGame.grid
     }
 
-    fun getMech(id: MechId): InternalMech =
-        _mechDatasById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+    inner class InternalInitializationPhase : InternalPhase(), InitializationPhase {
+        val game: InternalGame = this@InternalGame
 
-    fun getMechPosition(id: MechId): CellId =
-        _mechDatasById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
-
-    private class MechData(val mech: InternalMech, val position: CellId)
+        override fun newMech(specification: MechSpecification): Mech {
+            val mech = InternalMech(MechId(_nextMechId++))
+            _mechsById[mech.id] = mech
+            return mech
+        }
+    }
 }

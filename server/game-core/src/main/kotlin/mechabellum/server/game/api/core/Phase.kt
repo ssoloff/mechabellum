@@ -15,12 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.features
+package mechabellum.server.game.api.core
 
 import mechabellum.server.game.api.core.grid.Grid
 
-/** A game feature that provides access to the game grid. */
-interface GridFeature {
+/**
+ * A game phase.
+ *
+ * All game behavior is accessed via specializations of this type. A command manipulates the game state via an instance
+ * of this type representing the active game phase.
+ *
+ * This interface provides behavior that is common to all phases.
+ */
+interface Phase {
     /** The game grid. */
     val grid: Grid
 }

@@ -15,55 +15,64 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.commands
+package mechabellum.server.game.api.core.commands.initialization
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.CommandException
-import mechabellum.server.game.api.core.features.GridFeature
-import mechabellum.server.game.api.core.grid.Grid
+import mechabellum.server.game.api.core.phases.InitializationPhase
+import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.unit.newTestMechSpecification
+import org.amshove.kluent.Verify
+import org.amshove.kluent.any
+import org.amshove.kluent.called
+import org.amshove.kluent.on
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.that
+import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
-object GetGridCommandSpec : Spek({
+object NewMechCommandSpec : Spek({
     describe("execute") {
-        it("it should return the game grid") {
+        it("should return new Mech") {
             // given
-            val expected = mock<Grid>()
-            val gridFeature = mock<GridFeature> {
-                on { grid } doReturn expected
+            val expectedMech = mock<Mech>()
+            val initializationPhase = mock<InitializationPhase> {
+                on { newMech(any()) } doReturn expectedMech
             }
             val context = mock<CommandContext> {
-                on { getFeature(GridFeature::class.java) } doReturn Option.some(gridFeature)
+                on { getActivePhaseAs(InitializationPhase::class.java) } doReturn Option.some(initializationPhase)
             }
-            val subject = GetGridCommand()
+            val specification = newTestMechSpecification()
+            val subject = NewMechCommand(specification)
 
             // when
-            val actual = subject.execute(context)
+            val actualMech = subject.execute(context)
 
             // then
-            actual shouldBe expected
+            Verify on initializationPhase that initializationPhase.newMech(specification) was called
+            actualMech shouldBe expectedMech
         }
 
-        it("should throw exception when context does not provide required features") {
+        it("should throw exception when initialization phase is not active") {
             // given
             val context = mock<CommandContext> {
-                on { getFeature(GridFeature::class.java) } doReturn Option.none()
+                on { getActivePhaseAs(InitializationPhase::class.java) } doReturn Option.none()
             }
-            val subject = GetGridCommand()
+            val subject = NewMechCommand(newTestMechSpecification())
 
             // when
             val func = { subject.execute(context) }
 
             // then
             val exceptionResult = func shouldThrow CommandException::class
-            exceptionResult.exceptionMessage shouldContain GridFeature::class.java.simpleName
+            exceptionResult.exceptionMessage shouldContain InitializationPhase::class.java.simpleName
         }
     }
 })

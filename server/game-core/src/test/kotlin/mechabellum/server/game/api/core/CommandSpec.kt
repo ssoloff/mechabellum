@@ -24,19 +24,25 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class CommandContextSpec(
-    presentFeatureType: Class<*>,
+    activePhaseType: Class<out Phase>,
     subjectFactory: () -> CommandContext
 ) : SubjectSpek<CommandContext>({
     subject { subjectFactory() }
 
-    describe("getFeature") {
-        it("should return Some when feature exists") {
-            subject.getFeature(presentFeatureType) shouldBeInstanceOf Option.Some::class
+    describe("getActivePhase") {
+        it("should return active phase") {
+            subject.getActivePhase() shouldBeInstanceOf activePhaseType
+        }
+    }
+
+    describe("getActivePhaseAs") {
+        it("should return Some when active phase is of specified type") {
+            subject.getActivePhaseAs(activePhaseType) shouldBeInstanceOf Option.Some::class
         }
 
-        it("should return None when feature does not exist") {
-            class DummyFeature
-            subject.getFeature(DummyFeature::class.java) shouldBeInstanceOf Option.None::class
+        it("should return None when active phase is not of specified type") {
+            abstract class DummyPhase : Phase
+            subject.getActivePhaseAs(DummyPhase::class.java) shouldBeInstanceOf Option.None::class
         }
     }
 })

@@ -19,25 +19,19 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.CommandContextSpec
 import mechabellum.server.game.api.core.GameSpec
-import mechabellum.server.game.api.core.features.DeploymentFeature
-import mechabellum.server.game.api.core.features.DeploymentFeatureSpec
-import mechabellum.server.game.api.core.features.GridFeatureSpec
 import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.api.core.phases.InitializationPhase
+import mechabellum.server.game.api.core.phases.InitializationPhaseSpec
 import mechabellum.server.game.internal.core.grid.InternalGrid
 
 object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    presentFeatureType = DeploymentFeature::class.java,
+    activePhaseType = InitializationPhase::class.java,
     subjectFactory = { InternalGame(InternalGrid(newTestGridType())) }
-)
-
-object InternalGameBehavesAsDeploymentFeatureSpec : DeploymentFeatureSpec(
-    getMech = { subject, mechId -> (subject as InternalGame).getMech(mechId) },
-    getMechPosition = { subject, mechId -> (subject as InternalGame).getMechPosition(mechId) },
-    subjectFactory = { gridSpecification -> InternalGame(InternalGrid(gridSpecification.type)) }
 )
 
 object InternalGameBehavesAsGameSpec : GameSpec({ InternalGame(InternalGrid(newTestGridType())) })
 
-object InternalGameBehavesAsGridFeatureSpec : GridFeatureSpec(
-    { gridSpecification -> InternalGame(InternalGrid(gridSpecification.type)) }
+object InternalGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
+    getMech = { subject, mechId -> (subject as InternalGame.InternalInitializationPhase).game.getMech(mechId) },
+    subjectFactory = { InternalGame(InternalGrid(newTestGridType())).InternalInitializationPhase() }
 )

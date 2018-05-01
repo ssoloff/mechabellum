@@ -35,8 +35,11 @@ interface Command<T : Any> {
  * A command uses an instance of this context to access the game state and behavior.
  */
 interface CommandContext {
-    /** Returns the game feature of the specified [type]. */
-    fun <T : Any> getFeature(type: Class<T>): Option<T>
+    /** Returns the active game phase */
+    fun getActivePhase(): Phase
+
+    /** Returns the active game phase if it is of the specified [type]. */
+    fun <T : Phase> getActivePhaseAs(type: Class<T>): Option<T>
 }
 
 /** A checked exception that indicates an error occurred while executing a command. */

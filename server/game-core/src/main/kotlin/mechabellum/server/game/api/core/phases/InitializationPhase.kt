@@ -15,19 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.features
+package mechabellum.server.game.api.core.phases
 
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 
-/** A game feature that provides behavior to deploy units in the game. */
-interface DeploymentFeature {
-    /**
-     * Creates a new Mech based on [specification], deploys it to [position] on the game grid, and returns the deployed
-     * Mech.
-     *
-     * @throws IllegalArgumentException If [position] does not exist on the game grid.
-     */
-    fun deployMech(specification: MechSpecification, position: CellId): Mech
+/**
+ * The phase during which the game is initialized. All units must be defined during this phase in order to participate
+ * in the game.
+ */
+interface InitializationPhase : Phase {
+    /** Returns a new Mech based on [specification]. */
+    fun newMech(specification: MechSpecification): Mech
 }
