@@ -32,16 +32,13 @@ sealed class Result<out T : Any, out E : Exception> {
         private val EMPTY = Empty()
 
         /** Returns the empty result. */
-        fun <T : Any, E : Exception> empty(): Result<T, E> =
-            EMPTY
+        fun <T : Any, E : Exception> empty(): Result<T, E> = EMPTY
 
         /** Returns a new failure result containing [exception]. */
-        fun <T : Any, E : Exception> failure(exception: E): Result<T, E> =
-            Failure(exception)
+        fun <T : Any, E : Exception> failure(exception: E): Result<T, E> = Failure(exception)
 
         /** Returns a new success result containing [value]. */
-        fun <T : Any, E : Exception> success(value: T): Result<T, E> =
-            Success(value)
+        fun <T : Any, E : Exception> success(value: T): Result<T, E> = Success(value)
     }
 
     /** Result that represents success with no value. */

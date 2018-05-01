@@ -26,8 +26,7 @@ sealed class Option<out T : Any> {
         private val NONE = None()
 
         /** Returns the empty container. */
-        fun <T : Any> none(): Option<T> =
-            NONE
+        fun <T : Any> none(): Option<T> = NONE
 
         /** Returns a new container containing [value] if it is not null; otherwise returns the empty container. */
         fun <T : Any> of(value: T?): Option<T> = if (value != null) some(value) else none()
