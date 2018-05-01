@@ -53,6 +53,12 @@ object OptionNoneSpec : Spek({
         }
     }
 
+    describe("getOrThrowWithSupplier") {
+        it("should throw exception") {
+            ({ subject.getOrThrow(::IllegalStateException) }) shouldThrow IllegalStateException::class
+        }
+    }
+
     describe("toString") {
         it("should return None") {
             subject.toString() shouldEqual "None"
@@ -91,6 +97,12 @@ object OptionSomeSpec : Spek({
     describe("getOrThrow") {
         it("should return value") {
             subject.getOrThrow() shouldEqual value
+        }
+    }
+
+    describe("getOrThrowWithSupplier") {
+        it("should return value") {
+            subject.getOrThrow(::IllegalStateException) shouldEqual value
         }
     }
 

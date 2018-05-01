@@ -56,3 +56,9 @@ fun <T : Any> Option<T>.getOrElse(defaultValue: T): T = when (this) {
     is Option.Some -> value
     else -> defaultValue
 }
+
+/** Returns the value if present; otherwise throws the exception returned by [exceptionSupplier]. */
+fun <T : Any> Option<T>.getOrThrow(exceptionSupplier: () -> Throwable): T = when (this) {
+    is Option.Some -> value
+    else -> throw exceptionSupplier()
+}
