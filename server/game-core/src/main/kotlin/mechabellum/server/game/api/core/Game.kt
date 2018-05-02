@@ -30,4 +30,8 @@ interface Game {
 }
 
 /** A checked exception that indicates an error occurred within a game. */
-class GameException(message: String, cause: Throwable) : Exception(message, cause)
+class GameException : Exception {
+    constructor(message: String) : super(message)
+
+    constructor(message: String, cause: Throwable) : super(message, cause)
+}

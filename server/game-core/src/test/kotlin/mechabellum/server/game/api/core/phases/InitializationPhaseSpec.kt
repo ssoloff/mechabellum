@@ -17,20 +17,48 @@
 
 package mechabellum.server.game.api.core.phases
 
+import mechabellum.server.game.api.core.GameException
+import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
 import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotEqual
+import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class InitializationPhaseSpec(
+    getActivePhase: (InitializationPhase) -> Phase,
     getMech: (InitializationPhase, MechId) -> Mech,
     subjectFactory: () -> InitializationPhase
 ) : SubjectSpek<InitializationPhase>({
     subject { subjectFactory() }
+
+    describe("end") {
+        it("should change active phase to deployment phase") {
+            // given
+            subject.newMech(newTestMechSpecification())
+
+            // when
+            subject.end()
+
+            // then
+            getActivePhase(subject) shouldBeInstanceOf DeploymentPhase::class
+        }
+
+        it("should throw exception when no Mechs exist") {
+            // when
+            val func = { subject.end() }
+
+            // then
+            val exceptionResult = func shouldThrow GameException::class
+            exceptionResult.exceptionMessage shouldContain "no Mechs"
+        }
+    }
 
     describe("newMech") {
         it("should add Mech to game") {

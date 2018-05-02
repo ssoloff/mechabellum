@@ -17,7 +17,10 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.game.api.core.commands.deployment.deployMech
+import mechabellum.server.game.api.core.commands.initialization.endInitialization
 import mechabellum.server.game.api.core.commands.initialization.newMech
+import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridTypeRegistry
 import mechabellum.server.game.api.core.unit.MechSpecification
@@ -52,14 +55,16 @@ object TrainingScenarioSpec : Spek({
         it("should be able to play the training scenario from the Quick-Start rules") {
             val game = newQuickStartGame()
 
-            @Suppress("UNUSED_VARIABLE")
             val defender1 = game.newMech(newMechSpecification("CDA-2A Cicada"))
-            @Suppress("UNUSED_VARIABLE")
             val defender2 = game.newMech(newMechSpecification("HBK-4G Hunchback"))
-            @Suppress("UNUSED_VARIABLE")
             val attacker1 = game.newMech(newMechSpecification("ENF-4R Enforcer"))
-            @Suppress("UNUSED_VARIABLE")
             val attacker2 = game.newMech(newMechSpecification("HER-2S Hermes II"))
+            game.endInitialization()
+
+            game.deployMech(defender1, CellId(0, 16))
+            game.deployMech(defender2, CellId(14, 16))
+            game.deployMech(attacker1, CellId(0, 0))
+            game.deployMech(attacker2, CellId(14, 0))
 
             // TODO: implement remainder of scenario
         }

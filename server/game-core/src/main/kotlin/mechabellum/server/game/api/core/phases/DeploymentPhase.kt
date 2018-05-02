@@ -18,21 +18,16 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechSpecification
 
-/**
- * The phase during which the game is initialized. All units must be defined during this phase in order to participate
- * in the game.
- */
-interface InitializationPhase : Phase {
+/** The phase during which units are deployed to the game grid. */
+interface DeploymentPhase : Phase {
     /**
-     * Ends the initialization phase.
+     * Deploys [mech] to the specified [position].
      *
-     * @throws mechabellum.server.game.api.core.GameException If no Mechs have been added to the game.
+     * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] does not exist on the game
+     * grid.
      */
-    fun end()
-
-    /** Returns a new Mech based on [specification]. */
-    fun newMech(specification: MechSpecification): Mech
+    fun deployMech(mech: Mech, position: CellId)
 }
