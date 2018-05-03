@@ -36,7 +36,9 @@ import mechabellum.server.game.internal.core.unit.InternalMech
 internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
     private val _mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
     private var _nextMechId: Int = 0
-    private var _phase: Phase = InternalInitializationPhase()
+
+    override var phase: Phase = InternalInitializationPhase()
+        private set
 
     override fun <T : Any> executeCommand(command: Command<T>): T {
         try {
@@ -48,12 +50,6 @@ internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
             throw GameException("failed to execute game command", e)
         }
     }
-
-    override fun getActivePhase(): Phase = _phase
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : Phase> getActivePhaseAs(type: Class<T>): Option<T> =
-        if (type.isInstance(_phase)) Option.some(_phase as T) else Option.none()
 
     fun getMech(id: MechId): InternalMech =
         _mechRecordsById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
@@ -90,7 +86,7 @@ internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
                 // TODO: i18n
                 throw GameException("no Mechs added during initialization")
             }
-            _phase = InternalDeploymentPhase()
+            phase = InternalDeploymentPhase()
         }
 
         override fun newMech(specification: MechSpecification): Mech {

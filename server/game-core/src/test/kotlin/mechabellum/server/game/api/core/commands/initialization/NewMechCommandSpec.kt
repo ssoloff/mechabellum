@@ -19,9 +19,7 @@ package mechabellum.server.game.api.core.commands.initialization
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.CommandContext
-import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
@@ -30,8 +28,6 @@ import org.amshove.kluent.any
 import org.amshove.kluent.called
 import org.amshove.kluent.on
 import org.amshove.kluent.shouldBe
-import org.amshove.kluent.shouldContain
-import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.that
 import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
@@ -47,7 +43,7 @@ object NewMechCommandSpec : Spek({
                 on { newMech(any()) } doReturn expectedMech
             }
             val context = mock<CommandContext> {
-                on { getActivePhaseAs(InitializationPhase::class.java) } doReturn Option.some(initializationPhase)
+                on { phase } doReturn initializationPhase
             }
             val specification = newTestMechSpecification()
             val subject = NewMechCommand(specification)
@@ -58,21 +54,6 @@ object NewMechCommandSpec : Spek({
             // then
             Verify on initializationPhase that initializationPhase.newMech(specification) was called
             actualMech shouldBe expectedMech
-        }
-
-        it("should throw exception when initialization phase is not active") {
-            // given
-            val context = mock<CommandContext> {
-                on { getActivePhaseAs(InitializationPhase::class.java) } doReturn Option.none()
-            }
-            val subject = NewMechCommand(newTestMechSpecification())
-
-            // when
-            val func = { subject.execute(context) }
-
-            // then
-            val exceptionResult = func shouldThrow CommandException::class
-            exceptionResult.exceptionMessage shouldContain InitializationPhase::class.java.simpleName
         }
     }
 })

@@ -17,8 +17,9 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.common.api.core.util.Option
 import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldContain
+import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
@@ -29,20 +30,27 @@ abstract class CommandContextSpec(
 ) : SubjectSpek<CommandContext>({
     subject { subjectFactory() }
 
-    describe("getActivePhase") {
+    describe("phase") {
         it("should return active phase") {
-            subject.getActivePhase() shouldBeInstanceOf activePhaseType
+            subject.phase shouldBeInstanceOf activePhaseType
         }
     }
 
-    describe("getActivePhaseAs") {
-        it("should return Some when active phase is of specified type") {
-            subject.getActivePhaseAs(activePhaseType) shouldBeInstanceOf Option.Some::class
+    describe("getPhaseAs") {
+        it("should return phase when active phase is of specified type") {
+            subject.getPhaseAs(activePhaseType) shouldBeInstanceOf activePhaseType
         }
 
-        it("should return None when active phase is not of specified type") {
+        it("should throw exception when active phase is not of specified type") {
+            // given
             abstract class DummyPhase : Phase
-            subject.getActivePhaseAs(DummyPhase::class.java) shouldBeInstanceOf Option.None::class
+
+            // when
+            val func = { subject.getPhaseAs(DummyPhase::class.java) }
+
+            // then
+            val exceptionResult = func shouldThrow CommandException::class
+            exceptionResult.exceptionMessage shouldContain DummyPhase::class.java.simpleName
         }
     }
 })

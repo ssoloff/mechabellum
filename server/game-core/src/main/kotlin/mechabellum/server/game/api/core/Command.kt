@@ -17,8 +17,6 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.common.api.core.util.Option
-
 /** An abstract representation of some semantic game behavior. */
 interface Command<T : Any> {
     /**
@@ -35,11 +33,18 @@ interface Command<T : Any> {
  * A command uses an instance of this context to access the game state and behavior.
  */
 interface CommandContext {
-    /** Returns the active game phase */
-    fun getActivePhase(): Phase
+    /** The active game phase */
+    val phase: Phase
+}
 
-    /** Returns the active game phase if it is of the specified [type]. */
-    fun <T : Phase> getActivePhaseAs(type: Class<T>): Option<T>
+/**
+ * Returns the active game phase as the specified [type].
+ *
+ * @throws CommandException If the active game phase is not of the specified [type].
+ */
+fun <T : Phase> CommandContext.getPhaseAs(type: Class<T>): T = phase.let {
+    @Suppress("UNCHECKED_CAST")
+    if (type.isInstance(it)) it as T else throw CommandException("phase is not active (${type.simpleName})")
 }
 
 /** A checked exception that indicates an error occurred while executing a command. */

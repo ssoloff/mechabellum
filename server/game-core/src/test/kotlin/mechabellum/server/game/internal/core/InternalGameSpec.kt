@@ -45,7 +45,7 @@ object InternalGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
 )
 
 object InternalGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
-    getActivePhase = { subject -> (subject as InternalGame.InternalPhase).game.getActivePhase() },
+    getActivePhase = { subject -> (subject as InternalGame.InternalPhase).game.phase },
     getMech = { subject, mechId -> (subject as InternalGame.InternalPhase).game.getMech(mechId) },
     subjectFactory = { InternalGame(InternalGrid(newTestGridType())).InternalInitializationPhase() }
 )

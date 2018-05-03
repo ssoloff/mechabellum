@@ -19,15 +19,11 @@ package mechabellum.server.game.api.core.commands.initialization
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.CommandContext
-import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import org.amshove.kluent.Verify
 import org.amshove.kluent.called
 import org.amshove.kluent.on
-import org.amshove.kluent.shouldContain
-import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.that
 import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
@@ -40,7 +36,7 @@ object EndInitializationCommandSpec : Spek({
             // given
             val initializationPhase = mock<InitializationPhase>()
             val context = mock<CommandContext> {
-                on { getActivePhaseAs(InitializationPhase::class.java) } doReturn Option.some(initializationPhase)
+                on { phase } doReturn initializationPhase
             }
             val subject = EndInitializationCommand()
 
@@ -49,21 +45,6 @@ object EndInitializationCommandSpec : Spek({
 
             // then
             Verify on initializationPhase that initializationPhase.end() was called
-        }
-
-        it("should throw exception when initialization phase is not active") {
-            // given
-            val context = mock<CommandContext> {
-                on { getActivePhaseAs(InitializationPhase::class.java) } doReturn Option.none()
-            }
-            val subject = EndInitializationCommand()
-
-            // when
-            val func = { subject.execute(context) }
-
-            // then
-            val exceptionResult = func shouldThrow CommandException::class
-            exceptionResult.exceptionMessage shouldContain InitializationPhase::class.java.simpleName
         }
     }
 })

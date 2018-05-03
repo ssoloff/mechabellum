@@ -17,11 +17,10 @@
 
 package mechabellum.server.game.api.core.commands.deployment
 
-import mechabellum.server.common.api.core.util.getOrThrow
 import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandContext
-import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.getPhaseAs
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
@@ -32,11 +31,9 @@ class DeployMechCommand(private val mech: Mech, private val position: CellId) : 
      * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] does not exist on the game
      * grid.
      */
-    override fun execute(context: CommandContext) = getDeploymentPhase(context).deployMech(mech, position)
-
-    private fun getDeploymentPhase(context: CommandContext): DeploymentPhase = context
-        .getActivePhaseAs(DeploymentPhase::class.java)
-        .getOrThrow { CommandException("phase '${DeploymentPhase::class.java.simpleName}' is not active") }
+    override fun execute(context: CommandContext) = context
+        .getPhaseAs(DeploymentPhase::class.java)
+        .deployMech(mech, position)
 }
 
 /**

@@ -36,7 +36,7 @@ object GetGridCommandSpec : Spek({
                 on { grid } doReturn expected
             }
             val context = mock<CommandContext> {
-                on { getActivePhase() } doReturn phase
+                on { this.phase } doReturn phase
             }
             val subject = GetGridCommand()
 

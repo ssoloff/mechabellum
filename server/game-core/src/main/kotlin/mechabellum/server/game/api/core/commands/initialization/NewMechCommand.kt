@@ -17,22 +17,19 @@
 
 package mechabellum.server.game.api.core.commands.initialization
 
-import mechabellum.server.common.api.core.util.getOrThrow
 import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandContext
-import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.getPhaseAs
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 
 /** Returns a new Mech based on [specification]. */
 class NewMechCommand(private val specification: MechSpecification) : Command<Mech> {
-    override fun execute(context: CommandContext): Mech = getInitializationPhase(context).newMech(specification)
-
-    private fun getInitializationPhase(context: CommandContext): InitializationPhase = context
-        .getActivePhaseAs(InitializationPhase::class.java)
-        .getOrThrow { CommandException("phase '${InitializationPhase::class.java.simpleName}' is not active") }
+    override fun execute(context: CommandContext): Mech = context
+        .getPhaseAs(InitializationPhase::class.java)
+        .newMech(specification)
 }
 
 /** Returns a new Mech based on [specification]. */

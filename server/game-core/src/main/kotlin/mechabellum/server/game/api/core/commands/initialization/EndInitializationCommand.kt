@@ -17,21 +17,18 @@
 
 package mechabellum.server.game.api.core.commands.initialization
 
-import mechabellum.server.common.api.core.util.getOrThrow
 import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandContext
-import mechabellum.server.game.api.core.CommandException
 import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.getPhaseAs
 import mechabellum.server.game.api.core.phases.InitializationPhase
 
 /** Ends the initialization phase. */
 class EndInitializationCommand : Command<Unit> {
     /** @throws mechabellum.server.game.api.core.GameException If no Mechs have been added to the game. */
-    override fun execute(context: CommandContext) = getInitializationPhase(context).end()
-
-    private fun getInitializationPhase(context: CommandContext): InitializationPhase = context
-        .getActivePhaseAs(InitializationPhase::class.java)
-        .getOrThrow { CommandException("phase '${InitializationPhase::class.java.simpleName}' is not active") }
+    override fun execute(context: CommandContext) = context
+        .getPhaseAs(InitializationPhase::class.java)
+        .end()
 }
 
 /**

@@ -24,7 +24,7 @@ import mechabellum.server.game.api.core.grid.Grid
 
 /** Returns the game grid. */
 class GetGridCommand : Command<Grid> {
-    override fun execute(context: CommandContext): Grid = context.getActivePhase().grid
+    override fun execute(context: CommandContext): Grid = context.phase.grid
 }
 
 /** The game grid. */
