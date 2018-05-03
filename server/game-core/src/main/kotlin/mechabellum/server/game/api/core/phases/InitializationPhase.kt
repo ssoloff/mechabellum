@@ -29,7 +29,7 @@ interface InitializationPhase : Phase {
     /**
      * Ends the initialization phase.
      *
-     * @throws mechabellum.server.game.api.core.GameException If no Mechs have been added to the game.
+     * @throws mechabellum.server.game.api.core.GameException If all teams do not have at least one Mech.
      */
     fun end()
 

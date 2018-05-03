@@ -17,10 +17,8 @@
 
 package mechabellum.server.game.api.core.unit
 
-/**
- * A specification for creating a new [Mech].
- *
- * @property team The team to which the Mech belongs.
- * @property type The type of Mech to create.
- */
-data class MechSpecification(val team: Team, val type: MechType)
+/** The team to which a unit belongs. */
+enum class Team {
+    ATTACKER,
+    DEFENDER
+}

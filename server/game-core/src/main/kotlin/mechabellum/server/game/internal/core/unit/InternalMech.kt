@@ -19,5 +19,6 @@ package mechabellum.server.game.internal.core.unit
 
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
+import mechabellum.server.game.api.core.unit.Team
 
-internal class InternalMech(override val id: MechId) : Mech
+internal class InternalMech(override val id: MechId, override val team: Team) : Mech

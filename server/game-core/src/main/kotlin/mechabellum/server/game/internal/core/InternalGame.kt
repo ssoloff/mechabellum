@@ -30,6 +30,7 @@ import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
+import mechabellum.server.game.api.core.unit.Team
 import mechabellum.server.game.internal.core.grid.InternalGrid
 import mechabellum.server.game.internal.core.unit.InternalMech
 
@@ -82,15 +83,25 @@ internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
 
     inner class InternalInitializationPhase : InternalPhase(), InitializationPhase {
         override fun end() {
-            if (_mechRecordsById.isEmpty()) {
-                // TODO: i18n
-                throw GameException("no Mechs added during initialization")
-            }
+            checkAllTeamsHaveAtLeastOneMech()
+
             phase = InternalDeploymentPhase()
         }
 
+        private fun checkAllTeamsHaveAtLeastOneMech() {
+            for (team in Team.values()) {
+                if (_mechRecordsById.values.none { it.mech.team == team }) {
+                    // TODO: i18n
+                    throw GameException("${team.name.toLowerCase()} has no Mechs")
+                }
+            }
+        }
+
         override fun newMech(specification: MechSpecification): Mech {
-            val mech = InternalMech(MechId(_nextMechId++))
+            val mech = InternalMech(
+                id = MechId(_nextMechId++),
+                team = specification.team
+            )
             assert(mech.id !in _mechRecordsById)
             _mechRecordsById[mech.id] = MechRecord(mech)
             return mech

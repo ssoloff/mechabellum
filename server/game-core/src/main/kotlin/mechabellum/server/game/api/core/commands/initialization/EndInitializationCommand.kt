@@ -25,7 +25,7 @@ import mechabellum.server.game.api.core.phases.InitializationPhase
 
 /** Ends the initialization phase. */
 class EndInitializationCommand : Command<Unit> {
-    /** @throws mechabellum.server.game.api.core.GameException If no Mechs have been added to the game. */
+    /** @throws mechabellum.server.game.api.core.GameException If all teams do not have at least one Mech. */
     override fun execute(context: CommandContext) = context
         .getPhaseAs(InitializationPhase::class.java)
         .end()
@@ -34,6 +34,6 @@ class EndInitializationCommand : Command<Unit> {
 /**
  * Ends the initialization phase.
  *
- * @throws mechabellum.server.game.api.core.GameException If no Mechs have been added to the game.
+ * @throws mechabellum.server.game.api.core.GameException If all teams do not have at least one Mech.
  */
 fun Game.endInitialization() = executeCommand(EndInitializationCommand())

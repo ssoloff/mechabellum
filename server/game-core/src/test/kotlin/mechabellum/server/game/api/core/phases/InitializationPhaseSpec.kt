@@ -21,12 +21,13 @@ import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
+import mechabellum.server.game.api.core.unit.Team
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
-import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldNotEqual
 import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
@@ -41,7 +42,8 @@ abstract class InitializationPhaseSpec(
     describe("end") {
         it("should change active phase to deployment phase") {
             // given
-            subject.newMech(newTestMechSpecification())
+            subject.newMech(newTestMechSpecification(team = Team.ATTACKER))
+            subject.newMech(newTestMechSpecification(team = Team.DEFENDER))
 
             // when
             subject.end()
@@ -50,13 +52,26 @@ abstract class InitializationPhaseSpec(
             getActivePhase(subject) shouldBeInstanceOf DeploymentPhase::class
         }
 
-        it("should throw exception when no Mechs exist") {
+        it("should throw exception when attacker has no Mechs") {
+            // given
+            subject.newMech(newTestMechSpecification(team = Team.DEFENDER))
+
             // when
             val func = { subject.end() }
 
             // then
-            val exceptionResult = func shouldThrow GameException::class
-            exceptionResult.exceptionMessage shouldContain "no Mechs"
+            func shouldThrow GameException::class withMessage "attacker has no Mechs"
+        }
+
+        it("should throw exception when defender has no Mechs") {
+            // given
+            subject.newMech(newTestMechSpecification(team = Team.ATTACKER))
+
+            // when
+            val func = { subject.end() }
+
+            // then
+            func shouldThrow GameException::class withMessage "defender has no Mechs"
         }
     }
 

@@ -17,6 +17,12 @@
 
 package mechabellum.server.game.api.core.unit
 
-fun newTestMechSpecification(): MechSpecification = MechSpecification(newTestMechType())
+fun newTestMechSpecification(
+    team: Team = Team.ATTACKER,
+    type: MechType = newTestMechType()
+): MechSpecification = MechSpecification(
+    team = team,
+    type = type
+)
 
 fun newTestMechType(): MechType = MechType("TST-001 Test Mech")

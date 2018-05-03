@@ -24,6 +24,7 @@ import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridTypeRegistry
 import mechabellum.server.game.api.core.unit.MechSpecification
+import mechabellum.server.game.api.core.unit.Team
 import mechabellum.server.game.api.core.unit.UnitTypeRegistry
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -33,9 +34,10 @@ import java.util.ServiceLoader
 /** This spec attempts to play an entire game using the training scenario from the Quick-Start rules. */
 object TrainingScenarioSpec : Spek({
     describe("game implementation") {
-        fun newMechSpecification(name: String): MechSpecification {
+        fun newMechSpecification(name: String, team: Team): MechSpecification {
             val unitTypeRegistry = ServiceLoader.load(UnitTypeRegistry::class.java).first()
             return MechSpecification(
+                team = team,
                 type = unitTypeRegistry.findMechTypeByName(name).getOrThrow()
             )
         }
@@ -55,10 +57,10 @@ object TrainingScenarioSpec : Spek({
         it("should be able to play the training scenario from the Quick-Start rules") {
             val game = newQuickStartGame()
 
-            val defender1 = game.newMech(newMechSpecification("CDA-2A Cicada"))
-            val defender2 = game.newMech(newMechSpecification("HBK-4G Hunchback"))
-            val attacker1 = game.newMech(newMechSpecification("ENF-4R Enforcer"))
-            val attacker2 = game.newMech(newMechSpecification("HER-2S Hermes II"))
+            val defender1 = game.newMech(newMechSpecification("CDA-2A Cicada", Team.DEFENDER))
+            val defender2 = game.newMech(newMechSpecification("HBK-4G Hunchback", Team.DEFENDER))
+            val attacker1 = game.newMech(newMechSpecification("ENF-4R Enforcer", Team.ATTACKER))
+            val attacker2 = game.newMech(newMechSpecification("HER-2S Hermes II", Team.ATTACKER))
             game.endInitialization()
 
             game.deployMech(defender1, CellId(0, 16))

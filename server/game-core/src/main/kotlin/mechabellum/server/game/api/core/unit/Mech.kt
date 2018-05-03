@@ -24,4 +24,7 @@ data class MechId(val value: Int)
 interface Mech {
     /** The Mech identifier. */
     val id: MechId
+
+    /** The team to which the Mech belongs. */
+    val team: Team
 }
