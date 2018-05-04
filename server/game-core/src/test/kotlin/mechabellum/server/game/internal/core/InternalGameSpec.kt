@@ -19,7 +19,7 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.CommandContextSpec
 import mechabellum.server.game.api.core.GameSpec
-import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.phases.DeploymentPhaseSpec
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.phases.InitializationPhaseSpec
@@ -27,10 +27,10 @@ import mechabellum.server.game.internal.core.grid.InternalGrid
 
 object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
     activePhaseType = InitializationPhase::class.java,
-    subjectFactory = { InternalGame(InternalGrid(newTestGridType())) }
+    subjectFactory = { InternalGame(InternalGrid(newTestGridSpecification())) }
 )
 
-object InternalGameBehavesAsGameSpec : GameSpec({ InternalGame(InternalGrid(newTestGridType())) })
+object InternalGameBehavesAsGameSpec : GameSpec({ InternalGame(InternalGrid(newTestGridSpecification())) })
 
 object InternalGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
     getMechPosition = { subject, mechId ->
@@ -39,13 +39,11 @@ object InternalGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
     newMech = { subject, mechSpecification ->
         (subject as InternalGame.InternalPhase).game.InternalInitializationPhase().newMech(mechSpecification)
     },
-    subjectFactory = { gridSpecification ->
-        InternalGame(InternalGrid(gridSpecification.type)).InternalDeploymentPhase()
-    }
+    subjectFactory = { gridSpecification -> InternalGame(InternalGrid(gridSpecification)).InternalDeploymentPhase() }
 )
 
 object InternalGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
     getActivePhase = { subject -> (subject as InternalGame.InternalPhase).game.phase },
     getMech = { subject, mechId -> (subject as InternalGame.InternalPhase).game.getMech(mechId) },
-    subjectFactory = { InternalGame(InternalGrid(newTestGridType())).InternalInitializationPhase() }
+    subjectFactory = { InternalGame(InternalGrid(newTestGridSpecification())).InternalInitializationPhase() }
 )

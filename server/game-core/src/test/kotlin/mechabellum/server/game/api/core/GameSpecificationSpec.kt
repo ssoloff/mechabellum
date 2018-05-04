@@ -18,6 +18,5 @@
 package mechabellum.server.game.api.core
 
 import mechabellum.server.common.api.test.DataClassSpec
-import mechabellum.server.game.api.core.grid.newTestGridSpecification
 
-object GameSpecificationBehavesAsDataClassSpec : DataClassSpec({ GameSpecification(newTestGridSpecification()) })
+object GameSpecificationBehavesAsDataClassSpec : DataClassSpec({ newTestGameSpecification() })

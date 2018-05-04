@@ -25,12 +25,12 @@ import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.Grid
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.api.core.unit.Team
 import mechabellum.server.game.internal.core.grid.InternalGrid
 import mechabellum.server.game.internal.core.unit.InternalMech
 
@@ -72,12 +72,16 @@ internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
 
     inner class InternalDeploymentPhase : InternalPhase(), DeploymentPhase {
         override fun deployMech(mech: Mech, position: CellId) {
-            require((position.col in 0 until grid.type.cols) && (position.row in 0 until grid.type.rows)) {
-                "position $position does not exist in grid of type ${grid.type}"
-            }
-
             val mechRecord = _mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
+            checkPositionIsWithinTeamDeploymentZone(position, mech.team)
             mechRecord.position = Option.some(position)
+        }
+
+        private fun checkPositionIsWithinTeamDeploymentZone(position: CellId, team: Team) {
+            val deploymentZone = grid.getDeploymentZone(team)
+            require((position.col in deploymentZone.colRange) && (position.row in deploymentZone.rowRange)) {
+                "position $position is not in deployment zone $deploymentZone for team $team"
+            }
         }
     }
 

@@ -21,10 +21,11 @@ import mechabellum.server.game.api.core.commands.deployment.deployMech
 import mechabellum.server.game.api.core.commands.initialization.endInitialization
 import mechabellum.server.game.api.core.commands.initialization.newMech
 import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.CellRange
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridTypeRegistry
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.api.core.unit.Team
 import mechabellum.server.game.api.core.unit.UnitTypeRegistry
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -48,6 +49,10 @@ object TrainingScenarioSpec : Spek({
             return gameFactory.newGame(
                 GameSpecification(
                     gridSpecification = GridSpecification(
+                        deploymentZonesByTeam = mapOf(
+                            Team.ATTACKER to CellRange(0..14, 0..0),
+                            Team.DEFENDER to CellRange(0..14, 14..16)
+                        ),
                         type = gridTypeRegistry.findByName("Quick-Start Map").getOrThrow()
                     )
                 )

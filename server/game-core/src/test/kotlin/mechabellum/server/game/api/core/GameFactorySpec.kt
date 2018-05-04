@@ -18,8 +18,7 @@
 package mechabellum.server.game.api.core
 
 import mechabellum.server.game.api.core.commands.general.grid
-import mechabellum.server.game.api.core.grid.GridSpecification
-import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import org.amshove.kluent.shouldEqual
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -31,11 +30,11 @@ abstract class GameFactorySpec(subjectFactory: () -> GameFactory) : SubjectSpek<
     describe("newGame") {
         it("should return a game with the requested grid specification") {
             // when
-            val gridType = newTestGridType()
-            val game = subject.newGame(GameSpecification(GridSpecification(gridType)))
+            val gridSpecification = newTestGridSpecification()
+            val game = subject.newGame(newTestGameSpecification().copy(gridSpecification = gridSpecification))
 
             // then
-            game.grid.type shouldEqual gridType
+            game.grid.type shouldEqual gridSpecification.type
         }
     }
 })

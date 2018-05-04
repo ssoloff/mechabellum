@@ -17,7 +17,15 @@
 
 package mechabellum.server.game.api.core.grid
 
-fun newTestGridSpecification(type: GridType = newTestGridType()): GridSpecification = GridSpecification(type)
+import mechabellum.server.game.api.core.participant.Team
+
+fun newTestGridSpecification(type: GridType = newTestGridType()): GridSpecification = GridSpecification(
+    deploymentZonesByTeam = mapOf(
+        Team.ATTACKER to CellRange(0..0, 0..0),
+        Team.DEFENDER to CellRange(0..0, 0..0)
+    ),
+    type = type
+)
 
 fun newTestGridType(cols: Int = 1, rows: Int = 1): GridType = GridType(
     cols = cols,

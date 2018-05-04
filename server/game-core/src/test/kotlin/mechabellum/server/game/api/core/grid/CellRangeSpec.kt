@@ -15,15 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.grid
 
-import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.GameFactory
-import mechabellum.server.game.api.core.GameSpecification
-import mechabellum.server.game.internal.core.grid.InternalGrid
+import mechabellum.server.common.api.test.DataClassSpec
 
-internal class InternalGameFactory : GameFactory {
-    override fun newGame(specification: GameSpecification): Game = InternalGame(
-        grid = InternalGrid(specification.gridSpecification)
-    )
-}
+object CellRangeBehavesAsDataClassSpec : DataClassSpec({ CellRange(0..5, 0..8) })

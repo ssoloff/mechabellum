@@ -17,6 +17,8 @@
 
 package mechabellum.server.game.api.core.grid
 
+import mechabellum.server.game.api.core.participant.Team
+
 /**
  * A hexagonal grid.
  *
@@ -33,4 +35,7 @@ interface Grid {
      * @throws IllegalArgumentException If no cell exists at the specified coordinates.
      */
     fun getCell(col: Int, row: Int): Cell
+
+    /** Returns the deployment zone for the specified [team]. */
+    fun getDeploymentZone(team: Team): CellRange
 }

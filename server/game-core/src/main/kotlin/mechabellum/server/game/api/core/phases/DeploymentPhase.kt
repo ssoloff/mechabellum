@@ -26,8 +26,8 @@ interface DeploymentPhase : Phase {
     /**
      * Deploys [mech] to the specified [position].
      *
-     * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] does not exist on the game
-     * grid.
+     * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the deployment
+     * zone for [mech].
      */
     fun deployMech(mech: Mech, position: CellId)
 }

@@ -20,9 +20,11 @@ package mechabellum.server.game.api.core.phases
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.CellRange
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
@@ -42,8 +44,19 @@ abstract class DeploymentPhaseSpec(
     subjectFactory: (GridSpecification) -> DeploymentPhase
 ) : SubjectSpek<DeploymentPhase>({
     val gridType = newTestGridType(8, 10)
+    val attackerDeploymentZone = CellRange(1..6, 1..2)
 
-    subject { subjectFactory(newTestGridSpecification(gridType)) }
+    subject {
+        subjectFactory(
+            newTestGridSpecification().copy(
+                deploymentZonesByTeam = mapOf(
+                    Team.ATTACKER to attackerDeploymentZone,
+                    Team.DEFENDER to CellRange(0..7, 9..9)
+                ),
+                type = gridType
+            )
+        )
+    }
 
     describe("deployMech") {
         it("should place Mech at specified position") {
@@ -51,7 +64,7 @@ abstract class DeploymentPhaseSpec(
             val mech = newMech(subject, newTestMechSpecification())
 
             // when
-            val position = CellId(3, 6)
+            val position = CellId(3, 2)
             subject.deployMech(mech, position)
 
             // then
@@ -66,7 +79,7 @@ abstract class DeploymentPhaseSpec(
             }
 
             // when
-            val func = { subject.deployMech(mech, CellId(3, 6)) }
+            val func = { subject.deployMech(mech, CellId(3, 2)) }
 
             // then
             val exceptionResult = func shouldThrow IllegalArgumentException::class
@@ -74,11 +87,23 @@ abstract class DeploymentPhaseSpec(
         }
 
         on(
-            "invalid position %s",
-            data(CellId(-1, 0), expected = Unit),
-            data(CellId(0, -1), expected = Unit),
-            data(CellId(gridType.cols, 0), expected = Unit),
-            data(CellId(0, gridType.rows), expected = Unit)
+            "invalid attacker position %s",
+            data(
+                CellId(attackerDeploymentZone.colRange.start - 1, attackerDeploymentZone.rowRange.start),
+                expected = Unit
+            ),
+            data(
+                CellId(attackerDeploymentZone.colRange.start, attackerDeploymentZone.rowRange.start - 1),
+                expected = Unit
+            ),
+            data(
+                CellId(attackerDeploymentZone.colRange.endInclusive + 1, attackerDeploymentZone.rowRange.endInclusive),
+                expected = Unit
+            ),
+            data(
+                CellId(attackerDeploymentZone.colRange.endInclusive, attackerDeploymentZone.rowRange.endInclusive + 1),
+                expected = Unit
+            )
         ) { position, _ ->
             it("should throw exception") {
                 // given

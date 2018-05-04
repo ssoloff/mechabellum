@@ -28,8 +28,8 @@ import mechabellum.server.game.api.core.unit.Mech
 /** Deploys [mech] to the specified [position]. */
 class DeployMechCommand(private val mech: Mech, private val position: CellId) : Command<Unit> {
     /**
-     * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] does not exist on the game
-     * grid.
+     * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the deployment
+     * zone for [mech].
      */
     override fun execute(context: CommandContext) = context
         .getPhaseAs(DeploymentPhase::class.java)
@@ -39,7 +39,7 @@ class DeployMechCommand(private val mech: Mech, private val position: CellId) : 
 /**
  * Deploys [mech] to the specified [position].
  *
- * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] does not exist on the game
- * grid.
+ * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the deployment
+ * zone for [mech].
  */
 fun Game.deployMech(mech: Mech, position: CellId) = executeCommand(DeployMechCommand(mech, position))

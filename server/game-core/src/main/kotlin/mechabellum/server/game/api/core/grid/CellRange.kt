@@ -15,10 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.unit
+package mechabellum.server.game.api.core.grid
 
-/** The team to which a unit belongs. */
-enum class Team {
-    ATTACKER,
-    DEFENDER
-}
+/**
+ * A rectangular range of cells on a hexagonal grid.
+ *
+ * @property colRange The range of cell columns contained in this range.
+ * @property rowRange The range of cell rows contained in this range.
+ */
+data class CellRange(val colRange: IntRange, val rowRange: IntRange)

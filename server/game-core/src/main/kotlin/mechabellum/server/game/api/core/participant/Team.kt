@@ -15,15 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.api.core.participant
 
-import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.GameFactory
-import mechabellum.server.game.api.core.GameSpecification
-import mechabellum.server.game.internal.core.grid.InternalGrid
-
-internal class InternalGameFactory : GameFactory {
-    override fun newGame(specification: GameSpecification): Game = InternalGame(
-        grid = InternalGrid(specification.gridSpecification)
-    )
+/** A team participating in a game. */
+enum class Team {
+    ATTACKER,
+    DEFENDER
 }

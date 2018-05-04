@@ -17,9 +17,37 @@
 
 package mechabellum.server.game.api.core.grid
 
+import mechabellum.server.game.api.core.participant.Team
+
 /**
  * A specification for creating a new [Grid].
  *
+ * @property deploymentZonesByTeam A collection of deployment zones on the grid for each team.
  * @property type The type of grid to create.
+ *
+ * @throws IllegalArgumentException If [deploymentZonesByTeam] does not have an entry for each team.
  */
-data class GridSpecification(val type: GridType)
+data class GridSpecification(val deploymentZonesByTeam: Map<Team, CellRange>, val type: GridType) {
+    init {
+        checkAllTeamsHaveDeploymentZone()
+        checkDeploymentZonesAreWithinGridBounds()
+    }
+
+    private fun checkAllTeamsHaveDeploymentZone() {
+        Team.values().forEach { require(it in deploymentZonesByTeam) { "no deployment zone for team $it" } }
+    }
+
+    private fun checkDeploymentZonesAreWithinGridBounds() {
+        val gridBounds = CellRange(0 until type.cols, 0 until type.rows)
+        deploymentZonesByTeam.forEach { team, deploymentZone ->
+            require(
+                (deploymentZone.colRange.start in gridBounds.colRange) &&
+                    (deploymentZone.colRange.endInclusive in gridBounds.colRange) &&
+                    (deploymentZone.rowRange.start in gridBounds.rowRange) &&
+                    (deploymentZone.rowRange.endInclusive in gridBounds.rowRange)
+            ) {
+                "deployment zone $deploymentZone for team $team exceeds grid bounds"
+            }
+        }
+    }
+}

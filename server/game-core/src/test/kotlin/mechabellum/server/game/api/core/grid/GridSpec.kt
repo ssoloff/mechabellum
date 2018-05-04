@@ -17,14 +17,23 @@
 
 package mechabellum.server.game.api.core.grid
 
+import mechabellum.server.game.api.core.participant.Team
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
-abstract class GridSpec(subjectFactory: (Int, Int) -> Grid) : SubjectSpek<Grid>({
-    subject { subjectFactory(5, 8) }
+abstract class GridSpec(subjectFactory: (GridSpecification) -> Grid) : SubjectSpek<Grid>({
+    val gridSpecification = newTestGridSpecification().copy(type = newTestGridType().copy(cols = 5, rows = 8))
+
+    subject { subjectFactory(gridSpecification) }
+
+    describe("type") {
+        it("should return type from grid specification") {
+            subject.type shouldEqual gridSpecification.type
+        }
+    }
 
     describe("getCell") {
         it("should return requested cell when cell exists") {
@@ -37,6 +46,14 @@ abstract class GridSpec(subjectFactory: (Int, Int) -> Grid) : SubjectSpek<Grid>(
             ({ subject.getCell(0, -1) }) shouldThrow IllegalArgumentException::class
             ({ subject.getCell(5, 7) }) shouldThrow IllegalArgumentException::class
             ({ subject.getCell(4, 8) }) shouldThrow IllegalArgumentException::class
+        }
+    }
+
+    describe("getDeploymentZone") {
+        it("should return deployment zones from grid specification") {
+            Team.values().forEach {
+                subject.getDeploymentZone(it) shouldEqual gridSpecification.deploymentZonesByTeam[it]
+            }
         }
     }
 })

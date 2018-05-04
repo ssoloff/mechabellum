@@ -19,22 +19,30 @@ package mechabellum.server.game.internal.core.grid
 
 import mechabellum.server.game.api.core.grid.Cell
 import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.CellRange
 import mechabellum.server.game.api.core.grid.Grid
-import mechabellum.server.game.api.core.grid.GridType
+import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.participant.Team
 
-internal class InternalGrid(override val type: GridType) : Grid {
+internal class InternalGrid(specification: GridSpecification) : Grid {
     private val _cellsById: Map<CellId, InternalCell> = mutableMapOf<CellId, InternalCell>().apply {
-        for (col in 0 until type.cols) {
-            for (row in 0 until type.rows) {
+        for (col in 0 until specification.type.cols) {
+            for (row in 0 until specification.type.rows) {
                 val cellId = CellId(col, row)
                 put(cellId, InternalCell(cellId))
             }
         }
     }
 
+    private val _deploymentZonesByTeam = specification.deploymentZonesByTeam
+
+    override val type = specification.type
+
     override fun getCell(col: Int, row: Int): Cell {
         return _cellsById.getOrElse(CellId(col, row)) {
             throw IllegalArgumentException("cell ($col, $row) does not exist")
         }
     }
+
+    override fun getDeploymentZone(team: Team): CellRange = _deploymentZonesByTeam[team]!!
 }

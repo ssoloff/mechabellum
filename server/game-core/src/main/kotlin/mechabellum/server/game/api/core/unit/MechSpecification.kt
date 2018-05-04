@@ -17,6 +17,8 @@
 
 package mechabellum.server.game.api.core.unit
 
+import mechabellum.server.game.api.core.participant.Team
+
 /**
  * A specification for creating a new [Mech].
  *

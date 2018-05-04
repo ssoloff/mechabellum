@@ -19,9 +19,9 @@ package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
-import mechabellum.server.game.api.core.unit.Team
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
