@@ -42,8 +42,8 @@ abstract class InitializationPhaseSpec(
     describe("end") {
         it("should change active phase to deployment phase") {
             // given
-            subject.newMech(newTestMechSpecification(team = Team.ATTACKER))
-            subject.newMech(newTestMechSpecification(team = Team.DEFENDER))
+            subject.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
+            subject.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
 
             // when
             subject.end()
@@ -54,7 +54,7 @@ abstract class InitializationPhaseSpec(
 
         it("should throw exception when attacker has no Mechs") {
             // given
-            subject.newMech(newTestMechSpecification(team = Team.DEFENDER))
+            subject.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
 
             // when
             val func = { subject.end() }
@@ -65,7 +65,7 @@ abstract class InitializationPhaseSpec(
 
         it("should throw exception when defender has no Mechs") {
             // given
-            subject.newMech(newTestMechSpecification(team = Team.ATTACKER))
+            subject.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
 
             // when
             val func = { subject.end() }

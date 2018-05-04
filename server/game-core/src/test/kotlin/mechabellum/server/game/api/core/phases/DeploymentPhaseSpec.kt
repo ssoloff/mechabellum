@@ -43,7 +43,7 @@ abstract class DeploymentPhaseSpec(
     newMech: (DeploymentPhase, MechSpecification) -> Mech,
     subjectFactory: (GridSpecification) -> DeploymentPhase
 ) : SubjectSpek<DeploymentPhase>({
-    val gridType = newTestGridType(8, 10)
+    val gridType = newTestGridType().copy(cols = 8, rows = 10)
     val attackerDeploymentZone = CellRange(1..6, 1..2)
 
     subject {
