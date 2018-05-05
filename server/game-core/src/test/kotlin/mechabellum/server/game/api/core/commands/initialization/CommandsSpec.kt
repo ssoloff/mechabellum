@@ -21,9 +21,13 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.phases.InitializationPhase
+import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.unit.newTestMechSpecification
 import org.amshove.kluent.Verify
+import org.amshove.kluent.any
 import org.amshove.kluent.called
 import org.amshove.kluent.on
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.that
 import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
@@ -45,6 +49,30 @@ object EndInitializationCommandSpec : Spek({
 
             // then
             Verify on initializationPhase that initializationPhase.end() was called
+        }
+    }
+})
+
+object NewMechCommandSpec : Spek({
+    describe("execute") {
+        it("should return new Mech") {
+            // given
+            val expectedMech = mock<Mech>()
+            val initializationPhase = mock<InitializationPhase> {
+                on { newMech(any()) } doReturn expectedMech
+            }
+            val context = mock<CommandContext> {
+                on { phase } doReturn initializationPhase
+            }
+            val specification = newTestMechSpecification()
+            val subject = NewMechCommand(specification)
+
+            // when
+            val actualMech = subject.execute(context)
+
+            // then
+            Verify on initializationPhase that initializationPhase.newMech(specification) was called
+            actualMech shouldBe expectedMech
         }
     }
 })
