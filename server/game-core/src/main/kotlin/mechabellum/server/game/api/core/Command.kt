@@ -17,6 +17,8 @@
 
 package mechabellum.server.game.api.core
 
+import kotlin.reflect.KClass
+
 /** An abstract representation of some semantic game behavior. */
 interface Command<T : Any> {
     /**
@@ -42,7 +44,7 @@ interface CommandContext {
  *
  * @throws CommandException If the active game phase is not of the specified [type].
  */
-fun <T : Phase> CommandContext.getPhaseAs(type: Class<T>): T = phase.let {
+fun <T : Phase> CommandContext.getPhaseAs(type: KClass<T>): T = phase.let {
     @Suppress("UNCHECKED_CAST")
     if (type.isInstance(it)) it as T else throw CommandException("phase is not active (${type.simpleName})")
 }

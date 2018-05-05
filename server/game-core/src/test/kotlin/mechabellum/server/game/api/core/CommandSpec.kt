@@ -23,9 +23,10 @@ import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
+import kotlin.reflect.KClass
 
 abstract class CommandContextSpec(
-    activePhaseType: Class<out Phase>,
+    activePhaseType: KClass<out Phase>,
     subjectFactory: () -> CommandContext
 ) : SubjectSpek<CommandContext>({
     subject { subjectFactory() }
@@ -46,7 +47,7 @@ abstract class CommandContextSpec(
             abstract class DummyPhase : Phase
 
             // when
-            val func = { subject.getPhaseAs(DummyPhase::class.java) }
+            val func = { subject.getPhaseAs(DummyPhase::class) }
 
             // then
             val exceptionResult = func shouldThrow CommandException::class

@@ -29,7 +29,7 @@ import mechabellum.server.game.api.core.unit.MechSpecification
 class EndInitializationCommand : Command<Unit> {
     /** @throws mechabellum.server.game.api.core.GameException If all teams do not have at least one Mech. */
     override fun execute(context: CommandContext) = context
-        .getPhaseAs(InitializationPhase::class.java)
+        .getPhaseAs(InitializationPhase::class)
         .end()
 }
 
@@ -43,7 +43,7 @@ fun Game.endInitialization() = executeCommand(EndInitializationCommand())
 /** Returns a new Mech based on [specification]. */
 class NewMechCommand(private val specification: MechSpecification) : Command<Mech> {
     override fun execute(context: CommandContext): Mech = context
-        .getPhaseAs(InitializationPhase::class.java)
+        .getPhaseAs(InitializationPhase::class)
         .newMech(specification)
 }
 

@@ -67,7 +67,7 @@ subprojects {
 
     dependencies {
         "api"(kotlin("stdlib-jdk8", kotlinVersion))
-        "testImplementation"(kotlin("reflect", kotlinVersion)) // required by Spek
+        "api"(kotlin("reflect", kotlinVersion))
         "testImplementation"("org.amshove.kluent", "kluent", kluentVersion)
         "testImplementation"("org.jetbrains.spek", "spek-api", spekVersion) {
             exclude("org.jetbrains.kotlin")

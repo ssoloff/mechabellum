@@ -26,7 +26,7 @@ import mechabellum.server.game.api.core.phases.InitializationPhaseSpec
 import mechabellum.server.game.internal.core.grid.InternalGrid
 
 object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
-    activePhaseType = InitializationPhase::class.java,
+    activePhaseType = InitializationPhase::class,
     subjectFactory = { InternalGame(InternalGrid(newTestGridSpecification())) }
 )
 

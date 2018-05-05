@@ -32,7 +32,7 @@ class DeployMechCommand(private val mech: Mech, private val position: CellId) : 
      * zone for [mech].
      */
     override fun execute(context: CommandContext) = context
-        .getPhaseAs(DeploymentPhase::class.java)
+        .getPhaseAs(DeploymentPhase::class)
         .deployMech(mech, position)
 }
 
