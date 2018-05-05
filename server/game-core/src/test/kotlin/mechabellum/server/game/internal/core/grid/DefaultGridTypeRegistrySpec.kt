@@ -17,12 +17,10 @@
 
 package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.grid.GridType
-import mechabellum.server.game.api.core.grid.GridTypeRegistry
+import mechabellum.server.game.api.core.grid.GridTypeRegistrySpec
 
-internal class InternalGridTypeRegistry : GridTypeRegistry {
-    private val _gridTypes: Collection<GridType> = listOf(GridType(cols = 15, name = "Quick-Start Map", rows = 17))
-
-    override fun findByName(name: String): Option<GridType> = Option.of(_gridTypes.find { it.name == name })
-}
+object DefaultGridTypeRegistryBehavesAsGridTypeRegistrySpec : GridTypeRegistrySpec(
+    absentGridTypeName = "__unknown__",
+    presentGridTypeName = "Quick-Start Map",
+    subjectFactory = ::DefaultGridTypeRegistry
+)

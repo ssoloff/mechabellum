@@ -15,12 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.game.api.core.unit.UnitTypeRegistrySpec
+import mechabellum.server.game.api.core.grid.GridSpec
 
-object InternalUnitTypeRegistryBehavesAsUnitTypeRegistrySpec : UnitTypeRegistrySpec(
-    absentMechTypeName = "__unknown__",
-    presentMechTypeName = "HER-2S Hermes II",
-    subjectFactory = ::InternalUnitTypeRegistry
-)
+object DefaultGridBehavesAsGridSpec : GridSpec(::DefaultGrid)

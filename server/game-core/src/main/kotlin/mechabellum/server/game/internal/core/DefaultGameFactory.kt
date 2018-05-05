@@ -15,8 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.grid
+package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.api.core.grid.GridSpec
+import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.GameFactory
+import mechabellum.server.game.api.core.GameSpecification
+import mechabellum.server.game.internal.core.grid.DefaultGrid
 
-object InternalGridBehavesAsGridSpec : GridSpec(::InternalGrid)
+internal class DefaultGameFactory : GameFactory {
+    override fun newGame(specification: GameSpecification): Game = DefaultGame(
+        grid = DefaultGrid(specification.gridSpecification)
+    )
+}

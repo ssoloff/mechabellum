@@ -24,12 +24,12 @@ import mechabellum.server.game.api.core.grid.Grid
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.participant.Team
 
-internal class InternalGrid(specification: GridSpecification) : Grid {
-    private val _cellsById: Map<CellId, InternalCell> = mutableMapOf<CellId, InternalCell>().apply {
+internal class DefaultGrid(specification: GridSpecification) : Grid {
+    private val _cellsById: Map<CellId, DefaultCell> = mutableMapOf<CellId, DefaultCell>().apply {
         for (col in 0 until specification.type.cols) {
             for (row in 0 until specification.type.rows) {
                 val cellId = CellId(col, row)
-                put(cellId, InternalCell(cellId))
+                put(cellId, DefaultCell(cellId))
             }
         }
     }

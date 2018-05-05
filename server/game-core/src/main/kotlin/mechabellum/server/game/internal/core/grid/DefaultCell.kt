@@ -15,19 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.unit
+package mechabellum.server.game.internal.core.grid
 
-import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.unit.MechType
-import mechabellum.server.game.api.core.unit.UnitTypeRegistry
+import mechabellum.server.game.api.core.grid.Cell
+import mechabellum.server.game.api.core.grid.CellId
 
-internal class InternalUnitTypeRegistry : UnitTypeRegistry {
-    private val _mechTypes: Collection<MechType> = listOf(
-        MechType("CDA-2A Cicada"),
-        MechType("ENF-4R Enforcer"),
-        MechType("HER-2S Hermes II"),
-        MechType("HBK-4G Hunchback")
-    )
-
-    override fun findMechTypeByName(name: String): Option<MechType> = Option.of(_mechTypes.find { it.name == name })
-}
+internal class DefaultCell(override val id: CellId) : Cell

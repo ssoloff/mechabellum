@@ -15,8 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core
+package mechabellum.server.game.internal.core.unit
 
-import mechabellum.server.game.api.core.GameFactorySpec
+import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.unit.MechType
+import mechabellum.server.game.api.core.unit.UnitTypeRegistry
 
-object InternalGameFactoryBehavesAsGameFactorySpec : GameFactorySpec(::InternalGameFactory)
+internal class DefaultUnitTypeRegistry : UnitTypeRegistry {
+    private val _mechTypes: Collection<MechType> = listOf(
+        MechType("CDA-2A Cicada"),
+        MechType("ENF-4R Enforcer"),
+        MechType("HER-2S Hermes II"),
+        MechType("HBK-4G Hunchback")
+    )
+
+    override fun findMechTypeByName(name: String): Option<MechType> = Option.of(_mechTypes.find { it.name == name })
+}

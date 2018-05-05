@@ -17,13 +17,6 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.GameFactory
-import mechabellum.server.game.api.core.GameSpecification
-import mechabellum.server.game.internal.core.grid.InternalGrid
+import mechabellum.server.game.api.core.GameFactorySpec
 
-internal class InternalGameFactory : GameFactory {
-    override fun newGame(specification: GameSpecification): Game = InternalGame(
-        grid = InternalGrid(specification.gridSpecification)
-    )
-}
+object DefaultGameFactoryBehavesAsGameFactorySpec : GameFactorySpec(::DefaultGameFactory)

@@ -15,9 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.grid
+package mechabellum.server.game.internal.core.unit
 
-import mechabellum.server.game.api.core.grid.Cell
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.participant.Team
+import mechabellum.server.game.api.core.unit.Mech
+import mechabellum.server.game.api.core.unit.MechId
 
-internal class InternalCell(override val id: CellId) : Cell
+internal class DefaultMech(override val id: MechId, override val team: Team) : Mech

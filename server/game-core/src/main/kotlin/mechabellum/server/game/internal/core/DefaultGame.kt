@@ -31,14 +31,14 @@ import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.internal.core.grid.InternalGrid
-import mechabellum.server.game.internal.core.unit.InternalMech
+import mechabellum.server.game.internal.core.grid.DefaultGrid
+import mechabellum.server.game.internal.core.unit.DefaultMech
 
-internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
+internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
     private val _mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
     private var _nextMechId: Int = 0
 
-    override var phase: Phase = InternalInitializationPhase()
+    override var phase: Phase = DefaultInitializationPhase()
         private set
 
     override fun <T : Any> executeCommand(command: Command<T>): T {
@@ -52,25 +52,25 @@ internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
         }
     }
 
-    fun getMech(id: MechId): InternalMech =
+    fun getMech(id: MechId): DefaultMech =
         _mechRecordsById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     fun getMechPosition(id: MechId): Option<CellId> =
         _mechRecordsById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     private class MechRecord(
-        val mech: InternalMech,
+        val mech: DefaultMech,
         var position: Option<CellId> = Option.none()
     )
 
-    open inner class InternalPhase : Phase {
-        val game: InternalGame = this@InternalGame
+    open inner class DefaultPhase : Phase {
+        val game: DefaultGame = this@DefaultGame
 
         override val grid: Grid
             get() = game.grid
     }
 
-    inner class InternalDeploymentPhase : InternalPhase(), DeploymentPhase {
+    inner class DefaultDeploymentPhase : DefaultPhase(), DeploymentPhase {
         override fun deployMech(mech: Mech, position: CellId) {
             val mechRecord = _mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
             checkPositionIsWithinTeamDeploymentZone(position, mech.team)
@@ -85,11 +85,11 @@ internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
         }
     }
 
-    inner class InternalInitializationPhase : InternalPhase(), InitializationPhase {
+    inner class DefaultInitializationPhase : DefaultPhase(), InitializationPhase {
         override fun end() {
             checkAllTeamsHaveAtLeastOneMech()
 
-            phase = InternalDeploymentPhase()
+            phase = DefaultDeploymentPhase()
         }
 
         private fun checkAllTeamsHaveAtLeastOneMech() {
@@ -102,7 +102,7 @@ internal class InternalGame(val grid: InternalGrid) : CommandContext, Game {
         }
 
         override fun newMech(specification: MechSpecification): Mech {
-            val mech = InternalMech(
+            val mech = DefaultMech(
                 id = MechId(_nextMechId++),
                 team = specification.team
             )

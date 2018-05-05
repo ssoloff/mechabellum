@@ -23,27 +23,27 @@ import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.phases.DeploymentPhaseSpec
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.phases.InitializationPhaseSpec
-import mechabellum.server.game.internal.core.grid.InternalGrid
+import mechabellum.server.game.internal.core.grid.DefaultGrid
 
-object InternalGameBehavesAsCommandContextSpec : CommandContextSpec(
+object DefaultGameBehavesAsCommandContextSpec : CommandContextSpec(
     activePhaseType = InitializationPhase::class,
-    subjectFactory = { InternalGame(InternalGrid(newTestGridSpecification())) }
+    subjectFactory = { DefaultGame(DefaultGrid(newTestGridSpecification())) }
 )
 
-object InternalGameBehavesAsGameSpec : GameSpec({ InternalGame(InternalGrid(newTestGridSpecification())) })
+object DefaultGameBehavesAsGameSpec : GameSpec({ DefaultGame(DefaultGrid(newTestGridSpecification())) })
 
-object InternalGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
+object DefaultGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
     getMechPosition = { subject, mechId ->
-        (subject as InternalGame.InternalPhase).game.getMechPosition(mechId).getOrThrow()
+        (subject as DefaultGame.DefaultPhase).game.getMechPosition(mechId).getOrThrow()
     },
     newMech = { subject, mechSpecification ->
-        (subject as InternalGame.InternalPhase).game.InternalInitializationPhase().newMech(mechSpecification)
+        (subject as DefaultGame.DefaultPhase).game.DefaultInitializationPhase().newMech(mechSpecification)
     },
-    subjectFactory = { gridSpecification -> InternalGame(InternalGrid(gridSpecification)).InternalDeploymentPhase() }
+    subjectFactory = { gridSpecification -> DefaultGame(DefaultGrid(gridSpecification)).DefaultDeploymentPhase() }
 )
 
-object InternalGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
-    getActivePhase = { subject -> (subject as InternalGame.InternalPhase).game.phase },
-    getMech = { subject, mechId -> (subject as InternalGame.InternalPhase).game.getMech(mechId) },
-    subjectFactory = { InternalGame(InternalGrid(newTestGridSpecification())).InternalInitializationPhase() }
+object DefaultGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
+    getActivePhase = { subject -> (subject as DefaultGame.DefaultPhase).game.phase },
+    getMech = { subject, mechId -> (subject as DefaultGame.DefaultPhase).game.getMech(mechId) },
+    subjectFactory = { DefaultGame(DefaultGrid(newTestGridSpecification())).DefaultInitializationPhase() }
 )
