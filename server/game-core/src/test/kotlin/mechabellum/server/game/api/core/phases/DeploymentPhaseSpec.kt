@@ -39,8 +39,8 @@ import org.jetbrains.spek.data_driven.on
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class DeploymentPhaseSpec(
-    getMechPosition: (DeploymentPhase, MechId) -> CellId,
-    newMech: (DeploymentPhase, MechSpecification) -> Mech,
+    getMechPosition: DeploymentPhase.(MechId) -> CellId,
+    newMech: DeploymentPhase.(MechSpecification) -> Mech,
     subjectFactory: (GridSpecification) -> DeploymentPhase
 ) : SubjectSpek<DeploymentPhase>({
     val gridType = newTestGridType().copy(cols = 8, rows = 10)
@@ -61,14 +61,14 @@ abstract class DeploymentPhaseSpec(
     describe("deployMech") {
         it("should place Mech at specified position") {
             // given
-            val mech = newMech(subject, newTestMechSpecification())
+            val mech = subject.newMech(newTestMechSpecification())
 
             // when
             val position = CellId(3, 2)
             subject.deployMech(mech, position)
 
             // then
-            getMechPosition(subject, mech.id) shouldEqual position
+            subject.getMechPosition(mech.id) shouldEqual position
         }
 
         it("should throw exception when Mech does not exist") {
@@ -107,7 +107,7 @@ abstract class DeploymentPhaseSpec(
         ) { position, _ ->
             it("should throw exception") {
                 // given
-                val mech = newMech(subject, newTestMechSpecification())
+                val mech = subject.newMech(newTestMechSpecification())
 
                 // when
                 val func = { subject.deployMech(mech, position) }

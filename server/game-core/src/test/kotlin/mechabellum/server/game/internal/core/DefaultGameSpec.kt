@@ -33,17 +33,15 @@ object DefaultGameBehavesAsCommandContextSpec : CommandContextSpec(
 object DefaultGameBehavesAsGameSpec : GameSpec({ DefaultGame(DefaultGrid(newTestGridSpecification())) })
 
 object DefaultGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
-    getMechPosition = { subject, mechId ->
-        (subject as DefaultGame.DefaultPhase).game.getMechPosition(mechId).getOrThrow()
-    },
-    newMech = { subject, mechSpecification ->
-        (subject as DefaultGame.DefaultPhase).game.DefaultInitializationPhase().newMech(mechSpecification)
+    getMechPosition = { mechId -> (this as DefaultGame.DefaultPhase).game.getMechPosition(mechId).getOrThrow() },
+    newMech = { mechSpecification ->
+        (this as DefaultGame.DefaultPhase).game.DefaultInitializationPhase().newMech(mechSpecification)
     },
     subjectFactory = { gridSpecification -> DefaultGame(DefaultGrid(gridSpecification)).DefaultDeploymentPhase() }
 )
 
 object DefaultGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
-    getActivePhase = { subject -> (subject as DefaultGame.DefaultPhase).game.phase },
-    getMech = { subject, mechId -> (subject as DefaultGame.DefaultPhase).game.getMech(mechId) },
+    getActivePhase = { (this as DefaultGame.DefaultPhase).game.phase },
+    getMech = { mechId -> (this as DefaultGame.DefaultPhase).game.getMech(mechId) },
     subjectFactory = { DefaultGame(DefaultGrid(newTestGridSpecification())).DefaultInitializationPhase() }
 )

@@ -33,8 +33,8 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class InitializationPhaseSpec(
-    getActivePhase: (InitializationPhase) -> Phase,
-    getMech: (InitializationPhase, MechId) -> Mech,
+    getActivePhase: InitializationPhase.() -> Phase,
+    getMech: InitializationPhase.(MechId) -> Mech,
     subjectFactory: () -> InitializationPhase
 ) : SubjectSpek<InitializationPhase>({
     subject { subjectFactory() }
@@ -49,7 +49,7 @@ abstract class InitializationPhaseSpec(
             subject.end()
 
             // then
-            getActivePhase(subject) shouldBeInstanceOf DeploymentPhase::class
+            subject.getActivePhase() shouldBeInstanceOf DeploymentPhase::class
         }
 
         it("should throw exception when attacker has no Mechs") {
@@ -81,7 +81,7 @@ abstract class InitializationPhaseSpec(
             val mech = subject.newMech(newTestMechSpecification())
 
             // then
-            getMech(subject, mech.id) shouldBe mech
+            subject.getMech(mech.id) shouldBe mech
         }
 
         it("should create Mechs with distinct identifiers") {
