@@ -35,8 +35,8 @@ import mechabellum.server.game.internal.core.grid.DefaultGrid
 import mechabellum.server.game.internal.core.unit.DefaultMech
 
 internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
-    private val _mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
-    private var _nextMechId: Int = 0
+    private val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
+    private var nextMechId: Int = 0
 
     override var phase: Phase = DefaultInitializationPhase()
         private set
@@ -52,10 +52,10 @@ internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
     }
 
     fun getMech(id: MechId): DefaultMech =
-        _mechRecordsById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+        mechRecordsById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     fun getMechPosition(id: MechId): Option<CellId> =
-        _mechRecordsById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+        mechRecordsById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     private class MechRecord(
         val mech: DefaultMech,
@@ -71,7 +71,7 @@ internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
 
     inner class DefaultDeploymentPhase : DefaultPhase(), DeploymentPhase {
         override fun deployMech(mech: Mech, position: CellId) {
-            val mechRecord = _mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
+            val mechRecord = mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
             checkPositionIsWithinTeamDeploymentZone(position, mech.team)
             mechRecord.position = Option.some(position)
         }
@@ -93,7 +93,7 @@ internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
 
         private fun checkAllTeamsHaveAtLeastOneMech() {
             for (team in Team.values()) {
-                if (_mechRecordsById.values.none { it.mech.team == team }) {
+                if (mechRecordsById.values.none { it.mech.team == team }) {
                     throw GameException(Messages.teamHasNoMechs(team))
                 }
             }
@@ -101,11 +101,11 @@ internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
 
         override fun newMech(specification: MechSpecification): Mech {
             val mech = DefaultMech(
-                id = MechId(_nextMechId++),
+                id = MechId(nextMechId++),
                 team = specification.team
             )
-            assert(mech.id !in _mechRecordsById)
-            _mechRecordsById[mech.id] = MechRecord(mech)
+            assert(mech.id !in mechRecordsById)
+            mechRecordsById[mech.id] = MechRecord(mech)
             return mech
         }
     }

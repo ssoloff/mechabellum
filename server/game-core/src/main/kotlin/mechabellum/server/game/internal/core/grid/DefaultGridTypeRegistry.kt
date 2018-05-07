@@ -22,7 +22,7 @@ import mechabellum.server.game.api.core.grid.GridType
 import mechabellum.server.game.api.core.grid.GridTypeRegistry
 
 internal class DefaultGridTypeRegistry : GridTypeRegistry {
-    private val _gridTypes: Collection<GridType> = listOf(GridType(cols = 15, name = "Quick-Start Map", rows = 17))
+    private val gridTypes: Collection<GridType> = listOf(GridType(cols = 15, name = "Quick-Start Map", rows = 17))
 
-    override fun findByName(name: String): Option<GridType> = Option.of(_gridTypes.find { it.name == name })
+    override fun findByName(name: String): Option<GridType> = Option.of(gridTypes.find { it.name == name })
 }

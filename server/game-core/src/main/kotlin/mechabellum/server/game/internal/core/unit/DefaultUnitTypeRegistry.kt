@@ -22,12 +22,12 @@ import mechabellum.server.game.api.core.unit.MechType
 import mechabellum.server.game.api.core.unit.UnitTypeRegistry
 
 internal class DefaultUnitTypeRegistry : UnitTypeRegistry {
-    private val _mechTypes: Collection<MechType> = listOf(
+    private val mechTypes: Collection<MechType> = listOf(
         MechType("CDA-2A Cicada"),
         MechType("ENF-4R Enforcer"),
         MechType("HER-2S Hermes II"),
         MechType("HBK-4G Hunchback")
     )
 
-    override fun findMechTypeByName(name: String): Option<MechType> = Option.of(_mechTypes.find { it.name == name })
+    override fun findMechTypeByName(name: String): Option<MechType> = Option.of(mechTypes.find { it.name == name })
 }
