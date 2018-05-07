@@ -33,7 +33,7 @@ buildscript {
 
     dependencies {
         classpath(kotlin("gradle-plugin", kotlinVersion))
-        classpath("gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.11.2")
+        classpath("gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.12.0")
     }
 }
 
@@ -44,7 +44,7 @@ plugins {
 
 val javaVersion by extra { JavaVersion.VERSION_1_8 }
 val junitVersion by extra { "5.1.1" }
-val kluentVersion by extra { "1.36" }
+val kluentVersion by extra { "1.38" }
 val kotlinVersion: String by extra
 val spekVersion by extra { "1.1.5" }
 
