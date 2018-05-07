@@ -47,8 +47,7 @@ internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
         } catch (e: RuntimeException) {
             throw e
         } catch (e: Exception) {
-            // TODO: i18n
-            throw GameException("failed to execute game command", e)
+            throw GameException(Messages.commandExecutionFailure, e)
         }
     }
 
@@ -95,8 +94,7 @@ internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
         private fun checkAllTeamsHaveAtLeastOneMech() {
             for (team in Team.values()) {
                 if (_mechRecordsById.values.none { it.mech.team == team }) {
-                    // TODO: i18n
-                    throw GameException("${team.name.toLowerCase()} has no Mechs")
+                    throw GameException(Messages.teamHasNoMechs(team))
                 }
             }
         }
@@ -111,4 +109,14 @@ internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
             return mech
         }
     }
+
+    private interface Messages {
+        val commandExecutionFailure: String
+
+        fun teamHasNoMechs(teamName: String): String
+
+        companion object : Messages by DefaultMessageFactory.get(Messages::class)
+    }
+
+    private fun Messages.teamHasNoMechs(team: Team) = teamHasNoMechs(team.name.toLowerCase())
 }

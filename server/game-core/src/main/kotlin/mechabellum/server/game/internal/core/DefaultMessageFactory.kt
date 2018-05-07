@@ -15,7 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-dependencies {
-    "implementation"("com.github.rodionmoiseev.c10n", "c10n-core", "1.2")
-    "testImplementation"(project(":common-test"))
-}
+package mechabellum.server.game.internal.core
+
+import mechabellum.server.common.api.core.util.nls.MessageFactory
+import mechabellum.server.common.api.core.util.nls.ResourceBundleMessageFactory
+
+internal object DefaultMessageFactory : MessageFactory by ResourceBundleMessageFactory(
+    "${DefaultMessageFactory::class.java.`package`.name}.messages"
+)
