@@ -57,10 +57,10 @@ abstract class InitializationPhaseSpec(
             subject.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
 
             // when
-            val func = { subject.end() }
+            val operation = { subject.end() }
 
             // then
-            func shouldThrow GameException::class withMessage "attacker has no Mechs"
+            operation shouldThrow GameException::class withMessage "attacker has no Mechs"
         }
 
         it("should throw exception when defender has no Mechs") {
@@ -68,10 +68,10 @@ abstract class InitializationPhaseSpec(
             subject.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
 
             // when
-            val func = { subject.end() }
+            val operation = { subject.end() }
 
             // then
-            func shouldThrow GameException::class withMessage "defender has no Mechs"
+            operation shouldThrow GameException::class withMessage "defender has no Mechs"
         }
     }
 

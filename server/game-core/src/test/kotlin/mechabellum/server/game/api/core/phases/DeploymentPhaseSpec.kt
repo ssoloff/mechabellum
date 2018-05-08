@@ -79,10 +79,10 @@ abstract class DeploymentPhaseSpec(
             }
 
             // when
-            val func = { subject.deployMech(mech, CellId(3, 2)) }
+            val operation = { subject.deployMech(mech, CellId(3, 2)) }
 
             // then
-            val exceptionResult = func shouldThrow IllegalArgumentException::class
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain mechId.toString()
         }
 
@@ -110,10 +110,10 @@ abstract class DeploymentPhaseSpec(
                 val mech = subject.newMech(newTestMechSpecification())
 
                 // when
-                val func = { subject.deployMech(mech, position) }
+                val operation = { subject.deployMech(mech, position) }
 
                 // then
-                val exceptionResult = func shouldThrow IllegalArgumentException::class
+                val exceptionResult = operation shouldThrow IllegalArgumentException::class
                 exceptionResult.exceptionMessage shouldContain "position"
             }
         }

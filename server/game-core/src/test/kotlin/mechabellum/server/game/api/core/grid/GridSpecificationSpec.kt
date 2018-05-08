@@ -31,14 +31,14 @@ object GridSpecificationSpec : Spek({
     describe("constructor") {
         it("should throw exception when missing a team deployment zone") {
             // when
-            val func = {
+            val operation = {
                 newTestGridSpecification().copy(
                     deploymentZonesByTeam = mapOf(Team.ATTACKER to CellRange(0..0, 0..0))
                 )
             }
 
             // then
-            val exceptionResult = func shouldThrow IllegalArgumentException::class
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "no deployment zone for team"
         }
 
@@ -51,7 +51,7 @@ object GridSpecificationSpec : Spek({
         ) { invalidDeploymentZone, _ ->
             it("should throw exception") {
                 // when
-                val func = {
+                val operation = {
                     newTestGridSpecification().copy(
                         deploymentZonesByTeam = mapOf(
                             Team.ATTACKER to invalidDeploymentZone,
@@ -62,7 +62,7 @@ object GridSpecificationSpec : Spek({
                 }
 
                 // then
-                val exceptionResult = func shouldThrow IllegalArgumentException::class
+                val exceptionResult = operation shouldThrow IllegalArgumentException::class
                 exceptionResult.exceptionMessage shouldContain "exceeds grid bounds"
             }
         }
