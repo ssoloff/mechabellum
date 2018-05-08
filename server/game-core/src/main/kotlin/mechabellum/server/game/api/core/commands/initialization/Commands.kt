@@ -17,21 +17,16 @@
 
 package mechabellum.server.game.api.core.commands.initialization
 
-import mechabellum.server.game.api.core.Command
-import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.getPhaseAs
+import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 
-/** Ends the initialization phase. */
-class EndInitializationCommand : Command<Unit> {
-    /** @throws mechabellum.server.game.api.core.GameException If all teams do not have at least one Mech. */
-    override fun execute(context: CommandContext) = context
-        .getPhaseAs(InitializationPhase::class)
-        .end()
-}
+/** Superclass for stateless commands that are executed during the initialization phase. */
+open class StatelessInitializationCommand<R : Any>(
+    action: (InitializationPhase) -> R
+) : StatelessCommand<R, InitializationPhase>(InitializationPhase::class, action)
 
 /**
  * Ends the initialization phase.
@@ -40,12 +35,13 @@ class EndInitializationCommand : Command<Unit> {
  */
 fun Game.endInitialization() = executeCommand(EndInitializationCommand())
 
-/** Returns a new Mech based on [specification]. */
-class NewMechCommand(private val specification: MechSpecification) : Command<Mech> {
-    override fun execute(context: CommandContext): Mech = context
-        .getPhaseAs(InitializationPhase::class)
-        .newMech(specification)
-}
+class EndInitializationCommand : StatelessInitializationCommand<Unit>({
+    it.end()
+})
 
 /** Returns a new Mech based on [specification]. */
 fun Game.newMech(specification: MechSpecification): Mech = executeCommand(NewMechCommand(specification))
+
+class NewMechCommand(specification: MechSpecification) : StatelessInitializationCommand<Mech>({
+    it.newMech(specification)
+})

@@ -22,11 +22,12 @@ interface Game {
     /**
      * Executes [command] synchronously.
      *
+     * @throws IllegalArgumentException If the active game phase is not applicable for [command].
      * @throws GameException If [command] fails by throwing a checked exception (the original exception thrown by the
      * command will be the cause). If [command] fails by throwing an unchecked exception, that exception will be thrown
      * directly.
      */
-    fun <T : Any> executeCommand(command: Command<T>): T
+    fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R
 }
 
 /** A checked exception that indicates an error occurred within a game. */

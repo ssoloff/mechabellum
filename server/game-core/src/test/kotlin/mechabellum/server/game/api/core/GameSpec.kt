@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.api.core
 
+import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withCause
@@ -31,14 +32,22 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
         it("should return command result when command succeeds") {
             // when
             val expectedResult = 42
-            val actualResult = subject.executeCommand(object : Command<Int> {
-                override fun execute(context: CommandContext): Int {
-                    return expectedResult
-                }
-            })
+            val actualResult = subject.executeCommand(StatelessCommand(Phase::class, { expectedResult }))
 
             // then
             actualResult shouldEqual expectedResult
+        }
+
+        it("should throw exception when command phase not active") {
+            // given
+            abstract class FakePhase : Phase
+
+            // when
+            val operation = { subject.executeCommand(StatelessCommand(FakePhase::class) {}) }
+
+            // then
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain "phase not active"
         }
 
         it("should throw wrapped exception when command fails with checked exception") {
@@ -46,13 +55,7 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
             class FakeException : Exception()
 
             // when
-            val operation = {
-                subject.executeCommand(object : Command<Nothing> {
-                    override fun execute(context: CommandContext): Nothing {
-                        throw FakeException()
-                    }
-                })
-            }
+            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeException() }) }
 
             // then
             operation shouldThrow GameException::class withCause FakeException::class
@@ -63,13 +66,7 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
             class FakeRuntimeException : RuntimeException()
 
             // when
-            val operation = {
-                subject.executeCommand(object : Command<Nothing> {
-                    override fun execute(context: CommandContext): Nothing {
-                        throw FakeRuntimeException()
-                    }
-                })
-            }
+            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeRuntimeException() }) }
 
             // then
             operation shouldThrow FakeRuntimeException::class

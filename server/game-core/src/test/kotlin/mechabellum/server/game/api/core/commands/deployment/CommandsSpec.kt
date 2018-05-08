@@ -17,9 +17,7 @@
 
 package mechabellum.server.game.api.core.commands.deployment
 
-import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
@@ -37,15 +35,12 @@ object DeployMechCommandSpec : Spek({
         it("should deploy Mech to specified position") {
             // given
             val deploymentPhase = mock<DeploymentPhase>()
-            val context = mock<CommandContext> {
-                on { phase } doReturn deploymentPhase
-            }
             val mech = mock<Mech>()
             val position = CellId(3, 6)
             val subject = DeployMechCommand(mech, position)
 
             // when
-            subject.execute(context)
+            subject.execute(deploymentPhase)
 
             // then
             Verify on deploymentPhase that deploymentPhase.deployMech(mech, position) was called

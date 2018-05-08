@@ -17,16 +17,20 @@
 
 package mechabellum.server.game.api.core.commands.general
 
-import mechabellum.server.game.api.core.Command
-import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.grid.Grid
 
-/** Returns the game grid. */
-class GetGridCommand : Command<Grid> {
-    override fun execute(context: CommandContext): Grid = context.phase.grid
-}
+/** Superclass for stateless commands that are executed during any phase. */
+open class StatelessGeneralCommand<R : Any>(
+    action: (Phase) -> R
+) : StatelessCommand<R, Phase>(Phase::class, action)
 
 /** The game grid. */
 val Game.grid: Grid
     get() = executeCommand(GetGridCommand())
+
+class GetGridCommand : StatelessGeneralCommand<Grid>({
+    it.grid
+})

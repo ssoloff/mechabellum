@@ -19,7 +19,6 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Command
-import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.Phase
@@ -33,17 +32,20 @@ import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.grid.DefaultGrid
 import mechabellum.server.game.internal.core.unit.DefaultMech
+import kotlin.reflect.full.cast
 
-internal class DefaultGame(val grid: DefaultGrid) : CommandContext, Game {
+internal class DefaultGame(val grid: DefaultGrid) : Game {
     private val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
     private var nextMechId: Int = 0
 
-    override var phase: Phase = DefaultInitializationPhase()
+    var phase: Phase = DefaultInitializationPhase()
         private set
 
-    override fun <T : Any> executeCommand(command: Command<T>): T {
+    override fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R {
+        require(command.phaseType.isInstance(phase)) { "phase not active (${command.phaseType.simpleName}" }
+
         try {
-            return command.execute(this)
+            return command.execute(command.phaseType.cast(phase))
         } catch (e: RuntimeException) {
             throw e
         } catch (e: Exception) {

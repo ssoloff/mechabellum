@@ -20,34 +20,31 @@ package mechabellum.server.game.api.core
 import kotlin.reflect.KClass
 
 /** An abstract representation of some semantic game behavior. */
-interface Command<T : Any> {
+interface Command<R : Any, TPhase : Phase> {
+    /** The type of phase during which the command may be run. */
+    val phaseType: KClass<TPhase>
+
     /**
-     * Returns the result of executing the command. The command can access the game state and behavior via [context].
+     * Returns the result of executing the command. The command can access the game state and behavior via the active
+     * game [phase].
      *
-     * @throws CommandException If an error occurs while running the command.
+     * @throws GameException If an error occurs while running the command.
      */
-    fun execute(context: CommandContext): T
+    fun execute(phase: TPhase): R
 }
 
 /**
- * The context within which a game command is executed.
+ * Stateless implementation of [Command].
  *
- * A command uses an instance of this context to access the game state and behavior.
- */
-interface CommandContext {
-    /** The active game phase */
-    val phase: Phase
-}
-
-/**
- * Returns the active game phase as the specified [type].
+ * This class is open simply to make it easier to implement a stateless command via inheritance rather than delegation,
+ * which would require additional boilerplate in each implementation. For all intents and purposes, it should be
+ * considered final.
  *
- * @throws CommandException If the active game phase is not of the specified [type].
+ * @param action The action to perform when the command is executed.
  */
-fun <T : Phase> CommandContext.getPhaseAs(type: KClass<T>): T = phase.let {
-    @Suppress("UNCHECKED_CAST")
-    if (type.isInstance(it)) it as T else throw CommandException("phase is not active (${type.simpleName})")
+open class StatelessCommand<R : Any, TPhase : Phase>(
+    override val phaseType: KClass<TPhase>,
+    private val action: (TPhase) -> R
+) : Command<R, TPhase> {
+    override fun execute(phase: TPhase): R = action(phase)
 }
-
-/** A checked exception that indicates an error occurred while executing a command. */
-class CommandException(message: String) : Exception(message)

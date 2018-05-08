@@ -17,24 +17,16 @@
 
 package mechabellum.server.game.api.core.commands.deployment
 
-import mechabellum.server.game.api.core.Command
-import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.getPhaseAs
+import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
 
-/** Deploys [mech] to the specified [position]. */
-class DeployMechCommand(private val mech: Mech, private val position: CellId) : Command<Unit> {
-    /**
-     * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the deployment
-     * zone for [mech].
-     */
-    override fun execute(context: CommandContext) = context
-        .getPhaseAs(DeploymentPhase::class)
-        .deployMech(mech, position)
-}
+/** Superclass for stateless commands that are executed during the deployment phase. */
+open class StatelessDeploymentCommand<R : Any>(
+    action: (DeploymentPhase) -> R
+) : StatelessCommand<R, DeploymentPhase>(DeploymentPhase::class, action)
 
 /**
  * Deploys [mech] to the specified [position].
@@ -43,3 +35,7 @@ class DeployMechCommand(private val mech: Mech, private val position: CellId) : 
  * zone for [mech].
  */
 fun Game.deployMech(mech: Mech, position: CellId) = executeCommand(DeployMechCommand(mech, position))
+
+class DeployMechCommand(mech: Mech, position: CellId) : StatelessDeploymentCommand<Unit>({
+    it.deployMech(mech, position)
+})

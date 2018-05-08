@@ -19,7 +19,6 @@ package mechabellum.server.game.api.core.commands.general
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.grid.Grid
 import org.amshove.kluent.shouldBe
@@ -35,13 +34,10 @@ object GetGridCommandSpec : Spek({
             val phase = mock<Phase> {
                 on { grid } doReturn expected
             }
-            val context = mock<CommandContext> {
-                on { this.phase } doReturn phase
-            }
             val subject = GetGridCommand()
 
             // when
-            val actual = subject.execute(context)
+            val actual = subject.execute(phase)
 
             // then
             actual shouldBe expected

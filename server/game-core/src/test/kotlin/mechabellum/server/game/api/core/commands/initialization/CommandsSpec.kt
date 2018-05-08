@@ -19,7 +19,6 @@ package mechabellum.server.game.api.core.commands.initialization
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.game.api.core.CommandContext
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
@@ -39,13 +38,10 @@ object EndInitializationCommandSpec : Spek({
         it("should end the initialization phase") {
             // given
             val initializationPhase = mock<InitializationPhase>()
-            val context = mock<CommandContext> {
-                on { phase } doReturn initializationPhase
-            }
             val subject = EndInitializationCommand()
 
             // when
-            subject.execute(context)
+            subject.execute(initializationPhase)
 
             // then
             Verify on initializationPhase that initializationPhase.end() was called
@@ -61,14 +57,11 @@ object NewMechCommandSpec : Spek({
             val initializationPhase = mock<InitializationPhase> {
                 on { newMech(any()) } doReturn expectedMech
             }
-            val context = mock<CommandContext> {
-                on { phase } doReturn initializationPhase
-            }
             val specification = newTestMechSpecification()
             val subject = NewMechCommand(specification)
 
             // when
-            val actualMech = subject.execute(context)
+            val actualMech = subject.execute(initializationPhase)
 
             // then
             Verify on initializationPhase that initializationPhase.newMech(specification) was called
