@@ -23,10 +23,10 @@ import mechabellum.server.game.api.core.commands.initialization.newMech
 import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.CellRange
 import mechabellum.server.game.api.core.grid.GridSpecification
-import mechabellum.server.game.api.core.grid.GridTypeRegistry
+import mechabellum.server.game.api.core.grid.GridType
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechSpecification
-import mechabellum.server.game.api.core.unit.UnitTypeRegistry
+import mechabellum.server.game.api.core.unit.MechType
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -35,17 +35,15 @@ import java.util.ServiceLoader
 /** This spec attempts to play an entire game using the training scenario from the Quick-Start rules. */
 object TrainingScenarioSpec : Spek({
     describe("game implementation") {
-        fun newMechSpecification(name: String, team: Team): MechSpecification {
-            val unitTypeRegistry = ServiceLoader.load(UnitTypeRegistry::class.java).first()
+        fun newMechSpecification(type: MechType, team: Team): MechSpecification {
             return MechSpecification(
                 team = team,
-                type = unitTypeRegistry.findMechTypeByName(name).getOrThrow()
+                type = type
             )
         }
 
         fun newQuickStartGame(): Game {
             val gameFactory = ServiceLoader.load(GameFactory::class.java).first()
-            val gridTypeRegistry = ServiceLoader.load(GridTypeRegistry::class.java).first()
             return gameFactory.newGame(
                 GameSpecification(
                     gridSpecification = GridSpecification(
@@ -53,7 +51,7 @@ object TrainingScenarioSpec : Spek({
                             Team.ATTACKER to CellRange(0..14, 0..0),
                             Team.DEFENDER to CellRange(0..14, 14..16)
                         ),
-                        type = gridTypeRegistry.findByName("Quick-Start Map").getOrThrow()
+                        type = GridType(cols = 15, name = "Quick-Start Map", rows = 17)
                     )
                 )
             )
@@ -62,10 +60,10 @@ object TrainingScenarioSpec : Spek({
         it("should be able to play the training scenario from the Quick-Start rules") {
             val game = newQuickStartGame()
 
-            val defender1 = game.newMech(newMechSpecification("CDA-2A Cicada", Team.DEFENDER))
-            val defender2 = game.newMech(newMechSpecification("HBK-4G Hunchback", Team.DEFENDER))
-            val attacker1 = game.newMech(newMechSpecification("ENF-4R Enforcer", Team.ATTACKER))
-            val attacker2 = game.newMech(newMechSpecification("HER-2S Hermes II", Team.ATTACKER))
+            val defender1 = game.newMech(newMechSpecification(MechTypes.CICADA, Team.DEFENDER))
+            val defender2 = game.newMech(newMechSpecification(MechTypes.HUNCHBACK, Team.DEFENDER))
+            val attacker1 = game.newMech(newMechSpecification(MechTypes.ENFORCER, Team.ATTACKER))
+            val attacker2 = game.newMech(newMechSpecification(MechTypes.HERMES_II, Team.ATTACKER))
             game.endInitialization()
 
             game.deployMech(defender1, CellId(0, 16))
@@ -76,4 +74,11 @@ object TrainingScenarioSpec : Spek({
             // TODO: implement remainder of scenario
         }
     }
-})
+}) {
+    private object MechTypes {
+        val CICADA = MechType("CDA-2A Cicada")
+        val ENFORCER = MechType("ENF-4R Enforcer")
+        val HERMES_II = MechType("HER-2S Hermes II")
+        val HUNCHBACK = MechType("HBK-4G Hunchback")
+    }
+}
