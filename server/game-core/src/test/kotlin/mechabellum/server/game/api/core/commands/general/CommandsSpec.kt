@@ -28,7 +28,7 @@ import org.jetbrains.spek.api.dsl.it
 
 object GetGridCommandSpec : Spek({
     describe("execute") {
-        it("it should return the game grid") {
+        it("should return the game grid") {
             // given
             val expected = mock<Grid>()
             val phase = mock<Phase> {
