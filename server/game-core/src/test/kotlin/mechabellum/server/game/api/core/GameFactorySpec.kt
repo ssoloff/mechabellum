@@ -34,7 +34,7 @@ abstract class GameFactorySpec(subjectFactory: () -> GameFactory) : SubjectSpek<
             val game = subject.newGame(newTestGameSpecification().copy(gridSpecification = gridSpecification))
 
             // then
-            game.grid.type shouldEqual gridSpecification.type
+            game.grid.getOrThrow().type shouldEqual gridSpecification.type
         }
     }
 })

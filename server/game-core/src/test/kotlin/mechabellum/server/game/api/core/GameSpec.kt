@@ -17,10 +17,11 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.common.api.core.util.Result
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
-import org.amshove.kluent.withCause
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
@@ -29,13 +30,39 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
     subject { subjectFactory() }
 
     describe("executeCommand") {
-        it("should return command result when command succeeds") {
+        it("should return Success when command succeeds") {
             // when
-            val expectedResult = 42
-            val actualResult = subject.executeCommand(StatelessCommand(Phase::class, { expectedResult }))
+            val value = 42
+            val result = subject.executeCommand(StatelessCommand(Phase::class, { value }))
 
             // then
-            actualResult shouldEqual expectedResult
+            result shouldEqual Result.success(value)
+        }
+
+        it("should return Failure when command throws checked exception") {
+            // given
+            class FakeException : Exception()
+
+            // when
+            val result = subject.executeCommand(StatelessCommand(Phase::class) { throw FakeException() })
+
+            // then
+            result shouldBeInstanceOf Result.Failure::class
+            with(result as Result.Failure) {
+                exception shouldBeInstanceOf GameException::class
+                exception.cause shouldBeInstanceOf FakeException::class
+            }
+        }
+
+        it("should throw exception when command throws unchecked exception") {
+            // given
+            class FakeRuntimeException : RuntimeException()
+
+            // when
+            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeRuntimeException() }) }
+
+            // then
+            operation shouldThrow FakeRuntimeException::class
         }
 
         it("should throw exception when command phase not active") {
@@ -48,28 +75,6 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
             // then
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "phase not active"
-        }
-
-        it("should throw wrapped exception when command fails with checked exception") {
-            // given
-            class FakeException : Exception()
-
-            // when
-            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeException() }) }
-
-            // then
-            operation shouldThrow GameException::class withCause FakeException::class
-        }
-
-        it("should throw original exception when command fails with unchecked exception") {
-            // given
-            class FakeRuntimeException : RuntimeException()
-
-            // when
-            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeRuntimeException() }) }
-
-            // then
-            operation shouldThrow FakeRuntimeException::class
         }
     }
 })

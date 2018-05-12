@@ -23,11 +23,24 @@ interface Game {
      * Executes [command] synchronously.
      *
      * @throws IllegalArgumentException If the active game phase is not applicable for [command].
+     * @throws RuntimeException If [command] fails by throwing an unchecked exception (the thrown exception is the
+     * original unchecked exception thrown by the command and thus may be a subclass of [RuntimeException]).
      * @throws GameException If [command] fails by throwing a checked exception (the original exception thrown by the
-     * command will be the cause). If [command] fails by throwing an unchecked exception, that exception will be thrown
-     * directly.
+     * command will be the cause).
      */
-    fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R
+    // TODO: NEXT... change to return Result<R, GameException> ??
+    // - document that unchecked exceptions thrown while executing command will be rethrown
+    // - checked exceptions are returned through the Result
+    //
+    // TODO: how should we handle Empty??
+    // the only way that will work properly is if we have Command also return Result<R, GameException>
+    //
+    // bottom line is this forces even the command extension functions to deal with Results, which may not be what we want
+    // let's see how the TrainingScenarioSpec looks after making this change (only going to use Result here; not in the commands)
+    //
+    // - BASICALLY, this makes the extension functions useless (which they may have been to begin with; especially in light
+    // of possibly renaming Game to GameRunner)
+    fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): CommandResult<R>
 }
 
 /** A checked exception that indicates an error occurred within a game. */

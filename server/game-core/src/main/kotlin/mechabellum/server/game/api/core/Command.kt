@@ -17,7 +17,10 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.common.api.core.util.Result
 import kotlin.reflect.KClass
+
+typealias CommandResult<R> = Result<R, GameException>
 
 /** An abstract representation of some semantic game behavior. */
 interface Command<R : Any, TPhase : Phase> {

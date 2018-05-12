@@ -59,16 +59,16 @@ object TrainingScenarioSpec : Spek({
         it("should be able to play the training scenario from the Quick-Start rules") {
             val game = newQuickStartGame()
 
-            val defender1 = game.newMech(newMechSpecification(MechTypes.CICADA, Team.DEFENDER))
-            val defender2 = game.newMech(newMechSpecification(MechTypes.HUNCHBACK, Team.DEFENDER))
-            val attacker1 = game.newMech(newMechSpecification(MechTypes.ENFORCER, Team.ATTACKER))
-            val attacker2 = game.newMech(newMechSpecification(MechTypes.HERMES_II, Team.ATTACKER))
-            game.endInitialization()
+            val defender1 = game.newMech(newMechSpecification(MechTypes.CICADA, Team.DEFENDER)).getOrThrow()
+            val defender2 = game.newMech(newMechSpecification(MechTypes.HUNCHBACK, Team.DEFENDER)).getOrThrow()
+            val attacker1 = game.newMech(newMechSpecification(MechTypes.ENFORCER, Team.ATTACKER)).getOrThrow()
+            val attacker2 = game.newMech(newMechSpecification(MechTypes.HERMES_II, Team.ATTACKER)).getOrThrow()
+            game.endInitialization() // TODO: check for failure
 
-            game.deployMech(defender1, Position(0, 16))
-            game.deployMech(defender2, Position(14, 16))
-            game.deployMech(attacker1, Position(0, 0))
-            game.deployMech(attacker2, Position(14, 0))
+            game.deployMech(defender1, Position(0, 16)) // TODO: check for failure
+            game.deployMech(defender2, Position(14, 16)) // TODO: check for failure
+            game.deployMech(attacker1, Position(0, 0)) // TODO: check for failure
+            game.deployMech(attacker2, Position(14, 0)) // TODO: check for failure
 
             // TODO: implement remainder of scenario
         }

@@ -18,7 +18,9 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.common.api.core.util.Result
 import mechabellum.server.game.api.core.Command
+import mechabellum.server.game.api.core.CommandResult
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.Phase
@@ -41,15 +43,15 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
     var phase: Phase = DefaultInitializationPhase()
         private set
 
-    override fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R {
+    override fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): CommandResult<R> {
         require(command.phaseType.isInstance(phase)) { "phase not active (${command.phaseType.simpleName}" }
 
         try {
-            return command.execute(command.phaseType.cast(phase))
+            return Result.success(command.execute(command.phaseType.cast(phase)))
         } catch (e: RuntimeException) {
             throw e
         } catch (e: Exception) {
-            throw GameException(Messages.commandExecutionFailure, e)
+            return Result.failure(GameException(Messages.commandExecutionFailure, e))
         }
     }
 
