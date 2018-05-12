@@ -20,32 +20,17 @@ package mechabellum.server.game.api.core
 /** A BattleTech game session. */
 interface Game {
     /**
-     * Executes [command] synchronously.
+     * Executes [command] synchronously and returns its result.
      *
      * @throws IllegalArgumentException If the active game phase is not applicable for [command].
-     * @throws RuntimeException If [command] fails by throwing an unchecked exception (the thrown exception is the
-     * original unchecked exception thrown by the command and thus may be a subclass of [RuntimeException]).
-     * @throws GameException If [command] fails by throwing a checked exception (the original exception thrown by the
-     * command will be the cause).
+     * @throws UnexpectedCheckedException If [command] throws an unexpected checked exception.
      */
-    // TODO: NEXT... change to return Result<R, GameException> ??
-    // - document that unchecked exceptions thrown while executing command will be rethrown
-    // - checked exceptions are returned through the Result
-    //
-    // TODO: how should we handle Empty??
-    // the only way that will work properly is if we have Command also return Result<R, GameException>
-    //
-    // bottom line is this forces even the command extension functions to deal with Results, which may not be what we want
-    // let's see how the TrainingScenarioSpec looks after making this change (only going to use Result here; not in the commands)
-    //
-    // - BASICALLY, this makes the extension functions useless (which they may have been to begin with; especially in light
-    // of possibly renaming Game to GameRunner)
     fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): CommandResult<R>
 }
 
 /** A checked exception that indicates an error occurred within a game. */
-class GameException : Exception {
-    constructor(message: String) : super(message)
+class GameException(message: String) : Exception(message)
 
-    constructor(message: String, cause: Throwable) : super(message, cause)
-}
+// TODO: consider moving this to common-core
+/** An unchecked exception that indicates an unexpected checked exception was thrown while executing a game command. */
+class UnexpectedCheckedException(cause: Exception) : RuntimeException("unexpected checked exception", cause)

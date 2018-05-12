@@ -19,6 +19,7 @@ package mechabellum.server.game.api.core.commands.initialization
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.common.api.core.util.Result
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
@@ -26,7 +27,7 @@ import org.amshove.kluent.Verify
 import org.amshove.kluent.any
 import org.amshove.kluent.called
 import org.amshove.kluent.on
-import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.that
 import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
@@ -35,23 +36,24 @@ import org.jetbrains.spek.api.dsl.it
 
 object EndInitializationCommandSpec : Spek({
     describe("execute") {
-        it("should end the initialization phase") {
+        it("should end the initialization phase and return Empty") {
             // given
             val initializationPhase = mock<InitializationPhase>()
             val subject = EndInitializationCommand()
 
             // when
-            subject.execute(initializationPhase)
+            val result = subject.execute(initializationPhase)
 
             // then
             Verify on initializationPhase that initializationPhase.end() was called
+            result shouldEqual Result.empty()
         }
     }
 })
 
 object NewMechCommandSpec : Spek({
     describe("execute") {
-        it("should return new Mech") {
+        it("should return Success with the new Mech") {
             // given
             val expectedMech = mock<Mech>()
             val initializationPhase = mock<InitializationPhase> {
@@ -61,11 +63,11 @@ object NewMechCommandSpec : Spek({
             val subject = NewMechCommand(specification)
 
             // when
-            val actualMech = subject.execute(initializationPhase)
+            val result = subject.execute(initializationPhase)
 
             // then
             Verify on initializationPhase that initializationPhase.newMech(specification) was called
-            actualMech shouldBe expectedMech
+            result shouldEqual Result.success(expectedMech)
         }
     }
 })

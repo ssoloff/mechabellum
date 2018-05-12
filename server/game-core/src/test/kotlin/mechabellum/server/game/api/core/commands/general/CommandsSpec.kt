@@ -19,16 +19,17 @@ package mechabellum.server.game.api.core.commands.general
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.common.api.core.util.Result
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.grid.Grid
-import org.amshove.kluent.shouldBe
+import org.amshove.kluent.shouldEqual
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
 object GetGridCommandSpec : Spek({
     describe("execute") {
-        it("it should return the game grid") {
+        it("should return Success with the game grid") {
             // given
             val expected = mock<Grid>()
             val phase = mock<Phase> {
@@ -37,10 +38,10 @@ object GetGridCommandSpec : Spek({
             val subject = GetGridCommand()
 
             // when
-            val actual = subject.execute(phase)
+            val result = subject.execute(phase)
 
             // then
-            actual shouldBe expected
+            result shouldEqual Result.success(expected)
         }
     }
 })

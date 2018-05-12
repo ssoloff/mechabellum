@@ -18,12 +18,12 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.common.api.core.util.Result
 import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.CommandResult
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.UnexpectedCheckedException
 import mechabellum.server.game.api.core.grid.Grid
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
@@ -47,11 +47,11 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
         require(command.phaseType.isInstance(phase)) { "phase not active (${command.phaseType.simpleName}" }
 
         try {
-            return Result.success(command.execute(command.phaseType.cast(phase)))
+            return command.execute(command.phaseType.cast(phase))
         } catch (e: RuntimeException) {
             throw e
         } catch (e: Exception) {
-            return Result.failure(GameException(Messages.commandExecutionFailure, e))
+            throw UnexpectedCheckedException(e)
         }
     }
 
@@ -115,8 +115,6 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
     }
 
     private interface Messages {
-        val commandExecutionFailure: String
-
         fun teamHasNoMechs(teamName: String): String
 
         companion object : Messages by DefaultMessageFactory.get(Messages::class)

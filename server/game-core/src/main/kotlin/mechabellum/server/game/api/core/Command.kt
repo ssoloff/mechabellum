@@ -30,10 +30,8 @@ interface Command<R : Any, TPhase : Phase> {
     /**
      * Returns the result of executing the command. The command can access the game state and behavior via the active
      * game [phase].
-     *
-     * @throws GameException If an error occurs while running the command.
      */
-    fun execute(phase: TPhase): R
+    fun execute(phase: TPhase): CommandResult<R>
 }
 
 /**
@@ -47,7 +45,7 @@ interface Command<R : Any, TPhase : Phase> {
  */
 open class StatelessCommand<R : Any, TPhase : Phase>(
     override val phaseType: KClass<TPhase>,
-    private val action: (TPhase) -> R
+    private val action: (TPhase) -> CommandResult<R>
 ) : Command<R, TPhase> {
-    override fun execute(phase: TPhase): R = action(phase)
+    override fun execute(phase: TPhase): CommandResult<R> = action(phase)
 }

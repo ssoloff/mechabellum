@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.api.core.commands.deployment
 
+import mechabellum.server.common.api.core.util.Result
 import mechabellum.server.game.api.core.CommandResult
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.StatelessCommand
@@ -26,7 +27,7 @@ import mechabellum.server.game.api.core.unit.Mech
 
 /** Superclass for stateless commands that are executed during the deployment phase. */
 open class StatelessDeploymentCommand<R : Any>(
-    action: (DeploymentPhase) -> R
+    action: (DeploymentPhase) -> CommandResult<R>
 ) : StatelessCommand<R, DeploymentPhase>(DeploymentPhase::class, action)
 
 /**
@@ -40,4 +41,6 @@ fun Game.deployMech(mech: Mech, position: Position): CommandResult<Unit> =
 
 class DeployMechCommand(mech: Mech, position: Position) : StatelessDeploymentCommand<Unit>({
     it.deployMech(mech, position)
+    // TODO: should this return Empty or Success(Unit.INSTANCE)?
+    Result.empty()
 })
