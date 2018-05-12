@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.api.core
 
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
@@ -38,6 +39,38 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
             actualResult shouldEqual expectedResult
         }
 
+        it("should throw exception when command fails with game exception") {
+            // when
+            val exception = GameException("message")
+            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw exception }) }
+
+            // then
+            val exceptionResult = operation shouldThrow GameException::class
+            exceptionResult.exception shouldBe exception
+        }
+
+        it("should throw exception when command fails with unexpected checked exception") {
+            // given
+            class FakeException : Exception()
+
+            // when
+            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeException() }) }
+
+            // then
+            operation shouldThrow UnexpectedCommandException::class withCause FakeException::class
+        }
+
+        it("should throw exception when command fails with unchecked exception") {
+            // given
+            class FakeRuntimeException : RuntimeException()
+
+            // when
+            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeRuntimeException() }) }
+
+            // then
+            operation shouldThrow FakeRuntimeException::class
+        }
+
         it("should throw exception when command phase not active") {
             // given
             abstract class FakePhase : Phase
@@ -48,28 +81,6 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
             // then
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "phase not active"
-        }
-
-        it("should throw wrapped exception when command fails with checked exception") {
-            // given
-            class FakeException : Exception()
-
-            // when
-            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeException() }) }
-
-            // then
-            operation shouldThrow GameException::class withCause FakeException::class
-        }
-
-        it("should throw original exception when command fails with unchecked exception") {
-            // given
-            class FakeRuntimeException : RuntimeException()
-
-            // when
-            val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeRuntimeException() }) }
-
-            // then
-            operation shouldThrow FakeRuntimeException::class
         }
     }
 })
