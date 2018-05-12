@@ -121,5 +121,5 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
         companion object : Messages by DefaultMessageFactory.get(Messages::class)
     }
 
-    private fun Messages.teamHasNoMechs(team: Team) = teamHasNoMechs(team.name.toLowerCase())
+    private fun Messages.teamHasNoMechs(team: Team): String = teamHasNoMechs(team.name.toLowerCase())
 }

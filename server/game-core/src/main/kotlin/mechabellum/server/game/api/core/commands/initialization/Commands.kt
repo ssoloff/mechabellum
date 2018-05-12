@@ -33,7 +33,7 @@ open class StatelessInitializationCommand<R : Any>(
  *
  * @throws mechabellum.server.game.api.core.GameException If all teams do not have at least one Mech.
  */
-fun Game.endInitialization() = executeCommand(EndInitializationCommand())
+fun Game.endInitialization(): Unit = executeCommand(EndInitializationCommand())
 
 class EndInitializationCommand : StatelessInitializationCommand<Unit>({
     it.end()
