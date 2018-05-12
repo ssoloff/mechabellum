@@ -27,7 +27,7 @@ import mechabellum.server.game.api.core.participant.Team
  *
  * @throws IllegalArgumentException If [deploymentZonesByTeam] does not have an entry for each team.
  */
-data class GridSpecification(val deploymentZonesByTeam: Map<Team, CellRange>, val type: GridType) {
+data class GridSpecification(val deploymentZonesByTeam: Map<Team, CellIdRange>, val type: GridType) {
     init {
         checkAllTeamsHaveDeploymentZone()
         checkDeploymentZonesAreWithinGridBounds()

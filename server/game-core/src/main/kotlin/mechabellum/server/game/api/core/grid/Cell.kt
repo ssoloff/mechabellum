@@ -27,7 +27,7 @@ data class CellId(val col: Int, val row: Int) : Comparable<CellId> {
     override fun compareTo(other: CellId): Int = COMPARATOR.compare(this, other)
 
     /** Creates a range from this value to the specified [other] value. */
-    operator fun rangeTo(other: CellId): CellRange = CellRange(this, other)
+    operator fun rangeTo(other: CellId): CellIdRange = CellIdRange(this, other)
 
     companion object {
         private val COMPARATOR = Comparator.comparingInt(CellId::col).thenComparingInt(CellId::row)
@@ -35,7 +35,15 @@ data class CellId(val col: Int, val row: Int) : Comparable<CellId> {
 }
 
 /** Returns a range from this value up to but excluding the specified [to] value. */
-infix fun CellId.until(to: CellId): CellRange = CellRange(this, CellId(to.col - 1, to.row - 1))
+infix fun CellId.until(to: CellId): CellIdRange = CellIdRange(this, CellId(to.col - 1, to.row - 1))
+
+/**
+ * A rectangular range of cell identifiers.
+ *
+ * @property start The minimum value in the range.
+ * @property endInclusive The maximum value in the range (inclusive).
+ */
+data class CellIdRange(override val start: CellId, override val endInclusive: CellId) : ClosedRange<CellId>
 
 /** A cell in a hexagonal grid. */
 interface Cell {

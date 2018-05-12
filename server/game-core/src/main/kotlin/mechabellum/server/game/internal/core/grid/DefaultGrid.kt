@@ -19,7 +19,7 @@ package mechabellum.server.game.internal.core.grid
 
 import mechabellum.server.game.api.core.grid.Cell
 import mechabellum.server.game.api.core.grid.CellId
-import mechabellum.server.game.api.core.grid.CellRange
+import mechabellum.server.game.api.core.grid.CellIdRange
 import mechabellum.server.game.api.core.grid.Grid
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.participant.Team
@@ -44,5 +44,5 @@ internal class DefaultGrid(specification: GridSpecification) : Grid {
         }
     }
 
-    override fun getDeploymentZone(team: Team): CellRange = deploymentZonesByTeam[team]!!
+    override fun getDeploymentZone(team: Team): CellIdRange = deploymentZonesByTeam[team]!!
 }

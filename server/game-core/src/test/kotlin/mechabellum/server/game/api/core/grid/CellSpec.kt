@@ -19,6 +19,7 @@ package mechabellum.server.game.api.core.grid
 
 import mechabellum.server.common.api.test.ComparableSpec
 import mechabellum.server.common.api.test.DataClassSpec
+import mechabellum.server.common.api.test.ranges.ClosedRangeSpec
 import org.amshove.kluent.shouldEqual
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -29,7 +30,7 @@ object CellIdSpec : Spek({
         it("should return a cell range with an inclusive end") {
             val start = CellId(1, 2)
             val endInclusive = CellId(11, 22)
-            start..endInclusive shouldEqual CellRange(start, endInclusive)
+            start..endInclusive shouldEqual CellIdRange(start, endInclusive)
         }
     }
 
@@ -37,7 +38,7 @@ object CellIdSpec : Spek({
         it("should return a cell range with an exclusive end") {
             val start = CellId(1, 2)
             val endInclusive = CellId(11, 22)
-            start until endInclusive shouldEqual CellRange(start, CellId(endInclusive.col - 1, endInclusive.row - 1))
+            start until endInclusive shouldEqual CellIdRange(start, CellId(endInclusive.col - 1, endInclusive.row - 1))
         }
     }
 })
@@ -49,3 +50,12 @@ object CellIdBehavesAsComparableSpec : ComparableSpec<CellId>(
 )
 
 object CellIdBehavesAsDataClassSpec : DataClassSpec({ CellId(11, 22) })
+
+object CellIdRangeBehavesAsClosedRangeSpec : ClosedRangeSpec<CellId>(
+    inRangeValue = CellId(5, 5),
+    newEmptyInstance = { CellIdRange(CellId(0, 0), CellId(-1, -1)) },
+    newNonEmptyInstance = { CellIdRange(CellId(0, 0), CellId(10, 10)) },
+    outOfRangeValue = CellId(11, 11)
+)
+
+object CellIdRangeBehavesAsDataClassSpec : DataClassSpec({ CellIdRange(CellId(0, 0), CellId(5, 8)) })
