@@ -21,7 +21,6 @@ import mechabellum.server.game.api.core.commands.deployment.deployMech
 import mechabellum.server.game.api.core.commands.initialization.endInitialization
 import mechabellum.server.game.api.core.commands.initialization.newMech
 import mechabellum.server.game.api.core.grid.CellId
-import mechabellum.server.game.api.core.grid.CellRange
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridType
 import mechabellum.server.game.api.core.participant.Team
@@ -48,8 +47,8 @@ object TrainingScenarioSpec : Spek({
                 GameSpecification(
                     gridSpecification = GridSpecification(
                         deploymentZonesByTeam = mapOf(
-                            Team.ATTACKER to CellRange(0..14, 0..0),
-                            Team.DEFENDER to CellRange(0..14, 14..16)
+                            Team.ATTACKER to CellId(0, 0)..CellId(14, 0),
+                            Team.DEFENDER to CellId(0, 14)..CellId(14, 16)
                         ),
                         type = GridType(cols = 15, name = "Quick-Start Map", rows = 17)
                     )

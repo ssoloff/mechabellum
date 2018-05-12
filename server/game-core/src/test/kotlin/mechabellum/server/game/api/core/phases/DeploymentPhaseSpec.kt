@@ -20,7 +20,6 @@ package mechabellum.server.game.api.core.phases
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.grid.CellId
-import mechabellum.server.game.api.core.grid.CellRange
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridType
@@ -44,14 +43,14 @@ abstract class DeploymentPhaseSpec(
     subjectFactory: (GridSpecification) -> DeploymentPhase
 ) : SubjectSpek<DeploymentPhase>({
     val gridType = newTestGridType().copy(cols = 8, rows = 10)
-    val attackerDeploymentZone = CellRange(1..6, 1..2)
+    val attackerDeploymentZone = CellId(1, 1)..CellId(6, 2)
 
     subject {
         subjectFactory(
             newTestGridSpecification().copy(
                 deploymentZonesByTeam = mapOf(
                     Team.ATTACKER to attackerDeploymentZone,
-                    Team.DEFENDER to CellRange(0..7, 9..9)
+                    Team.DEFENDER to CellId(0, 8)..CellId(7, 9)
                 ),
                 type = gridType
             )
@@ -89,19 +88,19 @@ abstract class DeploymentPhaseSpec(
         on(
             "invalid attacker position %s",
             data(
-                CellId(attackerDeploymentZone.colRange.start - 1, attackerDeploymentZone.rowRange.start),
+                attackerDeploymentZone.start.copy(col = attackerDeploymentZone.start.col - 1),
                 expected = Unit
             ),
             data(
-                CellId(attackerDeploymentZone.colRange.start, attackerDeploymentZone.rowRange.start - 1),
+                attackerDeploymentZone.start.copy(row = attackerDeploymentZone.start.row - 1),
                 expected = Unit
             ),
             data(
-                CellId(attackerDeploymentZone.colRange.endInclusive + 1, attackerDeploymentZone.rowRange.endInclusive),
+                attackerDeploymentZone.endInclusive.copy(col = attackerDeploymentZone.endInclusive.col + 1),
                 expected = Unit
             ),
             data(
-                CellId(attackerDeploymentZone.colRange.endInclusive, attackerDeploymentZone.rowRange.endInclusive + 1),
+                attackerDeploymentZone.endInclusive.copy(row = attackerDeploymentZone.endInclusive.row + 1),
                 expected = Unit
             )
         ) { position, _ ->

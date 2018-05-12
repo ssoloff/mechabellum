@@ -18,5 +18,13 @@
 package mechabellum.server.game.api.core.grid
 
 import mechabellum.server.common.api.test.DataClassSpec
+import mechabellum.server.common.api.test.ranges.ClosedRangeSpec
 
-object CellRangeBehavesAsDataClassSpec : DataClassSpec({ CellRange(0..5, 0..8) })
+object CellRangeBehavesAsClosedRangeSpec : ClosedRangeSpec<CellId>(
+    inRangeValue = CellId(5, 5),
+    newEmptyInstance = { CellRange(CellId(0, 0), CellId(-1, -1)) },
+    newNonEmptyInstance = { CellRange(CellId(0, 0), CellId(10, 10)) },
+    outOfRangeValue = CellId(11, 11)
+)
+
+object CellRangeBehavesAsDataClassSpec : DataClassSpec({ CellRange(CellId(0, 0), CellId(5, 8)) })

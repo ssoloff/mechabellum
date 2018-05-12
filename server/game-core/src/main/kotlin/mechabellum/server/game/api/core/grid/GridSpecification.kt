@@ -38,14 +38,9 @@ data class GridSpecification(val deploymentZonesByTeam: Map<Team, CellRange>, va
     }
 
     private fun checkDeploymentZonesAreWithinGridBounds() {
-        val gridBounds = CellRange(0 until type.cols, 0 until type.rows)
+        val gridBounds = CellId(0, 0) until CellId(type.cols, type.rows)
         deploymentZonesByTeam.forEach { team, deploymentZone ->
-            require(
-                (deploymentZone.colRange.start in gridBounds.colRange) &&
-                    (deploymentZone.colRange.endInclusive in gridBounds.colRange) &&
-                    (deploymentZone.rowRange.start in gridBounds.rowRange) &&
-                    (deploymentZone.rowRange.endInclusive in gridBounds.rowRange)
-            ) {
+            require((deploymentZone.start in gridBounds) && (deploymentZone.endInclusive in gridBounds)) {
                 "deployment zone $deploymentZone for team $team exceeds grid bounds"
             }
         }

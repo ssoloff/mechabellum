@@ -17,6 +17,35 @@
 
 package mechabellum.server.game.api.core.grid
 
+import mechabellum.server.common.api.test.ComparableSpec
 import mechabellum.server.common.api.test.DataClassSpec
+import org.amshove.kluent.shouldEqual
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+
+object CellIdSpec : Spek({
+    describe("rangeTo") {
+        it("should return a cell range with an inclusive end") {
+            val start = CellId(1, 2)
+            val endInclusive = CellId(11, 22)
+            start..endInclusive shouldEqual CellRange(start, endInclusive)
+        }
+    }
+
+    describe("until") {
+        it("should return a cell range with an exclusive end") {
+            val start = CellId(1, 2)
+            val endInclusive = CellId(11, 22)
+            start until endInclusive shouldEqual CellRange(start, CellId(endInclusive.col - 1, endInclusive.row - 1))
+        }
+    }
+})
+
+object CellIdBehavesAsComparableSpec : ComparableSpec<CellId>(
+    newGreaterThanInstances = { listOf(CellId(12, 22), CellId(11, 23)) },
+    newLessThanInstances = { listOf(CellId(10, 22), CellId(11, 21)) },
+    newReferenceInstance = { CellId(11, 22) }
+)
 
 object CellIdBehavesAsDataClassSpec : DataClassSpec({ CellId(11, 22) })

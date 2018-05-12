@@ -80,7 +80,7 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
 
         private fun checkPositionIsWithinTeamDeploymentZone(position: CellId, team: Team) {
             val deploymentZone = grid.getDeploymentZone(team)
-            require((position.col in deploymentZone.colRange) && (position.row in deploymentZone.rowRange)) {
+            require(position in deploymentZone) {
                 "position $position is not in deployment zone $deploymentZone for team $team"
             }
         }

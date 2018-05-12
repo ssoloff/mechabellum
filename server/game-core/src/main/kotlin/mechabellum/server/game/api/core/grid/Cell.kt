@@ -23,7 +23,19 @@ package mechabellum.server.game.api.core.grid
  * @property col The cell column.
  * @property row The cell row.
  */
-data class CellId(val col: Int, val row: Int)
+data class CellId(val col: Int, val row: Int) : Comparable<CellId> {
+    override fun compareTo(other: CellId): Int = COMPARATOR.compare(this, other)
+
+    /** Creates a range from this value to the specified [other] value. */
+    operator fun rangeTo(other: CellId): CellRange = CellRange(this, other)
+
+    companion object {
+        private val COMPARATOR = Comparator.comparingInt(CellId::col).thenComparingInt(CellId::row)
+    }
+}
+
+/** Returns a range from this value up to but excluding the specified [to] value. */
+infix fun CellId.until(to: CellId): CellRange = CellRange(this, CellId(to.col - 1, to.row - 1))
 
 /** A cell in a hexagonal grid. */
 interface Cell {

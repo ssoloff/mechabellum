@@ -15,12 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.grid
+package mechabellum.server.common.api.test.ranges
 
-/**
- * A rectangular range of cells on a hexagonal grid.
- *
- * @property start The minimum value in the range.
- * @property endInclusive The maximum value in the range (inclusive).
- */
-data class CellRange(override val start: CellId, override val endInclusive: CellId) : ClosedRange<CellId>
+object IntRangeBehavesAsClosedRangeSpec : ClosedRangeSpec<Int>(
+    inRangeValue = 5,
+    newEmptyInstance = { IntRange(0, -1) },
+    newNonEmptyInstance = { IntRange(0, 10) },
+    outOfRangeValue = 11
+)

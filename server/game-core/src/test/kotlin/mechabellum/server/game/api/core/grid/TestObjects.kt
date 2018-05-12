@@ -21,8 +21,8 @@ import mechabellum.server.game.api.core.participant.Team
 
 fun newTestGridSpecification(): GridSpecification = GridSpecification(
     deploymentZonesByTeam = mapOf(
-        Team.ATTACKER to CellRange(0..0, 0..0),
-        Team.DEFENDER to CellRange(0..0, 0..0)
+        Team.ATTACKER to CellId(0, 0)..CellId(0, 0),
+        Team.DEFENDER to CellId(0, 0)..CellId(0, 0)
     ),
     type = newTestGridType()
 )
