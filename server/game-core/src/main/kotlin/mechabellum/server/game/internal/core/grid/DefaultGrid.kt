@@ -34,7 +34,7 @@ internal class DefaultGrid(specification: GridSpecification) : Grid {
         }
     }
 
-    private val deploymentZonesByTeam = specification.deploymentZonesByTeam
+    private val deploymentPositionsByTeam = specification.deploymentPositionsByTeam
 
     override val type = specification.type
 
@@ -44,5 +44,5 @@ internal class DefaultGrid(specification: GridSpecification) : Grid {
         }
     }
 
-    override fun getDeploymentZone(team: Team): PositionRange = deploymentZonesByTeam[team]!!
+    override fun getDeploymentPositions(team: Team): PositionRange = deploymentPositionsByTeam[team]!!
 }

@@ -36,6 +36,6 @@ interface Grid {
      */
     fun getCell(position: Position): Cell
 
-    /** Returns the deployment zone for the specified [team]. */
-    fun getDeploymentZone(team: Team): PositionRange
+    /** Returns the possible deployment positions for the specified [team]. */
+    fun getDeploymentPositions(team: Team): PositionRange
 }

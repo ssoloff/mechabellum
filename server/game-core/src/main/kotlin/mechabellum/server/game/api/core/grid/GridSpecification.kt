@@ -22,26 +22,26 @@ import mechabellum.server.game.api.core.participant.Team
 /**
  * A specification for creating a new [Grid].
  *
- * @property deploymentZonesByTeam A collection of deployment zones on the grid for each team.
+ * @property deploymentPositionsByTeam The possible deployment positions on the grid for each team.
  * @property type The type of grid to create.
  *
- * @throws IllegalArgumentException If [deploymentZonesByTeam] does not have an entry for each team.
+ * @throws IllegalArgumentException If [deploymentPositionsByTeam] does not have an entry for each team.
  */
-data class GridSpecification(val deploymentZonesByTeam: Map<Team, PositionRange>, val type: GridType) {
+data class GridSpecification(val deploymentPositionsByTeam: Map<Team, PositionRange>, val type: GridType) {
     init {
-        checkAllTeamsHaveDeploymentZone()
-        checkDeploymentZonesAreWithinGridBounds()
+        checkAllTeamsHaveDeploymentPositions()
+        checkDeploymentPositionsAreWithinGridBounds()
     }
 
-    private fun checkAllTeamsHaveDeploymentZone() {
-        Team.values().forEach { require(it in deploymentZonesByTeam) { "no deployment zone for team $it" } }
+    private fun checkAllTeamsHaveDeploymentPositions() {
+        Team.values().forEach { require(it in deploymentPositionsByTeam) { "no deployment positions for team $it" } }
     }
 
-    private fun checkDeploymentZonesAreWithinGridBounds() {
+    private fun checkDeploymentPositionsAreWithinGridBounds() {
         val gridBounds = Position(0, 0) until Position(type.cols, type.rows)
-        deploymentZonesByTeam.forEach { team, deploymentZone ->
-            require((deploymentZone.start in gridBounds) && (deploymentZone.endInclusive in gridBounds)) {
-                "deployment zone $deploymentZone for team $team exceeds grid bounds"
+        deploymentPositionsByTeam.forEach { team, deploymentPositions ->
+            require((deploymentPositions.start in gridBounds) && (deploymentPositions.endInclusive in gridBounds)) {
+                "deployment positions $deploymentPositions for team $team exceeds grid bounds"
             }
         }
     }

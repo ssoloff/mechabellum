@@ -20,7 +20,7 @@ package mechabellum.server.game.api.core.grid
 import mechabellum.server.game.api.core.participant.Team
 
 fun newTestGridSpecification(): GridSpecification = GridSpecification(
-    deploymentZonesByTeam = mapOf(
+    deploymentPositionsByTeam = mapOf(
         Team.ATTACKER to Position(0, 0)..Position(0, 0),
         Team.DEFENDER to Position(0, 0)..Position(0, 0)
     ),

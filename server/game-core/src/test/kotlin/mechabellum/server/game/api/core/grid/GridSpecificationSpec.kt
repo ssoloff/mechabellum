@@ -29,32 +29,32 @@ import org.jetbrains.spek.data_driven.on
 
 object GridSpecificationSpec : Spek({
     describe("constructor") {
-        it("should throw exception when missing a team deployment zone") {
+        it("should throw exception when missing team deployment positions") {
             // when
             val operation = {
                 newTestGridSpecification().copy(
-                    deploymentZonesByTeam = mapOf(Team.ATTACKER to Position(0, 0)..Position(0, 0))
+                    deploymentPositionsByTeam = mapOf(Team.ATTACKER to Position(0, 0)..Position(0, 0))
                 )
             }
 
             // then
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
-            exceptionResult.exceptionMessage shouldContain "no deployment zone for team"
+            exceptionResult.exceptionMessage shouldContain "no deployment positions for team"
         }
 
         on(
-            "deployment zone %s that exceeds grid bounds",
+            "deployment positions %s that exceeds grid bounds",
             data(Position(-1, 0)..Position(0, 0), expected = Unit),
             data(Position(0, 0)..Position(1, 0), expected = Unit),
             data(Position(0, -1)..Position(0, 0), expected = Unit),
             data(Position(0, 0)..Position(0, 1), expected = Unit)
-        ) { invalidDeploymentZone, _ ->
+        ) { invalidDeploymentPositions, _ ->
             it("should throw exception") {
                 // when
                 val operation = {
                     newTestGridSpecification().copy(
-                        deploymentZonesByTeam = mapOf(
-                            Team.ATTACKER to invalidDeploymentZone,
+                        deploymentPositionsByTeam = mapOf(
+                            Team.ATTACKER to invalidDeploymentPositions,
                             Team.DEFENDER to Position(0, 0)..Position(0, 0)
                         ),
                         type = newTestGridType().copy(cols = 1, rows = 1)

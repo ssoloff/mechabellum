@@ -67,10 +67,10 @@ abstract class GridSpec(subjectFactory: (GridSpecification) -> Grid) : SubjectSp
         }
     }
 
-    describe("getDeploymentZone") {
-        it("should return deployment zones from grid specification") {
+    describe("getDeploymentPositions") {
+        it("should return deployment positions from grid specification") {
             Team.values().forEach {
-                subject.getDeploymentZone(it) shouldEqual gridSpecification.deploymentZonesByTeam[it]
+                subject.getDeploymentPositions(it) shouldEqual gridSpecification.deploymentPositionsByTeam[it]
             }
         }
     }

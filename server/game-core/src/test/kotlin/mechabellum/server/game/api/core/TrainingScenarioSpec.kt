@@ -46,7 +46,7 @@ object TrainingScenarioSpec : Spek({
             return gameFactory.newGame(
                 GameSpecification(
                     gridSpecification = GridSpecification(
-                        deploymentZonesByTeam = mapOf(
+                        deploymentPositionsByTeam = mapOf(
                             Team.ATTACKER to Position(0, 0)..Position(14, 0),
                             Team.DEFENDER to Position(0, 14)..Position(14, 16)
                         ),

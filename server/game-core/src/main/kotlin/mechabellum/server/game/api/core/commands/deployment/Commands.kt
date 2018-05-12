@@ -31,8 +31,8 @@ open class StatelessDeploymentCommand<R : Any>(
 /**
  * Deploys [mech] to the specified [position].
  *
- * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the deployment
- * zone for [mech].
+ * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the possible
+ * deployment positions for [mech].
  */
 fun Game.deployMech(mech: Mech, position: Position) = executeCommand(DeployMechCommand(mech, position))
 

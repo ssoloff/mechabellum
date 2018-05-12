@@ -43,13 +43,13 @@ abstract class DeploymentPhaseSpec(
     subjectFactory: (GridSpecification) -> DeploymentPhase
 ) : SubjectSpek<DeploymentPhase>({
     val gridType = newTestGridType().copy(cols = 8, rows = 10)
-    val attackerDeploymentZone = Position(1, 1)..Position(6, 2)
+    val attackerDeploymentPositions = Position(1, 1)..Position(6, 2)
 
     subject {
         subjectFactory(
             newTestGridSpecification().copy(
-                deploymentZonesByTeam = mapOf(
-                    Team.ATTACKER to attackerDeploymentZone,
+                deploymentPositionsByTeam = mapOf(
+                    Team.ATTACKER to attackerDeploymentPositions,
                     Team.DEFENDER to Position(0, 8)..Position(7, 9)
                 ),
                 type = gridType
@@ -88,19 +88,19 @@ abstract class DeploymentPhaseSpec(
         on(
             "invalid attacker position %s",
             data(
-                attackerDeploymentZone.start.copy(col = attackerDeploymentZone.start.col - 1),
+                attackerDeploymentPositions.start.copy(col = attackerDeploymentPositions.start.col - 1),
                 expected = Unit
             ),
             data(
-                attackerDeploymentZone.start.copy(row = attackerDeploymentZone.start.row - 1),
+                attackerDeploymentPositions.start.copy(row = attackerDeploymentPositions.start.row - 1),
                 expected = Unit
             ),
             data(
-                attackerDeploymentZone.endInclusive.copy(col = attackerDeploymentZone.endInclusive.col + 1),
+                attackerDeploymentPositions.endInclusive.copy(col = attackerDeploymentPositions.endInclusive.col + 1),
                 expected = Unit
             ),
             data(
-                attackerDeploymentZone.endInclusive.copy(row = attackerDeploymentZone.endInclusive.row + 1),
+                attackerDeploymentPositions.endInclusive.copy(row = attackerDeploymentPositions.endInclusive.row + 1),
                 expected = Unit
             )
         ) { position, _ ->

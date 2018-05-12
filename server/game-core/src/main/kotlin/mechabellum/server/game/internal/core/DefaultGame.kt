@@ -74,14 +74,14 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
     inner class DefaultDeploymentPhase : DefaultPhase(), DeploymentPhase {
         override fun deployMech(mech: Mech, position: Position) {
             val mechRecord = mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
-            checkPositionIsWithinTeamDeploymentZone(position, mech.team)
+            checkPositionIsWithinTeamDeploymentPositions(position, mech.team)
             mechRecord.position = Option.some(position)
         }
 
-        private fun checkPositionIsWithinTeamDeploymentZone(position: Position, team: Team) {
-            val deploymentZone = grid.getDeploymentZone(team)
-            require(position in deploymentZone) {
-                "position $position is not in deployment zone $deploymentZone for team $team"
+        private fun checkPositionIsWithinTeamDeploymentPositions(position: Position, team: Team) {
+            val deploymentPositions = grid.getDeploymentPositions(team)
+            require(position in deploymentPositions) {
+                "position $position is not in deployment positions $deploymentPositions for team $team"
             }
         }
     }
