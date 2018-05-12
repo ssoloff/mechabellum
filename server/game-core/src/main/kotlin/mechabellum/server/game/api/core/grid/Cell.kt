@@ -17,36 +17,8 @@
 
 package mechabellum.server.game.api.core.grid
 
-/**
- * The unique identifier of a cell in a hexagonal grid.
- *
- * @property col The cell column.
- * @property row The cell row.
- */
-data class CellId(val col: Int, val row: Int) : Comparable<CellId> {
-    override fun compareTo(other: CellId): Int = COMPARATOR.compare(this, other)
-
-    /** Creates a range from this value to the specified [other] value. */
-    operator fun rangeTo(other: CellId): CellIdRange = CellIdRange(this, other)
-
-    companion object {
-        private val COMPARATOR = Comparator.comparingInt(CellId::col).thenComparingInt(CellId::row)
-    }
-}
-
-/** Returns a range from this value up to but excluding the specified [to] value. */
-infix fun CellId.until(to: CellId): CellIdRange = CellIdRange(this, CellId(to.col - 1, to.row - 1))
-
-/**
- * A rectangular range of cell identifiers.
- *
- * @property start The minimum value in the range.
- * @property endInclusive The maximum value in the range (inclusive).
- */
-data class CellIdRange(override val start: CellId, override val endInclusive: CellId) : ClosedRange<CellId>
-
 /** A cell in a hexagonal grid. */
 interface Cell {
-    /** The cell identifier. */
-    val id: CellId
+    /** The cell position. */
+    val position: Position
 }

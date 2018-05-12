@@ -20,9 +20,9 @@ package mechabellum.server.game.api.core
 import mechabellum.server.game.api.core.commands.deployment.deployMech
 import mechabellum.server.game.api.core.commands.initialization.endInitialization
 import mechabellum.server.game.api.core.commands.initialization.newMech
-import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridType
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.MechType
@@ -47,8 +47,8 @@ object TrainingScenarioSpec : Spek({
                 GameSpecification(
                     gridSpecification = GridSpecification(
                         deploymentZonesByTeam = mapOf(
-                            Team.ATTACKER to CellId(0, 0)..CellId(14, 0),
-                            Team.DEFENDER to CellId(0, 14)..CellId(14, 16)
+                            Team.ATTACKER to Position(0, 0)..Position(14, 0),
+                            Team.DEFENDER to Position(0, 14)..Position(14, 16)
                         ),
                         type = GridType(cols = 15, name = "Quick-Start Map", rows = 17)
                     )
@@ -65,10 +65,10 @@ object TrainingScenarioSpec : Spek({
             val attacker2 = game.newMech(newMechSpecification(MechTypes.HERMES_II, Team.ATTACKER))
             game.endInitialization()
 
-            game.deployMech(defender1, CellId(0, 16))
-            game.deployMech(defender2, CellId(14, 16))
-            game.deployMech(attacker1, CellId(0, 0))
-            game.deployMech(attacker2, CellId(14, 0))
+            game.deployMech(defender1, Position(0, 16))
+            game.deployMech(defender2, Position(14, 16))
+            game.deployMech(attacker1, Position(0, 0))
+            game.deployMech(attacker2, Position(14, 0))
 
             // TODO: implement remainder of scenario
         }

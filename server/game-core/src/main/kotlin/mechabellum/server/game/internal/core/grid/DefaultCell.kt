@@ -18,6 +18,6 @@
 package mechabellum.server.game.internal.core.grid
 
 import mechabellum.server.game.api.core.grid.Cell
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.Position
 
-internal class DefaultCell(override val id: CellId) : Cell
+internal class DefaultCell(override val position: Position) : Cell

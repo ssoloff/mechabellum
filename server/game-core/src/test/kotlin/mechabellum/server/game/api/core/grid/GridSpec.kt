@@ -18,10 +18,13 @@
 package mechabellum.server.game.api.core.grid
 
 import mechabellum.server.game.api.core.participant.Team
+import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.data_driven.data
+import org.jetbrains.spek.data_driven.on
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class GridSpec(subjectFactory: (GridSpecification) -> Grid) : SubjectSpek<Grid>({
@@ -36,16 +39,31 @@ abstract class GridSpec(subjectFactory: (GridSpecification) -> Grid) : SubjectSp
     }
 
     describe("getCell") {
-        it("should return requested cell when cell exists") {
-            subject.getCell(0, 0).id shouldEqual CellId(0, 0)
-            subject.getCell(4, 7).id shouldEqual CellId(4, 7)
+        on(
+            "cell present at position %s",
+            data(Position(0, 0), expected = Position(0, 0)),
+            data(Position(4, 7), expected = Position(4, 7))
+        ) { position, expected ->
+            it("should return cell at position") {
+                subject.getCell(position).position shouldEqual expected
+            }
         }
 
-        it("should throw exception when cell does not exist") {
-            ({ subject.getCell(-1, 0) }) shouldThrow IllegalArgumentException::class
-            ({ subject.getCell(0, -1) }) shouldThrow IllegalArgumentException::class
-            ({ subject.getCell(5, 7) }) shouldThrow IllegalArgumentException::class
-            ({ subject.getCell(4, 8) }) shouldThrow IllegalArgumentException::class
+        on(
+            "cell not present at position %s",
+            data(Position(-1, 0), expected = Unit),
+            data(Position(0, -1), expected = Unit),
+            data(Position(5, 7), expected = Unit),
+            data(Position(4, 8), expected = Unit)
+        ) { position, _ ->
+            it("should throw exception") {
+                // when
+                val operation = { subject.getCell(position) }
+
+                // then
+                val exceptionResult = operation shouldThrow IllegalArgumentException::class
+                exceptionResult.exceptionMessage shouldContain position.toString()
+            }
         }
     }
 

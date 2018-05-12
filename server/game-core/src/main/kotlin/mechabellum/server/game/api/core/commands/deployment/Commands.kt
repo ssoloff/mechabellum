@@ -19,7 +19,7 @@ package mechabellum.server.game.api.core.commands.deployment
 
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.StatelessCommand
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
 
@@ -34,8 +34,8 @@ open class StatelessDeploymentCommand<R : Any>(
  * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the deployment
  * zone for [mech].
  */
-fun Game.deployMech(mech: Mech, position: CellId) = executeCommand(DeployMechCommand(mech, position))
+fun Game.deployMech(mech: Mech, position: Position) = executeCommand(DeployMechCommand(mech, position))
 
-class DeployMechCommand(mech: Mech, position: CellId) : StatelessDeploymentCommand<Unit>({
+class DeployMechCommand(mech: Mech, position: Position) : StatelessDeploymentCommand<Unit>({
     it.deployMech(mech, position)
 })

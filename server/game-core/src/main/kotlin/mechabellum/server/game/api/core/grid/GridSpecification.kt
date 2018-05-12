@@ -27,7 +27,7 @@ import mechabellum.server.game.api.core.participant.Team
  *
  * @throws IllegalArgumentException If [deploymentZonesByTeam] does not have an entry for each team.
  */
-data class GridSpecification(val deploymentZonesByTeam: Map<Team, CellIdRange>, val type: GridType) {
+data class GridSpecification(val deploymentZonesByTeam: Map<Team, PositionRange>, val type: GridType) {
     init {
         checkAllTeamsHaveDeploymentZone()
         checkDeploymentZonesAreWithinGridBounds()
@@ -38,7 +38,7 @@ data class GridSpecification(val deploymentZonesByTeam: Map<Team, CellIdRange>, 
     }
 
     private fun checkDeploymentZonesAreWithinGridBounds() {
-        val gridBounds = CellId(0, 0) until CellId(type.cols, type.rows)
+        val gridBounds = Position(0, 0) until Position(type.cols, type.rows)
         deploymentZonesByTeam.forEach { team, deploymentZone ->
             require((deploymentZone.start in gridBounds) && (deploymentZone.endInclusive in gridBounds)) {
                 "deployment zone $deploymentZone for team $team exceeds grid bounds"

@@ -18,18 +18,18 @@
 package mechabellum.server.game.internal.core.grid
 
 import mechabellum.server.game.api.core.grid.Cell
-import mechabellum.server.game.api.core.grid.CellId
-import mechabellum.server.game.api.core.grid.CellIdRange
 import mechabellum.server.game.api.core.grid.Grid
 import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.grid.Position
+import mechabellum.server.game.api.core.grid.PositionRange
 import mechabellum.server.game.api.core.participant.Team
 
 internal class DefaultGrid(specification: GridSpecification) : Grid {
-    private val cellsById: Map<CellId, DefaultCell> = mutableMapOf<CellId, DefaultCell>().apply {
+    private val cellsByPosition: Map<Position, DefaultCell> = mutableMapOf<Position, DefaultCell>().apply {
         for (col in 0 until specification.type.cols) {
             for (row in 0 until specification.type.rows) {
-                val cellId = CellId(col, row)
-                put(cellId, DefaultCell(cellId))
+                val position = Position(col, row)
+                put(position, DefaultCell(position))
             }
         }
     }
@@ -38,11 +38,11 @@ internal class DefaultGrid(specification: GridSpecification) : Grid {
 
     override val type = specification.type
 
-    override fun getCell(col: Int, row: Int): Cell {
-        return cellsById.getOrElse(CellId(col, row)) {
-            throw IllegalArgumentException("cell ($col, $row) does not exist")
+    override fun getCell(position: Position): Cell {
+        return cellsByPosition.getOrElse(position) {
+            throw IllegalArgumentException("cell at $position does not exist")
         }
     }
 
-    override fun getDeploymentZone(team: Team): CellIdRange = deploymentZonesByTeam[team]!!
+    override fun getDeploymentZone(team: Team): PositionRange = deploymentZonesByTeam[team]!!
 }

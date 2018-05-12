@@ -18,7 +18,7 @@
 package mechabellum.server.game.api.core.commands.deployment
 
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
 import org.amshove.kluent.Verify
@@ -36,7 +36,7 @@ object DeployMechCommandSpec : Spek({
             // given
             val deploymentPhase = mock<DeploymentPhase>()
             val mech = mock<Mech>()
-            val position = CellId(3, 6)
+            val position = Position(3, 6)
             val subject = DeployMechCommand(mech, position)
 
             // when

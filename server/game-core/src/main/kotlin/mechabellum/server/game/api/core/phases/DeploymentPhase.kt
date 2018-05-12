@@ -18,7 +18,7 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.grid.CellId
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.unit.Mech
 
 /** The phase during which units are deployed to the game grid. */
@@ -29,5 +29,5 @@ interface DeploymentPhase : Phase {
      * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the deployment
      * zone for [mech].
      */
-    fun deployMech(mech: Mech, position: CellId)
+    fun deployMech(mech: Mech, position: Position)
 }

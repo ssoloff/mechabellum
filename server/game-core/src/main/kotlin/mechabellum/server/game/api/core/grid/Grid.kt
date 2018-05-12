@@ -30,12 +30,12 @@ interface Grid {
     val type: GridType
 
     /**
-     * Returns the cell at the coordinates ([col], [row]).
+     * Returns the cell at the specified [position].
      *
-     * @throws IllegalArgumentException If no cell exists at the specified coordinates.
+     * @throws IllegalArgumentException If no cell exists at the specified position.
      */
-    fun getCell(col: Int, row: Int): Cell
+    fun getCell(position: Position): Cell
 
     /** Returns the deployment zone for the specified [team]. */
-    fun getDeploymentZone(team: Team): CellIdRange
+    fun getDeploymentZone(team: Team): PositionRange
 }

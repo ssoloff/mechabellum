@@ -22,8 +22,8 @@ import mechabellum.server.game.api.core.Command
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.Grid
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.phases.InitializationPhase
@@ -56,12 +56,12 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
     fun getMech(id: MechId): DefaultMech =
         mechRecordsById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
-    fun getMechPosition(id: MechId): Option<CellId> =
+    fun getMechPosition(id: MechId): Option<Position> =
         mechRecordsById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     private class MechRecord(
         val mech: DefaultMech,
-        var position: Option<CellId> = Option.none()
+        var position: Option<Position> = Option.none()
     )
 
     open inner class DefaultPhase : Phase {
@@ -72,13 +72,13 @@ internal class DefaultGame(val grid: DefaultGrid) : Game {
     }
 
     inner class DefaultDeploymentPhase : DefaultPhase(), DeploymentPhase {
-        override fun deployMech(mech: Mech, position: CellId) {
+        override fun deployMech(mech: Mech, position: Position) {
             val mechRecord = mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
             checkPositionIsWithinTeamDeploymentZone(position, mech.team)
             mechRecord.position = Option.some(position)
         }
 
-        private fun checkPositionIsWithinTeamDeploymentZone(position: CellId, team: Team) {
+        private fun checkPositionIsWithinTeamDeploymentZone(position: Position, team: Team) {
             val deploymentZone = grid.getDeploymentZone(team)
             require(position in deploymentZone) {
                 "position $position is not in deployment zone $deploymentZone for team $team"

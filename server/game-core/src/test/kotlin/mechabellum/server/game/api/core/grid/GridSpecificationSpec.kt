@@ -33,7 +33,7 @@ object GridSpecificationSpec : Spek({
             // when
             val operation = {
                 newTestGridSpecification().copy(
-                    deploymentZonesByTeam = mapOf(Team.ATTACKER to CellId(0, 0)..CellId(0, 0))
+                    deploymentZonesByTeam = mapOf(Team.ATTACKER to Position(0, 0)..Position(0, 0))
                 )
             }
 
@@ -44,10 +44,10 @@ object GridSpecificationSpec : Spek({
 
         on(
             "deployment zone %s that exceeds grid bounds",
-            data(CellId(-1, 0)..CellId(0, 0), expected = Unit),
-            data(CellId(0, 0)..CellId(1, 0), expected = Unit),
-            data(CellId(0, -1)..CellId(0, 0), expected = Unit),
-            data(CellId(0, 0)..CellId(0, 1), expected = Unit)
+            data(Position(-1, 0)..Position(0, 0), expected = Unit),
+            data(Position(0, 0)..Position(1, 0), expected = Unit),
+            data(Position(0, -1)..Position(0, 0), expected = Unit),
+            data(Position(0, 0)..Position(0, 1), expected = Unit)
         ) { invalidDeploymentZone, _ ->
             it("should throw exception") {
                 // when
@@ -55,7 +55,7 @@ object GridSpecificationSpec : Spek({
                     newTestGridSpecification().copy(
                         deploymentZonesByTeam = mapOf(
                             Team.ATTACKER to invalidDeploymentZone,
-                            Team.DEFENDER to CellId(0, 0)..CellId(0, 0)
+                            Team.DEFENDER to Position(0, 0)..Position(0, 0)
                         ),
                         type = newTestGridType().copy(cols = 1, rows = 1)
                     )

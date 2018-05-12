@@ -19,8 +19,8 @@ package mechabellum.server.game.api.core.phases
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
-import mechabellum.server.game.api.core.grid.CellId
 import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridType
 import mechabellum.server.game.api.core.participant.Team
@@ -38,19 +38,19 @@ import org.jetbrains.spek.data_driven.on
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class DeploymentPhaseSpec(
-    getMechPosition: DeploymentPhase.(MechId) -> CellId,
+    getMechPosition: DeploymentPhase.(MechId) -> Position,
     newMech: DeploymentPhase.(MechSpecification) -> Mech,
     subjectFactory: (GridSpecification) -> DeploymentPhase
 ) : SubjectSpek<DeploymentPhase>({
     val gridType = newTestGridType().copy(cols = 8, rows = 10)
-    val attackerDeploymentZone = CellId(1, 1)..CellId(6, 2)
+    val attackerDeploymentZone = Position(1, 1)..Position(6, 2)
 
     subject {
         subjectFactory(
             newTestGridSpecification().copy(
                 deploymentZonesByTeam = mapOf(
                     Team.ATTACKER to attackerDeploymentZone,
-                    Team.DEFENDER to CellId(0, 8)..CellId(7, 9)
+                    Team.DEFENDER to Position(0, 8)..Position(7, 9)
                 ),
                 type = gridType
             )
@@ -63,7 +63,7 @@ abstract class DeploymentPhaseSpec(
             val mech = subject.newMech(newTestMechSpecification())
 
             // when
-            val position = CellId(3, 2)
+            val position = Position(3, 2)
             subject.deployMech(mech, position)
 
             // then
@@ -78,7 +78,7 @@ abstract class DeploymentPhaseSpec(
             }
 
             // when
-            val operation = { subject.deployMech(mech, CellId(3, 2)) }
+            val operation = { subject.deployMech(mech, Position(3, 2)) }
 
             // then
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
