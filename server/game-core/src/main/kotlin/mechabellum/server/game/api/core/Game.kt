@@ -17,23 +17,13 @@
 
 package mechabellum.server.game.api.core
 
-/** A BattleTech game session. */
+import mechabellum.server.game.api.core.grid.Grid
+
+/** A BattleTech game. */
 interface Game {
-    /**
-     * Executes [command] synchronously.
-     *
-     * @throws IllegalArgumentException If the active game phase is not applicable for [command].
-     * @throws GameException If a recoverable error occurs while running [command].
-     * @throws UnexpectedGameException If an unexpected checked exception is thrown while running [command].
-     */
-    fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R
+    /** The game grid. */
+    val grid: Grid
 }
 
-/** A checked exception that indicates an error occurred within a game. */
+/** A checked exception that indicates a recoverable error occurred within a game. */
 class GameException(message: String) : Exception(message)
-
-/** An unchecked exception that indicates an unexpected checked exception was thrown when running a command. */
-class UnexpectedCommandException(cause: Throwable) : RuntimeException(
-    "unexpected checked exception when running command",
-    cause
-)

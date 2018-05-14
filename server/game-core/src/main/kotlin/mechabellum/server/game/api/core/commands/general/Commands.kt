@@ -17,7 +17,6 @@
 
 package mechabellum.server.game.api.core.commands.general
 
-import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.grid.Grid
@@ -27,10 +26,11 @@ open class StatelessGeneralCommand<R : Any>(
     action: (Phase) -> R
 ) : StatelessCommand<R, Phase>(Phase::class, action)
 
-/** The game grid. */
-val Game.grid: Grid
-    get() = executeCommand(GetGridCommand())
-
+/**
+ * Command to get the game grid.
+ *
+ * When executed, returns the game grid.
+ */
 class GetGridCommand : StatelessGeneralCommand<Grid>({
-    it.grid
+    it.game.grid
 })

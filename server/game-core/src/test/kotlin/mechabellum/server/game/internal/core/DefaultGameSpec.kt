@@ -17,13 +17,10 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.api.core.GameSpec
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.phases.DeploymentPhaseSpec
 import mechabellum.server.game.api.core.phases.InitializationPhaseSpec
 import mechabellum.server.game.internal.core.grid.DefaultGrid
-
-object DefaultGameBehavesAsGameSpec : GameSpec({ DefaultGame(DefaultGrid(newTestGridSpecification())) })
 
 object DefaultGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
     getMechPosition = { mechId -> (this as DefaultGame.DefaultPhase).game.getMechPosition(mechId).getOrThrow() },

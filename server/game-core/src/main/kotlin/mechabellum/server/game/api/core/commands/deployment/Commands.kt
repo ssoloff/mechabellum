@@ -17,7 +17,6 @@
 
 package mechabellum.server.game.api.core.commands.deployment
 
-import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.phases.DeploymentPhase
@@ -29,13 +28,14 @@ open class StatelessDeploymentCommand<R : Any>(
 ) : StatelessCommand<R, DeploymentPhase>(DeploymentPhase::class, action)
 
 /**
- * Deploys [mech] to the specified [position].
+ * Command that deploys a Mech to a position on the game grid.
  *
- * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the possible
- * deployment positions for [mech].
+ * When executed, throws [IllegalArgumentException] if the Mech is not part of the game; or if the position is outside
+ * the possible deployment positions for the Mech.
+ *
+ * @param mech The Mech to deploy.
+ * @param position The position on the game grid where the Mech will be deployed.
  */
-fun Game.deployMech(mech: Mech, position: Position): Unit = executeCommand(DeployMechCommand(mech, position))
-
 class DeployMechCommand(mech: Mech, position: Position) : StatelessDeploymentCommand<Unit>({
     it.deployMech(mech, position)
 })

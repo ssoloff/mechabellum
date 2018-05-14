@@ -17,7 +17,6 @@
 
 package mechabellum.server.game.api.core.commands.initialization
 
-import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
@@ -29,19 +28,21 @@ open class StatelessInitializationCommand<R : Any>(
 ) : StatelessCommand<R, InitializationPhase>(InitializationPhase::class, action)
 
 /**
- * Ends the initialization phase.
+ * Command that ends the initialization phase.
  *
- * @throws mechabellum.server.game.api.core.GameException If all teams do not have at least one Mech.
+ * When executed, throws [mechabellum.server.game.api.core.GameException] if all teams do not have at least one Mech.
  */
-fun Game.endInitialization(): Unit = executeCommand(EndInitializationCommand())
-
 class EndInitializationCommand : StatelessInitializationCommand<Unit>({
     it.end()
 })
 
-/** Returns a new Mech based on [specification]. */
-fun Game.newMech(specification: MechSpecification): Mech = executeCommand(NewMechCommand(specification))
-
+/**
+ * Command that creates a new Mech and adds it to the game.
+ *
+ * When executed, returns the new Mech.
+ *
+ * @param specification The specification used to create the new Mech.
+ */
 class NewMechCommand(specification: MechSpecification) : StatelessInitializationCommand<Mech>({
     it.newMech(specification)
 })

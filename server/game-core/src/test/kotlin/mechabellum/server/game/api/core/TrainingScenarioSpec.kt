@@ -17,9 +17,9 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.commands.deployment.deployMech
-import mechabellum.server.game.api.core.commands.initialization.endInitialization
-import mechabellum.server.game.api.core.commands.initialization.newMech
+import mechabellum.server.game.api.core.commands.deployment.DeployMechCommand
+import mechabellum.server.game.api.core.commands.initialization.EndInitializationCommand
+import mechabellum.server.game.api.core.commands.initialization.NewMechCommand
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridType
 import mechabellum.server.game.api.core.grid.Position
@@ -34,16 +34,31 @@ import java.util.ServiceLoader
 /** This spec attempts to play an entire game using the training scenario from the Quick-Start rules. */
 object TrainingScenarioSpec : Spek({
     describe("game implementation") {
-        fun newMechSpecification(type: MechType, team: Team): MechSpecification {
-            return MechSpecification(
-                team = team,
-                type = type
-            )
-        }
+        val gameRunner = DomainObjects.newGameRunner()
 
-        fun newQuickStartGame(): Game {
-            val gameFactory = ServiceLoader.load(GameFactory::class.java).first()
-            return gameFactory.newGame(
+        fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R =
+            gameRunner.executeCommand(command)
+
+        it("should be able to play the training scenario from the Quick-Start rules") {
+            val defender1 = executeCommand(NewMechCommand(MechSpecification(Team.DEFENDER, MechTypes.CICADA)))
+            val defender2 = executeCommand(NewMechCommand(MechSpecification(Team.DEFENDER, MechTypes.HUNCHBACK)))
+            val attacker1 = executeCommand(NewMechCommand(MechSpecification(Team.ATTACKER, MechTypes.ENFORCER)))
+            val attacker2 = executeCommand(NewMechCommand(MechSpecification(Team.ATTACKER, MechTypes.HERMES_II)))
+            executeCommand(EndInitializationCommand())
+
+            executeCommand(DeployMechCommand(defender1, Position(0, 16)))
+            executeCommand(DeployMechCommand(defender2, Position(14, 16)))
+            executeCommand(DeployMechCommand(attacker1, Position(0, 0)))
+            executeCommand(DeployMechCommand(attacker2, Position(14, 0)))
+
+            // TODO: implement remainder of scenario
+        }
+    }
+}) {
+    private object DomainObjects {
+        fun newGameRunner(): GameRunner {
+            val gameRunnerFactory = ServiceLoader.load(GameRunnerFactory::class.java).first()
+            return gameRunnerFactory.newGameRunner(
                 GameSpecification(
                     gridSpecification = GridSpecification(
                         deploymentPositionsByTeam = mapOf(
@@ -55,25 +70,8 @@ object TrainingScenarioSpec : Spek({
                 )
             )
         }
-
-        it("should be able to play the training scenario from the Quick-Start rules") {
-            val game = newQuickStartGame()
-
-            val defender1 = game.newMech(newMechSpecification(MechTypes.CICADA, Team.DEFENDER))
-            val defender2 = game.newMech(newMechSpecification(MechTypes.HUNCHBACK, Team.DEFENDER))
-            val attacker1 = game.newMech(newMechSpecification(MechTypes.ENFORCER, Team.ATTACKER))
-            val attacker2 = game.newMech(newMechSpecification(MechTypes.HERMES_II, Team.ATTACKER))
-            game.endInitialization()
-
-            game.deployMech(defender1, Position(0, 16))
-            game.deployMech(defender2, Position(14, 16))
-            game.deployMech(attacker1, Position(0, 0))
-            game.deployMech(attacker2, Position(14, 0))
-
-            // TODO: implement remainder of scenario
-        }
     }
-}) {
+
     private object MechTypes {
         val CICADA = MechType("CDA-2A Cicada")
         val ENFORCER = MechType("ENF-4R Enforcer")

@@ -15,14 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core
+package mechabellum.server.game.internal.core
 
-/**
- * Factory for creating [Game] implementations.
- *
- * Clients are expected to obtain an instance of this interface using the Java [java.util.ServiceLoader] framework.
- */
-interface GameFactory {
-    /** Returns a new [Game] for the specified [GameSpecification]. */
-    fun newGame(specification: GameSpecification): Game
-}
+import mechabellum.server.game.api.core.GameRunnerFactorySpec
+import mechabellum.server.game.api.core.GameRunnerSpec
+import mechabellum.server.game.api.core.grid.newTestGridSpecification
+import mechabellum.server.game.internal.core.grid.DefaultGrid
+
+object DefaultGameRunnerBehavesAsGameRunnerSpec : GameRunnerSpec(
+    subjectFactory = { DefaultGameRunner(DefaultGame(DefaultGrid(newTestGridSpecification()))) }
+)
+
+object DefaultGameRunnerFactoryBehavesAsGameRunnerFactorySpec : GameRunnerFactorySpec(::DefaultGameRunnerFactory)

@@ -17,8 +17,6 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.grid.Grid
-
 /**
  * A game phase.
  *
@@ -28,6 +26,6 @@ import mechabellum.server.game.api.core.grid.Grid
  * This interface provides behavior that is common to all phases.
  */
 interface Phase {
-    /** The game grid. */
-    val grid: Grid
+    /** The game. */
+    val game: Game
 }

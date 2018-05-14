@@ -17,6 +17,8 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.game.api.core.commands.general.GetGridCommand
+import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
@@ -26,7 +28,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
-abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
+abstract class GameRunnerSpec(subjectFactory: () -> GameRunner) : SubjectSpek<GameRunner>({
     subject { subjectFactory() }
 
     describe("executeCommand") {
@@ -81,6 +83,23 @@ abstract class GameSpec(subjectFactory: () -> Game) : SubjectSpek<Game>({
             // then
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "phase not active"
+        }
+    }
+})
+
+abstract class GameRunnerFactorySpec(subjectFactory: () -> GameRunnerFactory) : SubjectSpek<GameRunnerFactory>({
+    subject { subjectFactory() }
+
+    describe("newGameRunner") {
+        it("should return a game runner with the requested grid specification") {
+            // when
+            val gridSpecification = newTestGridSpecification()
+            val gameRunner = subject.newGameRunner(
+                newTestGameSpecification().copy(gridSpecification = gridSpecification)
+            )
+
+            // then
+            gameRunner.executeCommand(GetGridCommand()).type shouldEqual gridSpecification.type
         }
     }
 })
