@@ -25,7 +25,7 @@ import mechabellum.server.game.api.core.unit.Mech
 /** Superclass for stateless commands that are executed during the deployment phase. */
 open class StatelessDeploymentCommand<R : Any>(
     action: (DeploymentPhase) -> R
-) : StatelessCommand<R, DeploymentPhase>(DeploymentPhase::class, action)
+) : StatelessCommand<DeploymentPhase, R>(DeploymentPhase::class, action)
 
 /**
  * Command that deploys a Mech to a position on the game grid.

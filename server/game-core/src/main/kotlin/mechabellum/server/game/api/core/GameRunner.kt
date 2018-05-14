@@ -30,7 +30,7 @@ interface GameRunner {
      * @throws GameException If a recoverable error occurs while running [command].
      * @throws UnexpectedCommandException If an unexpected checked exception is thrown while running [command].
      */
-    fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R
+    fun <TPhase : Phase, R : Any> executeCommand(command: Command<TPhase, R>): R
 }
 
 /**

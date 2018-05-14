@@ -28,7 +28,7 @@ import mechabellum.server.game.internal.core.grid.DefaultGrid
 import kotlin.reflect.full.cast
 
 internal class DefaultGameRunner(private val game: DefaultGame) : GameRunner {
-    override fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R {
+    override fun <TPhase : Phase, R : Any> executeCommand(command: Command<TPhase, R>): R {
         require(command.phaseType.isInstance(game.phase)) { "phase not active (${command.phaseType.simpleName}" }
 
         try {

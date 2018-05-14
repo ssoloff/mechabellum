@@ -25,7 +25,7 @@ import mechabellum.server.game.api.core.unit.MechSpecification
 /** Superclass for stateless commands that are executed during the initialization phase. */
 open class StatelessInitializationCommand<R : Any>(
     action: (InitializationPhase) -> R
-) : StatelessCommand<R, InitializationPhase>(InitializationPhase::class, action)
+) : StatelessCommand<InitializationPhase, R>(InitializationPhase::class, action)
 
 /**
  * Command that ends the initialization phase.

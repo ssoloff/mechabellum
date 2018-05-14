@@ -20,7 +20,7 @@ package mechabellum.server.game.api.core
 import kotlin.reflect.KClass
 
 /** An abstract representation of some semantic game behavior. */
-interface Command<R : Any, TPhase : Phase> {
+interface Command<TPhase : Phase, R : Any> {
     /** The type of phase during which the command may be run. */
     val phaseType: KClass<TPhase>
 
@@ -42,9 +42,9 @@ interface Command<R : Any, TPhase : Phase> {
  *
  * @param action The action to perform when the command is executed.
  */
-open class StatelessCommand<R : Any, TPhase : Phase>(
+open class StatelessCommand<TPhase : Phase, R : Any>(
     override val phaseType: KClass<TPhase>,
     private val action: (TPhase) -> R
-) : Command<R, TPhase> {
+) : Command<TPhase, R> {
     override fun execute(phase: TPhase): R = action(phase)
 }

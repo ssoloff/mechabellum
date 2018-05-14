@@ -24,7 +24,7 @@ import mechabellum.server.game.api.core.grid.Grid
 /** Superclass for stateless commands that are executed during any phase. */
 open class StatelessGeneralCommand<R : Any>(
     action: (Phase) -> R
-) : StatelessCommand<R, Phase>(Phase::class, action)
+) : StatelessCommand<Phase, R>(Phase::class, action)
 
 /**
  * Command to get the game grid.

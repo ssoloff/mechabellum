@@ -36,7 +36,7 @@ object TrainingScenarioSpec : Spek({
     describe("game implementation") {
         val gameRunner = DomainObjects.newGameRunner()
 
-        fun <R : Any, TPhase : Phase> executeCommand(command: Command<R, TPhase>): R =
+        fun <TPhase : Phase, R : Any> executeCommand(command: Command<TPhase, R>): R =
             gameRunner.executeCommand(command)
 
         it("should be able to play the training scenario from the Quick-Start rules") {
