@@ -23,6 +23,9 @@ import mechabellum.server.game.api.core.grid.Grid
 interface Game {
     /** The game grid. */
     val grid: Grid
+
+    /** The active game phase. */
+    val phase: Phase
 }
 
 /** A checked exception that indicates a recoverable error occurred within a game. */

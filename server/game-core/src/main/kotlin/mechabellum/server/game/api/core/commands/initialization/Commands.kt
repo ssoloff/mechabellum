@@ -28,15 +28,6 @@ open class StatelessInitializationCommand<R : Any>(
 ) : StatelessCommand<InitializationPhase, R>(InitializationPhase::class, action)
 
 /**
- * Command that ends the initialization phase.
- *
- * When executed, throws [mechabellum.server.game.api.core.GameException] if all teams do not have at least one Mech.
- */
-class EndInitializationCommand : StatelessInitializationCommand<Unit>({
-    it.end()
-})
-
-/**
  * Command that creates a new Mech and adds it to the game.
  *
  * When executed, returns the new Mech.

@@ -18,7 +18,7 @@
 package mechabellum.server.game.api.core
 
 import mechabellum.server.game.api.core.commands.deployment.DeployMechCommand
-import mechabellum.server.game.api.core.commands.initialization.EndInitializationCommand
+import mechabellum.server.game.api.core.commands.general.EndPhaseCommand
 import mechabellum.server.game.api.core.commands.initialization.NewMechCommand
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridType
@@ -44,12 +44,13 @@ object TrainingScenarioSpec : Spek({
             val defender2 = executeCommand(NewMechCommand(MechSpecification(Team.DEFENDER, MechTypes.HUNCHBACK)))
             val attacker1 = executeCommand(NewMechCommand(MechSpecification(Team.ATTACKER, MechTypes.ENFORCER)))
             val attacker2 = executeCommand(NewMechCommand(MechSpecification(Team.ATTACKER, MechTypes.HERMES_II)))
-            executeCommand(EndInitializationCommand())
+            executeCommand(EndPhaseCommand())
 
             executeCommand(DeployMechCommand(defender1, Position(0, 16)))
             executeCommand(DeployMechCommand(defender2, Position(14, 16)))
             executeCommand(DeployMechCommand(attacker1, Position(0, 0)))
             executeCommand(DeployMechCommand(attacker2, Position(14, 0)))
+            executeCommand(EndPhaseCommand())
 
             // TODO: implement remainder of scenario
         }

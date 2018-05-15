@@ -33,22 +33,6 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
-object EndInitializationCommandSpec : Spek({
-    describe("execute") {
-        it("should end the initialization phase") {
-            // given
-            val initializationPhase = mock<InitializationPhase>()
-            val subject = EndInitializationCommand()
-
-            // when
-            subject.execute(initializationPhase)
-
-            // then
-            Verify on initializationPhase that initializationPhase.end() was called
-        }
-    }
-})
-
 object NewMechCommandSpec : Spek({
     describe("execute") {
         it("should return new Mech") {

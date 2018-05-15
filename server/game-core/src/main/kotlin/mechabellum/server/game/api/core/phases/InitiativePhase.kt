@@ -18,14 +18,6 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechSpecification
 
-/**
- * The phase during which the game is initialized. All units must be defined during this phase in order to participate
- * in the game.
- */
-interface InitializationPhase : Phase {
-    /** Returns a new Mech based on [specification]. */
-    fun newMech(specification: MechSpecification): Mech
-}
+/** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
+interface InitiativePhase : Phase

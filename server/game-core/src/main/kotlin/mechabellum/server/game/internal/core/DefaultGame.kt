@@ -25,6 +25,7 @@ import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.phases.InitializationPhase
+import mechabellum.server.game.api.core.phases.InitiativePhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
@@ -35,7 +36,7 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
     private val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
     private var nextMechId: Int = 0
 
-    var phase: Phase = DefaultInitializationPhase()
+    override var phase: Phase = DefaultInitializationPhase()
         private set
 
     fun getMech(id: MechId): DefaultMech =
@@ -49,7 +50,7 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
         var position: Option<Position> = Option.none()
     )
 
-    open inner class DefaultPhase : Phase {
+    abstract inner class DefaultPhase : Phase {
         override val game: DefaultGame = this@DefaultGame
     }
 
@@ -65,6 +66,18 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
             require(position in deploymentPositions) {
                 "position $position is not in deployment positions $deploymentPositions for team $team"
             }
+        }
+
+        override fun end() {
+            checkAllMechsDeployed()
+
+            phase = DefaultInitiativePhase()
+        }
+
+        private fun checkAllMechsDeployed() {
+            mechRecordsById.values
+                .find { it.position is Option.None }
+                ?.let { throw GameException(Messages.mechHasNotBeenDeployed(it.mech)) }
         }
     }
 
@@ -94,11 +107,19 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
         }
     }
 
+    inner class DefaultInitiativePhase : DefaultPhase(), InitiativePhase {
+        override fun end() {
+            TODO("not implemented")
+        }
+    }
+
     private interface Messages {
+        fun mechHasNotBeenDeployed(mechId: MechId): String
         fun teamHasNoMechs(teamName: String): String
 
         companion object : Messages by DefaultMessageFactory.get(Messages::class)
     }
 
+    private fun Messages.mechHasNotBeenDeployed(mech: DefaultMech): String = mechHasNotBeenDeployed(mech.id)
     private fun Messages.teamHasNoMechs(team: Team): String = teamHasNoMechs(team.name.toLowerCase())
 }

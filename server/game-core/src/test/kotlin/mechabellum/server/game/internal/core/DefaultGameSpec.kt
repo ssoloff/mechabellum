@@ -31,7 +31,6 @@ object DefaultGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
 )
 
 object DefaultGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
-    getActivePhase = { (this as DefaultGame.DefaultPhase).game.phase },
     getMech = { mechId -> (this as DefaultGame.DefaultPhase).game.getMech(mechId) },
     subjectFactory = { DefaultGame(DefaultGrid(newTestGridSpecification())).DefaultInitializationPhase() }
 )

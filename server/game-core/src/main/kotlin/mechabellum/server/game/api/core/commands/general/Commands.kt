@@ -27,6 +27,16 @@ open class StatelessGeneralCommand<R : Any>(
 ) : StatelessCommand<Phase, R>(Phase::class, action)
 
 /**
+ * Command that ends the current phase and activates the next appropriate phase.
+ *
+ * When executed, throws [mechabellum.server.game.api.core.GameException] if the current phase is not in an appropriate
+ * state to be ended.
+ */
+class EndPhaseCommand : StatelessGeneralCommand<Unit>({
+    it.end()
+})
+
+/**
  * Command to get the game grid.
  *
  * When executed, returns the game grid.

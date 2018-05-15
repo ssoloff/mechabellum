@@ -22,10 +22,31 @@ import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.grid.Grid
+import org.amshove.kluent.Verify
+import org.amshove.kluent.called
+import org.amshove.kluent.on
 import org.amshove.kluent.shouldBe
+import org.amshove.kluent.that
+import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+
+object EndPhaseCommandSpec : Spek({
+    describe("execute") {
+        it("should end the phase") {
+            // given
+            val phase = mock<Phase>()
+            val subject = EndPhaseCommand()
+
+            // when
+            subject.execute(phase)
+
+            // then
+            Verify on phase that phase.end() was called
+        }
+    }
+})
 
 object GetGridCommandSpec : Spek({
     describe("execute") {

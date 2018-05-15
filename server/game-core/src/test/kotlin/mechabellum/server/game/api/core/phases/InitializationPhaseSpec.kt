@@ -18,7 +18,6 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.GameException
-import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
@@ -33,7 +32,6 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
 abstract class InitializationPhaseSpec(
-    getActivePhase: InitializationPhase.() -> Phase,
     getMech: InitializationPhase.(MechId) -> Mech,
     subjectFactory: () -> InitializationPhase
 ) : SubjectSpek<InitializationPhase>({
@@ -49,7 +47,7 @@ abstract class InitializationPhaseSpec(
             subject.end()
 
             // then
-            subject.getActivePhase() shouldBeInstanceOf DeploymentPhase::class
+            subject.game.phase shouldBeInstanceOf DeploymentPhase::class
         }
 
         it("should throw exception when attacker has no Mechs") {

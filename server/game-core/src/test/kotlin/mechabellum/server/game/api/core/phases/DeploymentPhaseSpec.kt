@@ -19,6 +19,7 @@ package mechabellum.server.game.api.core.phases
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
@@ -28,9 +29,11 @@ import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.data_driven.data
@@ -44,13 +47,14 @@ abstract class DeploymentPhaseSpec(
 ) : SubjectSpek<DeploymentPhase>({
     val gridType = newTestGridType().copy(cols = 8, rows = 10)
     val attackerDeploymentPositions = Position(1, 1)..Position(6, 2)
+    val defenderDeploymentPositions = Position(0, 8)..Position(7, 9)
 
     subject {
         subjectFactory(
             newTestGridSpecification().copy(
                 deploymentPositionsByTeam = mapOf(
                     Team.ATTACKER to attackerDeploymentPositions,
-                    Team.DEFENDER to Position(0, 8)..Position(7, 9)
+                    Team.DEFENDER to defenderDeploymentPositions
                 ),
                 type = gridType
             )
@@ -115,6 +119,42 @@ abstract class DeploymentPhaseSpec(
                 val exceptionResult = operation shouldThrow IllegalArgumentException::class
                 exceptionResult.exceptionMessage shouldContain "position"
             }
+        }
+    }
+
+    describe("end") {
+        it("should change active phase to initiative phase") {
+            // given: each team has one Mech
+            val initializationPhase = subject.game.phase as InitializationPhase
+            val attacker = initializationPhase.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
+            val defender = initializationPhase.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
+            initializationPhase.end()
+            // and: all Mechs have been deployed
+            subject.deployMech(attacker, attackerDeploymentPositions.start)
+            subject.deployMech(defender, defenderDeploymentPositions.start)
+
+            // when: deployment phase is ended
+            subject.end()
+
+            // then: initiative phase should be active
+            subject.game.phase shouldBeInstanceOf InitiativePhase::class
+        }
+
+        it("should throw exception when all Mechs have not been deployed") {
+            // given: each team has one Mech
+            val initializationPhase = subject.game.phase as InitializationPhase
+            val attacker = initializationPhase.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
+            val defender = initializationPhase.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
+            initializationPhase.end()
+            // and: the attacker has been deployed
+            subject.deployMech(attacker, attackerDeploymentPositions.start)
+            // but: the defender has not been deployed
+
+            // when: deployment phase is ended
+            val operation = { subject.end() }
+
+            // then: an exception should be thrown
+            operation shouldThrow GameException::class withMessage "Mech with ID ${defender.id} has not been deployed"
         }
     }
 })
