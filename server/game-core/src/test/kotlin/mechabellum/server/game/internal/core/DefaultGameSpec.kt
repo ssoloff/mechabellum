@@ -27,7 +27,9 @@ object DefaultGameBehavesAsDeploymentPhaseSpec : DeploymentPhaseSpec(
     newMech = { mechSpecification ->
         (this as DefaultGame.DefaultPhase).game.DefaultInitializationPhase().newMech(mechSpecification)
     },
-    subjectFactory = { gridSpecification -> DefaultGame(DefaultGrid(gridSpecification)).DefaultDeploymentPhase() }
+    subjectFactory = { gridSpecification, team ->
+        DefaultGame(DefaultGrid(gridSpecification)).DefaultDeploymentPhase(team)
+    }
 )
 
 object DefaultGameBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(

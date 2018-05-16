@@ -48,6 +48,8 @@ object TrainingScenarioSpec : Spek({
 
             executeCommand(DeployMechCommand(defender1, Position(0, 16)))
             executeCommand(DeployMechCommand(defender2, Position(14, 16)))
+            executeCommand(EndPhaseCommand())
+
             executeCommand(DeployMechCommand(attacker1, Position(0, 0)))
             executeCommand(DeployMechCommand(attacker2, Position(14, 0)))
             executeCommand(EndPhaseCommand())

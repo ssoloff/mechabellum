@@ -54,11 +54,16 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
         override val game: DefaultGame = this@DefaultGame
     }
 
-    inner class DefaultDeploymentPhase : DefaultPhase(), DeploymentPhase {
+    inner class DefaultDeploymentPhase(override val team: Team) : DefaultPhase(), DeploymentPhase {
         override fun deployMech(mech: Mech, position: Position) {
             val mechRecord = mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
+            checkMechBelongsToDeployingTeam(mech)
             checkPositionIsWithinTeamDeploymentPositions(position, mech.team)
             mechRecord.position = Option.some(position)
+        }
+
+        private fun checkMechBelongsToDeployingTeam(mech: Mech) {
+            require(mech.team == team) { "only team $team may deploy during this phase" }
         }
 
         private fun checkPositionIsWithinTeamDeploymentPositions(position: Position, team: Team) {
@@ -69,13 +74,17 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
         }
 
         override fun end() {
-            checkAllMechsDeployed()
+            checkAllTeamMechsDeployed()
 
-            phase = DefaultInitiativePhase()
+            phase = when (team) {
+                Team.DEFENDER -> DefaultDeploymentPhase(Team.ATTACKER)
+                Team.ATTACKER -> DefaultInitiativePhase()
+            }
         }
 
-        private fun checkAllMechsDeployed() {
+        private fun checkAllTeamMechsDeployed() {
             mechRecordsById.values
+                .filter { it.mech.team == team }
                 .find { it.position is Option.None }
                 ?.let { throw GameException(Messages.mechHasNotBeenDeployed(it.mech)) }
         }
@@ -85,7 +94,7 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
         override fun end() {
             checkAllTeamsHaveAtLeastOneMech()
 
-            phase = DefaultDeploymentPhase()
+            phase = DefaultDeploymentPhase(Team.DEFENDER)
         }
 
         private fun checkAllTeamsHaveAtLeastOneMech() {

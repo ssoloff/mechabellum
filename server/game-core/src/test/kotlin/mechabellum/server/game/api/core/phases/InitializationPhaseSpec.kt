@@ -24,6 +24,7 @@ import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
+import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldNotEqual
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
@@ -38,7 +39,7 @@ abstract class InitializationPhaseSpec(
     subject { subjectFactory() }
 
     describe("end") {
-        it("should change active phase to deployment phase") {
+        it("should change active phase to defender deployment phase") {
             // given
             subject.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
             subject.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
@@ -48,6 +49,7 @@ abstract class InitializationPhaseSpec(
 
             // then
             subject.game.phase shouldBeInstanceOf DeploymentPhase::class
+            (subject.game.phase as DeploymentPhase).team shouldEqual Team.DEFENDER
         }
 
         it("should throw exception when attacker has no Mechs") {

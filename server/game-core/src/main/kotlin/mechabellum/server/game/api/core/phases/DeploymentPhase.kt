@@ -19,15 +19,24 @@ package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.grid.Position
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 
-/** The phase during which units are deployed to the game grid. */
+/** The phase during which units from one team are deployed to the game grid. */
 interface DeploymentPhase : Phase {
+    // TODO: consider having this phase be team-specific
+    // - would have a property indicating which team may be deployed (probably not necessary right now)
+    // - document exception to be thrown if mech from wrong team is deployed (IllegalArgumentException or GameException)
+    //   - IAE is appropriate if we add a property indicating which team can be deployed
+
+    /** The team that may deploy during this phase. */
+    val team: Team
+
     /**
      * Deploys [mech] to the specified [position].
      *
-     * @throws IllegalArgumentException If [mech] is not part of this game; or if [position] is outside the possible
-     * deployment positions for [mech].
+     * @throws IllegalArgumentException If [mech] is not part of this game; if [mech] does not belong to the team being
+     * deployed; or if [position] is outside the possible deployment positions for [mech].
      */
     fun deployMech(mech: Mech, position: Position)
 }
