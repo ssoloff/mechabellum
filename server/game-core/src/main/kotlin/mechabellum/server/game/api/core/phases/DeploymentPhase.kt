@@ -24,11 +24,6 @@ import mechabellum.server.game.api.core.unit.Mech
 
 /** The phase during which units from one team are deployed to the game grid. */
 interface DeploymentPhase : Phase {
-    // TODO: consider having this phase be team-specific
-    // - would have a property indicating which team may be deployed (probably not necessary right now)
-    // - document exception to be thrown if mech from wrong team is deployed (IllegalArgumentException or GameException)
-    //   - IAE is appropriate if we add a property indicating which team can be deployed
-
     /** The team that may deploy during this phase. */
     val team: Team
 
