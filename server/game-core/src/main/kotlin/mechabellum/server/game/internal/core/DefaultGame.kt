@@ -39,11 +39,12 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
     override var phase: Phase = DefaultInitializationPhase()
         private set
 
-    fun getMech(id: MechId): DefaultMech =
-        mechRecordsById[id]?.mech ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+    fun getMech(id: MechId): DefaultMech = getMechRecord(id).mech
 
-    fun getMechPosition(id: MechId): Option<Position> =
-        mechRecordsById[id]?.position ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+    fun getMechPosition(id: MechId): Option<Position> = getMechRecord(id).position
+
+    private fun getMechRecord(id: MechId): MechRecord =
+        mechRecordsById[id] ?: throw IllegalArgumentException("unknown Mech ID ($id)")
 
     private class MechRecord(
         val mech: DefaultMech,
@@ -56,7 +57,7 @@ internal class DefaultGame(override val grid: DefaultGrid) : Game {
 
     inner class DefaultDeploymentPhase(override val team: Team) : DefaultPhase(), DeploymentPhase {
         override fun deployMech(mech: Mech, position: Position) {
-            val mechRecord = mechRecordsById[mech.id] ?: throw IllegalArgumentException("unknown Mech ID (${mech.id})")
+            val mechRecord = getMechRecord(mech.id)
             checkMechBelongsToDeployingTeam(mech)
             checkPositionIsWithinTeamDeploymentPositions(position, mech.team)
             mechRecord.position = Option.some(position)
