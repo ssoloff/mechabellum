@@ -24,7 +24,6 @@ import mechabellum.server.game.api.core.GameRunnerFactory
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.UnexpectedCommandException
-import mechabellum.server.game.internal.core.grid.DefaultGrid
 import kotlin.reflect.full.cast
 
 internal class DefaultGameRunner(private val game: DefaultGame) : GameRunner {
@@ -45,8 +44,6 @@ internal class DefaultGameRunner(private val game: DefaultGame) : GameRunner {
 
 internal class DefaultGameRunnerFactory : GameRunnerFactory {
     override fun newGameRunner(specification: GameSpecification): GameRunner = DefaultGameRunner(
-        DefaultGame(
-            grid = DefaultGrid(specification.gridSpecification)
-        )
+        DefaultGame(specification)
     )
 }

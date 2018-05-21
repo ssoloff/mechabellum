@@ -18,7 +18,7 @@
 package mechabellum.server.game.internal.core.phases
 
 import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.AttackerDeploymentPhaseSpec
@@ -30,11 +30,10 @@ import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.DefaultGame
-import mechabellum.server.game.internal.core.grid.DefaultGrid
 
 object DefaultDeploymentPhaseSpecs {
-    fun newStrategy(gridSpecification: GridSpecification): DeploymentPhaseSpec.Strategy {
-        val game = DefaultGame(DefaultGrid(gridSpecification))
+    fun newStrategy(gameSpecification: GameSpecification): DeploymentPhaseSpec.Strategy {
+        val game = DefaultGame(gameSpecification)
         return object : DeploymentPhaseSpec.Strategy {
             override val game: Game = game
 

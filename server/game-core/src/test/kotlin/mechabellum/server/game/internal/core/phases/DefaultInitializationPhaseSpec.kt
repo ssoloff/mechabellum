@@ -23,11 +23,10 @@ import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.DefaultGame
-import mechabellum.server.game.internal.core.grid.DefaultGrid
 
 object DefaultInitializationPhaseBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
-    newStrategy = { gridSpecification ->
-        val game = DefaultGame(DefaultGrid(gridSpecification))
+    newStrategy = { gameSpecification ->
+        val game = DefaultGame(gameSpecification)
         object : Strategy {
             override val game: Game = game
 

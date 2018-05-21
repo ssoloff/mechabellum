@@ -19,8 +19,8 @@ package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
-import mechabellum.server.game.api.core.grid.GridSpecification
-import mechabellum.server.game.api.core.grid.newTestGridSpecification
+import mechabellum.server.game.api.core.GameSpecification
+import mechabellum.server.game.api.core.newTestGameSpecification
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
@@ -38,7 +38,7 @@ import org.jetbrains.spek.subject.SubjectSpek
 import kotlin.properties.Delegates
 
 abstract class InitializationPhaseSpec(
-    newStrategy: (GridSpecification) -> Strategy,
+    newStrategy: (GameSpecification) -> Strategy,
     newSubject: (Strategy) -> InitializationPhase
 ) : SubjectSpek<InitializationPhase>({
     var strategy: Strategy by Delegates.notNull()
@@ -46,7 +46,7 @@ abstract class InitializationPhaseSpec(
     subject { newSubject(strategy) }
 
     beforeEachTest {
-        strategy = newStrategy(newTestGridSpecification())
+        strategy = newStrategy(newTestGameSpecification())
     }
 
     describe("end") {

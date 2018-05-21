@@ -21,10 +21,11 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
-import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridType
+import mechabellum.server.game.api.core.newTestGameSpecification
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
@@ -50,13 +51,15 @@ abstract class DeploymentPhaseSpec(
         val attackerDeploymentPositions = Position(1, 1)..Position(6, 2)
         val defenderDeploymentPositions = Position(0, 8)..Position(7, 9)
 
-        fun newStrategy(newStrategy: (GridSpecification) -> Strategy): Strategy = newStrategy(
-            newTestGridSpecification().copy(
-                deploymentPositionsByTeam = mapOf(
-                    Team.ATTACKER to attackerDeploymentPositions,
-                    Team.DEFENDER to defenderDeploymentPositions
-                ),
-                type = newTestGridType().copy(cols = 8, rows = 10)
+        fun newStrategy(newStrategy: (GameSpecification) -> Strategy): Strategy = newStrategy(
+            newTestGameSpecification().copy(
+                gridSpecification = newTestGridSpecification().copy(
+                    deploymentPositionsByTeam = mapOf(
+                        Team.ATTACKER to attackerDeploymentPositions,
+                        Team.DEFENDER to defenderDeploymentPositions
+                    ),
+                    type = newTestGridType().copy(cols = 8, rows = 10)
+                )
             )
         )
     }
@@ -73,7 +76,7 @@ abstract class DeploymentPhaseSpec(
 }
 
 abstract class CommonDeploymentPhaseSpec(
-    newStrategy: (GridSpecification) -> Strategy,
+    newStrategy: (GameSpecification) -> Strategy,
     newSubject: (Strategy, Team) -> DeploymentPhase
 ) : DeploymentPhaseSpec({
     var strategy: Strategy by Delegates.notNull()
@@ -161,7 +164,7 @@ abstract class CommonDeploymentPhaseSpec(
 })
 
 abstract class AttackerDeploymentPhaseSpec(
-    newStrategy: (GridSpecification) -> Strategy,
+    newStrategy: (GameSpecification) -> Strategy,
     newSubject: (Strategy, Team) -> DeploymentPhase
 ) : DeploymentPhaseSpec({
     var strategy: Strategy by Delegates.notNull()
@@ -201,7 +204,7 @@ abstract class AttackerDeploymentPhaseSpec(
 })
 
 abstract class DefenderDeploymentPhaseSpec(
-    newStrategy: (GridSpecification) -> Strategy,
+    newStrategy: (GameSpecification) -> Strategy,
     newSubject: (Strategy, Team) -> DeploymentPhase
 ) : DeploymentPhaseSpec({
     var strategy: Strategy by Delegates.notNull()

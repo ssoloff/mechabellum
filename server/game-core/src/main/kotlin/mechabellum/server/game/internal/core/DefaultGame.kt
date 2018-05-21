@@ -19,16 +19,17 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.grid.DefaultGrid
 import mechabellum.server.game.internal.core.phases.DefaultInitializationPhase
 import mechabellum.server.game.internal.core.unit.DefaultMech
 
-internal class DefaultGame(override val grid: DefaultGrid) : Game {
-    val state: DefaultGameState = DefaultGameState()
-
+internal class DefaultGame(specification: GameSpecification) : Game {
+    override val grid: DefaultGrid = DefaultGrid(specification.gridSpecification)
     override var phase: DefaultPhase = DefaultInitializationPhase(this)
+    val state: DefaultGameState = DefaultGameState()
 }
 
 internal class DefaultGameState {
