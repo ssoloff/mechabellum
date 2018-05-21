@@ -23,7 +23,7 @@ import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.internal.core.grid.DefaultGrid
 
 object DefaultGameRunnerBehavesAsGameRunnerSpec : GameRunnerSpec(
-    subjectFactory = { DefaultGameRunner(DefaultGame(DefaultGrid(newTestGridSpecification()))) }
+    newSubject = { DefaultGameRunner(DefaultGame(DefaultGrid(newTestGridSpecification()))) }
 )
 
 object DefaultGameRunnerFactoryBehavesAsGameRunnerFactorySpec : GameRunnerFactorySpec(::DefaultGameRunnerFactory)

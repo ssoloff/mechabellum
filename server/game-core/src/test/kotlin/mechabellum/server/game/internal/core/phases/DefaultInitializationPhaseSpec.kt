@@ -37,5 +37,5 @@ object DefaultInitializationPhaseBehavesAsInitializationPhaseSpec : Initializati
                 DefaultInitializationPhase(game).newMech(mechSpecification)
         }
     },
-    subjectFactory = { gameState -> DefaultInitializationPhase(gameState.game as DefaultGame) }
+    newSubject = { gameState -> DefaultInitializationPhase(gameState.game as DefaultGame) }
 )

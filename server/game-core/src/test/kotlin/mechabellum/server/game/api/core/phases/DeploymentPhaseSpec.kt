@@ -74,13 +74,13 @@ abstract class DeploymentPhaseSpec(
 
 abstract class CommonDeploymentPhaseSpec(
     newStrategy: (GridSpecification) -> Strategy,
-    subjectFactory: (Strategy, Team) -> DeploymentPhase
+    newSubject: (Strategy, Team) -> DeploymentPhase
 ) : DeploymentPhaseSpec({
     var strategy: Strategy by Delegates.notNull()
     val deploymentPositions = DeploymentPhaseSpec.defenderDeploymentPositions
     val team = Team.DEFENDER
 
-    subject { subjectFactory(strategy, team) }
+    subject { newSubject(strategy, team) }
 
     beforeEachTest {
         strategy = DeploymentPhaseSpec.newStrategy(newStrategy)
@@ -162,11 +162,11 @@ abstract class CommonDeploymentPhaseSpec(
 
 abstract class AttackerDeploymentPhaseSpec(
     newStrategy: (GridSpecification) -> Strategy,
-    subjectFactory: (Strategy, Team) -> DeploymentPhase
+    newSubject: (Strategy, Team) -> DeploymentPhase
 ) : DeploymentPhaseSpec({
     var strategy: Strategy by Delegates.notNull()
 
-    subject { subjectFactory(strategy, Team.ATTACKER) }
+    subject { newSubject(strategy, Team.ATTACKER) }
 
     beforeEachTest {
         strategy = DeploymentPhaseSpec.newStrategy(newStrategy)
@@ -202,11 +202,11 @@ abstract class AttackerDeploymentPhaseSpec(
 
 abstract class DefenderDeploymentPhaseSpec(
     newStrategy: (GridSpecification) -> Strategy,
-    subjectFactory: (Strategy, Team) -> DeploymentPhase
+    newSubject: (Strategy, Team) -> DeploymentPhase
 ) : DeploymentPhaseSpec({
     var strategy: Strategy by Delegates.notNull()
 
-    subject { subjectFactory(strategy, Team.DEFENDER) }
+    subject { newSubject(strategy, Team.DEFENDER) }
 
     beforeEachTest {
         strategy = DeploymentPhaseSpec.newStrategy(newStrategy)

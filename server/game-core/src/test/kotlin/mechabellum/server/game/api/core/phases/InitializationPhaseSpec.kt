@@ -39,11 +39,11 @@ import kotlin.properties.Delegates
 
 abstract class InitializationPhaseSpec(
     newStrategy: (GridSpecification) -> Strategy,
-    subjectFactory: (Strategy) -> InitializationPhase
+    newSubject: (Strategy) -> InitializationPhase
 ) : SubjectSpek<InitializationPhase>({
     var strategy: Strategy by Delegates.notNull()
 
-    subject { subjectFactory(strategy) }
+    subject { newSubject(strategy) }
 
     beforeEachTest {
         strategy = newStrategy(newTestGridSpecification())

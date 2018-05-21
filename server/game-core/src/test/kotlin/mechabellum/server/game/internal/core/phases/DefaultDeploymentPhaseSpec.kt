@@ -54,15 +54,15 @@ object DefaultDeploymentPhaseSpecs {
 
 object DefaultDeploymentPhaseBehavesAsCommonDeploymentPhaseSpec : CommonDeploymentPhaseSpec(
     newStrategy = DefaultDeploymentPhaseSpecs::newStrategy,
-    subjectFactory = DefaultDeploymentPhaseSpecs::newSubject
+    newSubject = DefaultDeploymentPhaseSpecs::newSubject
 )
 
 object DefaultDeploymentPhaseBehavesAsAttackerDeploymentPhaseSpec : AttackerDeploymentPhaseSpec(
     newStrategy = DefaultDeploymentPhaseSpecs::newStrategy,
-    subjectFactory = DefaultDeploymentPhaseSpecs::newSubject
+    newSubject = DefaultDeploymentPhaseSpecs::newSubject
 )
 
 object DefaultDeploymentPhaseBehavesAsDefenderDeploymentPhaseSpec : DefenderDeploymentPhaseSpec(
     newStrategy = DefaultDeploymentPhaseSpecs::newStrategy,
-    subjectFactory = DefaultDeploymentPhaseSpecs::newSubject
+    newSubject = DefaultDeploymentPhaseSpecs::newSubject
 )

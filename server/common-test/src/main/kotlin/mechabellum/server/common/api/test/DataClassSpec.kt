@@ -33,8 +33,8 @@ import java.lang.reflect.Modifier
  * prevent coverage from dropping every time we add a data class. It should be removed when the above JaCoCo issue is
  * resolved.
  */
-abstract class DataClassSpec(subjectFactory: () -> Any) : SubjectSpek<Any>({
-    subject { subjectFactory() }
+abstract class DataClassSpec(newSubject: () -> Any) : SubjectSpek<Any>({
+    subject { newSubject() }
 
     fun copyByDestructuring(subject: Any): Any {
         val copyMethod = subject.javaClass.methods

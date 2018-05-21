@@ -28,8 +28,8 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
-abstract class GameRunnerSpec(subjectFactory: () -> GameRunner) : SubjectSpek<GameRunner>({
-    subject { subjectFactory() }
+abstract class GameRunnerSpec(newSubject: () -> GameRunner) : SubjectSpek<GameRunner>({
+    subject { newSubject() }
 
     describe("executeCommand") {
         it("should return command result when command succeeds") {
@@ -87,8 +87,8 @@ abstract class GameRunnerSpec(subjectFactory: () -> GameRunner) : SubjectSpek<Ga
     }
 })
 
-abstract class GameRunnerFactorySpec(subjectFactory: () -> GameRunnerFactory) : SubjectSpek<GameRunnerFactory>({
-    subject { subjectFactory() }
+abstract class GameRunnerFactorySpec(newSubject: () -> GameRunnerFactory) : SubjectSpek<GameRunnerFactory>({
+    subject { newSubject() }
 
     describe("newGameRunner") {
         it("should return a game runner with the requested grid specification") {

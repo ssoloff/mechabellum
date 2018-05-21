@@ -27,10 +27,10 @@ import org.jetbrains.spek.data_driven.data
 import org.jetbrains.spek.data_driven.on
 import org.jetbrains.spek.subject.SubjectSpek
 
-abstract class GridSpec(subjectFactory: (GridSpecification) -> Grid) : SubjectSpek<Grid>({
+abstract class GridSpec(newSubject: (GridSpecification) -> Grid) : SubjectSpek<Grid>({
     val gridSpecification = newTestGridSpecification().copy(type = newTestGridType().copy(cols = 5, rows = 8))
 
-    subject { subjectFactory(gridSpecification) }
+    subject { newSubject(gridSpecification) }
 
     describe("type") {
         it("should return type from grid specification") {
