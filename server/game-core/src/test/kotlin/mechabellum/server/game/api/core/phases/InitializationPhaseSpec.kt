@@ -17,10 +17,14 @@
 
 package mechabellum.server.game.api.core.phases
 
+import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
+import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
+import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeInstanceOf
@@ -31,66 +35,83 @@ import org.amshove.kluent.withMessage
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
+import kotlin.properties.Delegates
 
 abstract class InitializationPhaseSpec(
-    getMech: InitializationPhase.(MechId) -> Mech,
-    subjectFactory: () -> InitializationPhase
+    newStrategy: (GridSpecification) -> Strategy,
+    subjectFactory: (Strategy) -> InitializationPhase
 ) : SubjectSpek<InitializationPhase>({
-    subject { subjectFactory() }
+    var strategy: Strategy by Delegates.notNull()
+
+    subject { subjectFactory(strategy) }
+
+    beforeEachTest {
+        strategy = newStrategy(newTestGridSpecification())
+    }
 
     describe("end") {
         it("should change active phase to defender deployment phase") {
-            // given
-            subject.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
-            subject.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
+            // given: all teams have at least one Mech
+            strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
+            strategy.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
 
-            // when
+            // when: initialization phase is ended
             subject.end()
 
-            // then
-            subject.game.phase shouldBeInstanceOf DeploymentPhase::class
-            (subject.game.phase as DeploymentPhase).team shouldEqual Team.DEFENDER
+            // then: defender deployment phase should be active
+            strategy.game.phase shouldBeInstanceOf DeploymentPhase::class
+            (strategy.game.phase as DeploymentPhase).team shouldEqual Team.DEFENDER
         }
 
         it("should throw exception when attacker has no Mechs") {
-            // given
-            subject.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
+            // given: defender has at least one Mech
+            strategy.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
+            // but: attacker has no Mechs
 
-            // when
+            // when: initialization phase is ended
             val operation = { subject.end() }
 
-            // then
+            // then: an exception should be thrown
             operation shouldThrow GameException::class withMessage "attacker has no Mechs"
         }
 
         it("should throw exception when defender has no Mechs") {
-            // given
-            subject.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
+            // given: attacker has at least one Mech
+            strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
+            // but: defender has no Mechs
 
-            // when
+            // when: initialization phase is ended
             val operation = { subject.end() }
 
-            // then
+            // then: an exception should be thrown
             operation shouldThrow GameException::class withMessage "defender has no Mechs"
         }
     }
 
     describe("newMech") {
         it("should add Mech to game") {
-            // when
+            // when: new Mech is created
             val mech = subject.newMech(newTestMechSpecification())
 
-            // then
-            subject.getMech(mech.id) shouldBe mech
+            // then: it should be added to the game
+            strategy.getMech(mech.id) shouldBe mech
         }
 
         it("should create Mechs with distinct identifiers") {
-            // when
+            // when: multiple Mechs are created
             val mech1 = subject.newMech(newTestMechSpecification())
             val mech2 = subject.newMech(newTestMechSpecification())
 
-            // then
+            // then: each mech should have a distinct identifier
             mech1.id shouldNotEqual mech2.id
         }
     }
-})
+}) {
+    interface Strategy {
+        val game: Game
+
+        fun getMech(mechId: MechId): Mech
+
+        fun newMech(mechSpecification: MechSpecification): Mech
+    }
+}
