@@ -40,7 +40,8 @@ object DefaultDeploymentPhaseSpecs {
             override fun deployMech(mech: Mech, position: Position) =
                 DefaultDeploymentPhase(game, mech.team).deployMech(mech, position)
 
-            override fun getMechPosition(mechId: MechId): Position = game.state.getMechPosition(mechId).getOrThrow()
+            override fun getMechPosition(mechId: MechId): Position =
+                game.state.getMechRecord(mechId).position.getOrThrow()
 
             override fun newMech(mechSpecification: MechSpecification): Mech =
                 DefaultInitializationPhase(game).newMech(mechSpecification)

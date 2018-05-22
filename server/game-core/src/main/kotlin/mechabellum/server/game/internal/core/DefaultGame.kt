@@ -36,12 +36,8 @@ internal class DefaultGameState {
     val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
     var nextMechId: Int = 0
 
-    fun getMech(id: MechId): DefaultMech = getMechRecord(id).mech
-
-    fun getMechPosition(id: MechId): Option<Position> = getMechRecord(id).position
-
-    fun getMechRecord(id: MechId): MechRecord =
-        mechRecordsById[id] ?: throw IllegalArgumentException("unknown Mech ID ($id)")
+    fun getMechRecord(mechId: MechId): MechRecord =
+        mechRecordsById[mechId] ?: throw IllegalArgumentException("unknown Mech ID ($mechId)")
 
     class MechRecord(
         val mech: DefaultMech,
