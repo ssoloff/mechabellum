@@ -41,6 +41,11 @@ internal class DefaultGameState {
 
     class MechRecord(
         val mech: DefaultMech,
-        var position: Option<Position> = Option.none()
-    )
+        val position: Option<Position> = Option.none()
+    ) {
+        fun setPosition(position: Position): MechRecord = MechRecord(
+            mech = mech,
+            position = Option.some(position)
+        )
+    }
 }

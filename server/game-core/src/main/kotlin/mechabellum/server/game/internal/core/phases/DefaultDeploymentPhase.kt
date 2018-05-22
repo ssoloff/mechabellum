@@ -37,7 +37,7 @@ internal class DefaultDeploymentPhase(
         val mechRecord = game.state.getMechRecord(mech.id)
         checkMechBelongsToDeployingTeam(mech)
         checkPositionIsWithinTeamDeploymentPositions(position, mech.team)
-        mechRecord.position = Option.some(position)
+        game.state.mechRecordsById[mech.id] = mechRecord.setPosition(position)
     }
 
     private fun checkMechBelongsToDeployingTeam(mech: Mech) {
