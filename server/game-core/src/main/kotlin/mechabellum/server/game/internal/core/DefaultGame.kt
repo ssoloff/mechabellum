@@ -33,11 +33,26 @@ internal class DefaultGame(specification: GameSpecification) : Game {
 }
 
 internal class DefaultGameState {
-    val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
-    var nextMechId: Int = 0
+    private val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
+    private var nextMechIdValue: Int = 0
+
+    val mechRecords: Collection<MechRecord>
+        get() = mechRecordsById.values
+
+    fun addMechRecord(mechRecord: MechRecord) {
+        val mechId = mechRecord.mech.id
+        require(mechId !in mechRecordsById) { "record for Mech ID exists ($mechId}" }
+        mechRecordsById[mechId] = mechRecord
+    }
 
     fun getMechRecord(mechId: MechId): MechRecord =
         mechRecordsById[mechId] ?: throw IllegalArgumentException("unknown Mech ID ($mechId)")
+
+    fun modifyMechRecord(mechId: MechId, action: (MechRecord) -> MechRecord) {
+        mechRecordsById[mechId] = action(getMechRecord(mechId))
+    }
+
+    fun newMechId(): MechId = MechId(nextMechIdValue++)
 
     class MechRecord(
         val mech: DefaultMech,

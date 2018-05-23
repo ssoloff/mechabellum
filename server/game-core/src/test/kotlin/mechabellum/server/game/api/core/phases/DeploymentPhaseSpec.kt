@@ -107,6 +107,7 @@ abstract class CommonDeploymentPhaseSpec(
             val mechId = MechId(-1)
             val mech = mock<Mech> {
                 on { id } doReturn mechId
+                on { this.team } doReturn team
             }
 
             // when

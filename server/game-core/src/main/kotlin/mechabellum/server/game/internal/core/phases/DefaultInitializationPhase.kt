@@ -21,7 +21,6 @@ import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultGameState
@@ -38,7 +37,7 @@ internal class DefaultInitializationPhase(game: DefaultGame) : DefaultPhase(game
 
     private fun checkAllTeamsHaveAtLeastOneMech() {
         for (team in Team.values()) {
-            if (game.state.mechRecordsById.values.none { it.mech.team == team }) {
+            if (game.state.mechRecords.none { it.mech.team == team }) {
                 throw GameException(Messages.teamHasNoMechs(team))
             }
         }
@@ -46,11 +45,10 @@ internal class DefaultInitializationPhase(game: DefaultGame) : DefaultPhase(game
 
     override fun newMech(specification: MechSpecification): Mech {
         val mech = DefaultMech(
-            id = MechId(game.state.nextMechId++),
+            id = game.state.newMechId(),
             team = specification.team
         )
-        assert(mech.id !in game.state.mechRecordsById)
-        game.state.mechRecordsById[mech.id] = DefaultGameState.MechRecord(mech)
+        game.state.addMechRecord(DefaultGameState.MechRecord(mech))
         return mech
     }
 

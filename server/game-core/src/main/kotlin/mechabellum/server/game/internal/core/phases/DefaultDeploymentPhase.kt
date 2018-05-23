@@ -34,10 +34,10 @@ internal class DefaultDeploymentPhase(
     override val team: Team
 ) : DefaultPhase(game), DeploymentPhase {
     override fun deployMech(mech: Mech, position: Position) {
-        val mechRecord = game.state.getMechRecord(mech.id)
         checkMechBelongsToDeployingTeam(mech)
         checkPositionIsWithinTeamDeploymentPositions(position, mech.team)
-        game.state.mechRecordsById[mech.id] = mechRecord.setPosition(position)
+
+        game.state.modifyMechRecord(mech.id) { it.setPosition(position) }
     }
 
     private fun checkMechBelongsToDeployingTeam(mech: Mech) {
@@ -61,7 +61,7 @@ internal class DefaultDeploymentPhase(
     }
 
     private fun checkAllTeamMechsDeployed() {
-        game.state.mechRecordsById.values
+        game.state.mechRecords
             .filter { it.mech.team == team }
             .find { it.position is Option.None }
             ?.let { throw GameException(Messages.mechHasNotBeenDeployed(it.mech)) }
