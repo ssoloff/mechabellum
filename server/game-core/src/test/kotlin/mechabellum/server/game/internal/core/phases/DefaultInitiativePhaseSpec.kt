@@ -15,13 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.phases
+package mechabellum.server.game.internal.core.phases
 
-import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.participant.Team
+import mechabellum.server.game.api.core.Game
+import mechabellum.server.game.api.core.phases.InitiativePhaseSpec
+import mechabellum.server.game.internal.core.DefaultGame
 
-/** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
-interface InitiativePhase : Phase {
-    /** Returns the initiative roll for the specified [team] (a value in the range [2,12]). */
-    fun getInitiativeRoll(team: Team): Int
-}
+object DefaultInitiativePhaseBehavesAsInitializationPhaseSpec : InitiativePhaseSpec(
+    newStrategy = { gameSpecification ->
+        val game = DefaultGame(gameSpecification)
+        object : Strategy {
+            override val game: Game = game
+        }
+    },
+    newSubject = { gameState -> DefaultInitiativePhase(gameState.game as DefaultGame) }
+)

@@ -40,18 +40,26 @@ object TrainingScenarioSpec : Spek({
             gameRunner.executeCommand(command)
 
         it("should be able to play the training scenario from the Quick-Start rules") {
+            // initialization phase
             val defender1 = executeCommand(NewMechCommand(MechSpecification(Team.DEFENDER, MechTypes.CICADA)))
             val defender2 = executeCommand(NewMechCommand(MechSpecification(Team.DEFENDER, MechTypes.HUNCHBACK)))
             val attacker1 = executeCommand(NewMechCommand(MechSpecification(Team.ATTACKER, MechTypes.ENFORCER)))
             val attacker2 = executeCommand(NewMechCommand(MechSpecification(Team.ATTACKER, MechTypes.HERMES_II)))
             executeCommand(EndPhaseCommand())
 
+            // defender deployment phase
             executeCommand(DeployMechCommand(defender1, Position(0, 16)))
             executeCommand(DeployMechCommand(defender2, Position(14, 16)))
             executeCommand(EndPhaseCommand())
 
+            // attacker deployment phase
             executeCommand(DeployMechCommand(attacker1, Position(0, 0)))
             executeCommand(DeployMechCommand(attacker2, Position(14, 0)))
+            executeCommand(EndPhaseCommand())
+
+            // turn 0
+
+            // initiative phase
             executeCommand(EndPhaseCommand())
 
             // TODO: implement remainder of scenario

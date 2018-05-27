@@ -18,6 +18,7 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.DieRoller
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Position
@@ -27,6 +28,7 @@ import mechabellum.server.game.internal.core.phases.DefaultInitializationPhase
 import mechabellum.server.game.internal.core.unit.DefaultMech
 
 internal class DefaultGame(specification: GameSpecification) : Game {
+    val dieRoller: DieRoller = specification.dieRoller
     override val grid: DefaultGrid = DefaultGrid(specification.gridSpecification)
     override var phase: DefaultPhase = DefaultInitializationPhase(this)
     val state: DefaultGameState = DefaultGameState()

@@ -18,31 +18,15 @@
 package mechabellum.server.game.internal.core.phases
 
 import mechabellum.server.game.api.core.participant.Team
-import mechabellum.server.game.api.core.phases.InitiativePhase
+import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultPhase
 
-internal class DefaultInitiativePhase(game: DefaultGame) : DefaultPhase(game), InitiativePhase {
-    private val initiativeRollsByTeam: Map<Team, Int> = rollInitiative()
-
-    private fun rollInitiative(): Map<Team, Int> {
-        while (true) {
-            val initiativeRollsByTeam = Team.values().associate {
-                it to (game.dieRoller.roll() + game.dieRoller.roll())
-            }
-            val maxInitiativeRoll: Int = initiativeRollsByTeam.values.max()!!
-            if (initiativeRollsByTeam.values.count(maxInitiativeRoll::equals) == 1) {
-                return initiativeRollsByTeam
-            }
-        }
-    }
-
+internal class DefaultMovementPhase(
+    game: DefaultGame,
+    override val team: Team
+) : DefaultPhase(game), MovementPhase {
     override fun end() {
-        game.phase = DefaultMovementPhase(game, teamWithInitiative)
+        TODO("not implemented")
     }
-
-    private val teamWithInitiative: Team
-        get() = initiativeRollsByTeam.maxBy(Map.Entry<Team, Int>::value)!!.key
-
-    override fun getInitiativeRoll(team: Team): Int = initiativeRollsByTeam[team]!!
 }

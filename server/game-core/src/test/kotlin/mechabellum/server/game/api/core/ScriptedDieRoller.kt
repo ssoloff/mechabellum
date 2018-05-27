@@ -15,13 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.phases
+package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.participant.Team
+import java.util.ArrayDeque
+import java.util.Queue
 
-/** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
-interface InitiativePhase : Phase {
-    /** Returns the initiative roll for the specified [team] (a value in the range [2,12]). */
-    fun getInitiativeRoll(team: Team): Int
+internal class ScriptedDieRoller : DieRoller {
+    private val values: Queue<Int> = ArrayDeque()
+
+    fun addValues(vararg values: Int) {
+        require(values.all { it in 1..DieRoller.DIE_SIDES }) { "value out of range" }
+
+        this.values.addAll(values.toTypedArray())
+    }
+
+    override fun roll(): Int = values.poll() ?: throw IllegalStateException("no die roll value available")
 }

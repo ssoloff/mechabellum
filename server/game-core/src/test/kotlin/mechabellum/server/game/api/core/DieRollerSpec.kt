@@ -15,13 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.phases
+package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.participant.Team
+import org.amshove.kluent.shouldBeGreaterOrEqualTo
+import org.amshove.kluent.shouldBeLessOrEqualTo
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.subject.SubjectSpek
 
-/** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
-interface InitiativePhase : Phase {
-    /** Returns the initiative roll for the specified [team] (a value in the range [2,12]). */
-    fun getInitiativeRoll(team: Team): Int
-}
+object UniformDieRollerSpec : SubjectSpek<UniformDieRoller>({
+    subject { UniformDieRoller() }
+
+    describe("roll") {
+        it("should return an integer between 1 and 6 inclusive") {
+            for (i in 1..100) {
+                val roll = subject.roll()
+                roll shouldBeGreaterOrEqualTo 1
+                roll shouldBeLessOrEqualTo 6
+            }
+        }
+    }
+})

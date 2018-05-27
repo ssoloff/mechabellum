@@ -23,6 +23,7 @@ import mechabellum.server.game.api.core.grid.GridSpecification
 /**
  * A specification for creating a new [Game].
  *
+ * @property dieRoller The [DieRoller] used to generate die rolls for various events in the game.
  * @property gridSpecification The [GridSpecification] describing the [Grid] to create for the game.
  */
-data class GameSpecification(val gridSpecification: GridSpecification)
+data class GameSpecification(val dieRoller: DieRoller = UniformDieRoller(), val gridSpecification: GridSpecification)

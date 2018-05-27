@@ -15,13 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.phases
+package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.participant.Team
+import java.util.concurrent.ThreadLocalRandom
 
-/** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
-interface InitiativePhase : Phase {
-    /** Returns the initiative roll for the specified [team] (a value in the range [2,12]). */
-    fun getInitiativeRoll(team: Team): Int
+/** A six-sided die roller. */
+interface DieRoller {
+    /** Returns the result of rolling one six-sided die (a value in the range [1,6]). */
+    fun roll(): Int
+
+    companion object {
+        /** The count of sides on a six-sided die. */
+        const val DIE_SIDES: Int = 6
+    }
+}
+
+/** Implementation of [DieRoller] that randomly generates a die roll using a uniform distribution. */
+class UniformDieRoller : DieRoller {
+    override fun roll(): Int = ThreadLocalRandom.current().nextInt(DieRoller.DIE_SIDES) + 1
 }
