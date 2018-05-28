@@ -20,7 +20,7 @@ val kotlinVersion: String by rootProject
 val spekVersion: String by rootProject
 
 dependencies {
-    "implementation"(kotlin("reflect", kotlinVersion)) // required by Spek
+    "implementation"(kotlin("reflect", kotlinVersion))
     "implementation"("nl.jqno.equalsverifier", "equalsverifier", "2.4.6")
     "implementation"("org.amshove.kluent", "kluent", kluentVersion)
     "implementation"("org.jetbrains.spek", "spek-api", spekVersion) {
