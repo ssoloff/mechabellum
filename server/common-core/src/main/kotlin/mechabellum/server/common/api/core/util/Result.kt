@@ -49,7 +49,7 @@ sealed class Result<out T : Any, out E : Exception> {
     }
 
     /** Result that represents failure with [exception]. */
-    data class Failure<out E : Exception> internal constructor(val exception: E) : Result<Nothing, E>() {
+    class Failure<out E : Exception> internal constructor(val exception: E) : Result<Nothing, E>() {
         override fun getOrThrow(): Nothing = throw exception
 
         override fun toString(): String = "Failure(${exception.message})"

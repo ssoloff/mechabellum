@@ -54,19 +54,11 @@ object ResultEmptySpec : Spek({
                 else -> throw AssertionError("expected Empty but was $subject")
             }
         }
-
-        it("should take Empty branch when target is Empty instance") {
-            when (subject) {
-                Result.empty<Number, RuntimeException>() -> Unit
-                else -> throw AssertionError("expected Empty but was $subject")
-            }
-        }
     }
 })
 
 object ResultFailureSpec : Spek({
     val exception = NumberFormatException("message")
-    val otherException = IllegalStateException("otherMessage")
     val subject: SpecResult = Result.failure(exception)
 
     describe("getOrElse") {
@@ -94,26 +86,8 @@ object ResultFailureSpec : Spek({
                 else -> throw AssertionError("expected Failure but was $subject")
             }
         }
-
-        it("should take Failure branch when target is equal Failure instance") {
-            val result: SpecResult = Result.failure(exception)
-            when (subject) {
-                result -> Unit
-                else -> throw AssertionError("expected $result but was $subject")
-            }
-        }
-
-        it("should take else branch when target is unequal Failure instance") {
-            val result: SpecResult = Result.failure(otherException)
-            when (subject) {
-                result -> throw AssertionError("expected $subject but was $result")
-                else -> Unit
-            }
-        }
     }
 })
-
-object ResultFailureBehavesAsDataClassSpec : DataClassSpec({ Result.Failure(Exception()) })
 
 object ResultSuccessSpec : Spek({
     val value = 42
