@@ -46,6 +46,7 @@ val javaVersion by extra { JavaVersion.VERSION_1_8 }
 val junitVersion by extra { "5.1.1" }
 val kluentVersion by extra { "1.38" }
 val kotlinVersion: String by extra
+val mockitoVersion by extra { "2.18.3" }
 val spekVersion by extra { "1.1.5" }
 
 allprojects {
@@ -78,6 +79,7 @@ subprojects {
         "testImplementation"("org.jetbrains.spek", "spek-subject-extension", spekVersion) {
             exclude("org.jetbrains.kotlin")
         }
+        "testImplementation"("org.mockito", "mockito-core", mockitoVersion)
         "testRuntimeOnly"("org.jetbrains.spek", "spek-junit-platform-engine", spekVersion) {
             exclude("org.jetbrains.kotlin")
             exclude("org.junit.platform")
