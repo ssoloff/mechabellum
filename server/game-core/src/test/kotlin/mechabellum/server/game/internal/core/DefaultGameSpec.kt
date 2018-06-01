@@ -18,6 +18,7 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.GameSpec
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechId
@@ -30,6 +31,8 @@ import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
+
+object DefaultGameBehavesAsGameSpec : GameSpec(::DefaultGame)
 
 internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
     subject { DefaultGameState() }

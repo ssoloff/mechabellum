@@ -17,23 +17,24 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.grid.Grid
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.subject.SubjectSpek
 
-/** A BattleTech game. */
-interface Game {
-    /** The game grid. */
-    val grid: Grid
+abstract class GameSpec(newSubject: (GameSpecification) -> Game) : SubjectSpek<Game>({
+    subject { newSubject(newTestGameSpecification()) }
 
-    /** The active game phase. */
-    val phase: Phase
+    describe("turn") {
+        it("should throw exception when no turn is active") {
+            // given: no turn is active
 
-    /**
-     * The active game turn.
-     *
-     * @throws IllegalStateException If the first game turn has not yet begun.
-     */
-    val turn: Turn
-}
+            // when: getting the active turn
+            val operation = { subject.turn }
 
-/** A checked exception that indicates a recoverable error occurred within a game. */
-class GameException(message: String) : Exception(message)
+            // then: an exception should be thrown
+            operation shouldThrow IllegalStateException::class withMessage "no active turn"
+        }
+    }
+})

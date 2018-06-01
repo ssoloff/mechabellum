@@ -18,10 +18,6 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.participant.Team
 
 /** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
-interface InitiativePhase : Phase {
-    /** Returns the initiative roll for the specified [team] (a value in the range [2,12]). */
-    fun getInitiativeRoll(team: Team): Int
-}
+interface InitiativePhase : Phase

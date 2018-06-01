@@ -15,21 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.internal.core.phases
+package mechabellum.server.game.internal.core
 
-import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.phases.InitiativePhaseSpec
-import mechabellum.server.game.internal.core.DefaultGame
+import mechabellum.server.game.api.core.Turn
+import mechabellum.server.game.api.core.participant.Team
 
-object DefaultInitiativePhaseBehavesAsInitializationPhaseSpec : InitiativePhaseSpec(
-    newStrategy = { gameSpecification ->
-        val game = DefaultGame(gameSpecification)
-        object : Strategy {
-            override val game: Game = game
-        }
-    },
-    newSubject = { gameState ->
-        val game = gameState.game as DefaultGame
-        DefaultInitiativePhase(game, game.state.addTurn())
-    }
-)
+internal class DefaultTurn : Turn {
+    private val initiativeRollsByTeam: MutableMap<Team, Int> = mutableMapOf()
+
+    val teamWithInitiative: Team
+        get() = initiativeRollsByTeam.maxBy(Map.Entry<Team, Int>::value)!!.key
+
+    override fun getInitiativeRoll(team: Team): Int = initiativeRollsByTeam[team]!!
+
+    fun setInitiativeRolls(initiativeRollsByTeam: Map<Team, Int>) =
+        this.initiativeRollsByTeam.putAll(initiativeRollsByTeam)
+}

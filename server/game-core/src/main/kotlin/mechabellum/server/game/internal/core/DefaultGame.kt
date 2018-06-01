@@ -32,19 +32,32 @@ internal class DefaultGame(specification: GameSpecification) : Game {
     override val grid: DefaultGrid = DefaultGrid(specification.gridSpecification)
     override var phase: DefaultPhase = DefaultInitializationPhase(this)
     val state: DefaultGameState = DefaultGameState()
+
+    override val turn: DefaultTurn
+        get() = state.turn
 }
 
 internal class DefaultGameState {
     private val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
     private var nextMechIdValue: Int = 0
+    private val turns: MutableList<DefaultTurn> = mutableListOf()
 
     val mechRecords: Collection<MechRecord>
         get() = mechRecordsById.values
+
+    val turn: DefaultTurn
+        get() = turns.lastOrNull() ?: throw IllegalStateException("no active turn")
 
     fun addMechRecord(mechRecord: MechRecord) {
         val mechId = mechRecord.mech.id
         require(mechId !in mechRecordsById) { "record for Mech ID exists ($mechId}" }
         mechRecordsById[mechId] = mechRecord
+    }
+
+    fun addTurn(): DefaultTurn {
+        val turn = DefaultTurn()
+        turns.add(turn)
+        return turn
     }
 
     fun getMechRecord(mechId: MechId): MechRecord =

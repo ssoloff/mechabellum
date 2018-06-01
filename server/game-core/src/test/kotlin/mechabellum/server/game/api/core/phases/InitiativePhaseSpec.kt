@@ -47,11 +47,11 @@ abstract class InitiativePhaseSpec(
             scriptedDieRoller.addValues(1, 2, 5, 6)
 
             // when: initiative phase is created
-            val subject = newSubject(strategy)
+            newSubject(strategy)
 
             // then: it should roll initiative for each team in lexicographic order
-            subject.getInitiativeRoll(Team.ATTACKER) shouldEqual 3
-            subject.getInitiativeRoll(Team.DEFENDER) shouldEqual 11
+            strategy.game.turn.getInitiativeRoll(Team.ATTACKER) shouldEqual 3
+            strategy.game.turn.getInitiativeRoll(Team.DEFENDER) shouldEqual 11
         }
 
         it("should re-roll initiative for each team in the event of a tie") {
@@ -61,11 +61,11 @@ abstract class InitiativePhaseSpec(
             scriptedDieRoller.addValues(1, 2, 5, 6)
 
             // when: initiative phase is created
-            val subject = newSubject(strategy)
+            newSubject(strategy)
 
             // then: it should roll initiative for each team twice to resolve the tie
-            subject.getInitiativeRoll(Team.ATTACKER) shouldEqual 3
-            subject.getInitiativeRoll(Team.DEFENDER) shouldEqual 11
+            strategy.game.turn.getInitiativeRoll(Team.ATTACKER) shouldEqual 3
+            strategy.game.turn.getInitiativeRoll(Team.DEFENDER) shouldEqual 11
         }
     }
 

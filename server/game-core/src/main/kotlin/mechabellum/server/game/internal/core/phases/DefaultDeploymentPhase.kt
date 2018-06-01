@@ -56,7 +56,7 @@ internal class DefaultDeploymentPhase(
 
         game.phase = when (team) {
             Team.DEFENDER -> DefaultDeploymentPhase(game, Team.ATTACKER)
-            Team.ATTACKER -> DefaultInitiativePhase(game)
+            Team.ATTACKER -> DefaultInitiativePhase(game, game.state.addTurn())
         }
     }
 

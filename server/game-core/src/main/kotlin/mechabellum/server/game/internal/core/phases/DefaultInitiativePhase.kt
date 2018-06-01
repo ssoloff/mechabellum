@@ -21,9 +21,15 @@ import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultPhase
+import mechabellum.server.game.internal.core.DefaultTurn
 
-internal class DefaultInitiativePhase(game: DefaultGame) : DefaultPhase(game), InitiativePhase {
-    private val initiativeRollsByTeam: Map<Team, Int> = rollInitiative()
+internal class DefaultInitiativePhase(
+    game: DefaultGame,
+    private val turn: DefaultTurn
+) : DefaultPhase(game), InitiativePhase {
+    init {
+        turn.setInitiativeRolls(rollInitiative())
+    }
 
     private fun rollInitiative(): Map<Team, Int> {
         while (true) {
@@ -38,11 +44,6 @@ internal class DefaultInitiativePhase(game: DefaultGame) : DefaultPhase(game), I
     }
 
     override fun end() {
-        game.phase = DefaultMovementPhase(game, teamWithInitiative)
+        game.phase = DefaultMovementPhase(game, turn.teamWithInitiative)
     }
-
-    private val teamWithInitiative: Team
-        get() = initiativeRollsByTeam.maxBy(Map.Entry<Team, Int>::value)!!.key
-
-    override fun getInitiativeRoll(team: Team): Int = initiativeRollsByTeam[team]!!
 }
