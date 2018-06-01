@@ -43,7 +43,7 @@ plugins {
 }
 
 val javaVersion by extra { JavaVersion.VERSION_1_8 }
-val junitVersion by extra { "5.1.1" }
+val junitVersion by extra { "5.2.0" }
 val kluentVersion by extra { "1.38" }
 val kotlinVersion: String by extra
 val mockitoVersion by extra { "2.18.3" }
