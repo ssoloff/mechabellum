@@ -48,8 +48,8 @@ object DefaultDeploymentPhaseSpecs {
         }
     }
 
-    fun newSubject(gameState: DeploymentPhaseSpec.Strategy, team: Team): DeploymentPhase =
-        DefaultDeploymentPhase(gameState.game as DefaultGame, team)
+    fun newSubject(strategy: DeploymentPhaseSpec.Strategy, team: Team): DeploymentPhase =
+        DefaultDeploymentPhase(strategy.game as DefaultGame, team)
 }
 
 object DefaultDeploymentPhaseBehavesAsCommonDeploymentPhaseSpec : CommonDeploymentPhaseSpec(

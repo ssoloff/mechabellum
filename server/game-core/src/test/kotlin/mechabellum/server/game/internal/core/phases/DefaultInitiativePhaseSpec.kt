@@ -28,8 +28,8 @@ object DefaultInitiativePhaseBehavesAsInitializationPhaseSpec : InitiativePhaseS
             override val game: Game = game
         }
     },
-    newSubject = { gameState ->
-        val game = gameState.game as DefaultGame
+    newSubject = { strategy ->
+        val game = strategy.game as DefaultGame
         DefaultInitiativePhase(game, game.state.addTurn())
     }
 )
