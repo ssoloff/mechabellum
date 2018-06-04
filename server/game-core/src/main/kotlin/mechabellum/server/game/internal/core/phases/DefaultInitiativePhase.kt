@@ -17,18 +17,18 @@
 
 package mechabellum.server.game.internal.core.phases
 
+import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultPhase
-import mechabellum.server.game.internal.core.DefaultTurn
 
 internal class DefaultInitiativePhase(
     game: DefaultGame,
-    private val turn: DefaultTurn
+    private val turnId: TurnId
 ) : DefaultPhase(game), InitiativePhase {
     init {
-        turn.setInitiativeRolls(rollInitiative())
+        game.state.modifyTurn(turnId) { it.setInitiativeRolls(rollInitiative()) }
     }
 
     private fun rollInitiative(): Map<Team, Int> {
@@ -44,6 +44,6 @@ internal class DefaultInitiativePhase(
     }
 
     override fun end() {
-        game.phase = DefaultMovementPhase(game, turn.teamWithInitiative)
+        game.phase = DefaultMovementPhase(game, game.state.getTurn(turnId).teamWithInitiative)
     }
 }

@@ -20,6 +20,19 @@ package mechabellum.server.game.api.core
 import mechabellum.server.game.api.core.participant.Team
 
 /**
+ * The unique identifier of a turn within a game.
+ *
+ * @property value The zero-based turn identifier.
+ *
+ * @throws IllegalArgumentException If [value] is negative.
+ */
+data class TurnId(val value: Int) {
+    init {
+        require(value >= 0) { "value must not be negative" }
+    }
+}
+
+/**
  * A game turn.
  *
  * Each turn encapsulates information about one instance of each of the following phases:
@@ -30,6 +43,9 @@ import mechabellum.server.game.api.core.participant.Team
  * - End phase
  */
 interface Turn {
+    /** The turn identifier. */
+    val id: TurnId
+
     /** Returns the initiative roll for the specified [team] (a value in the range [2,12]). */
     fun getInitiativeRoll(team: Team): Int
 }

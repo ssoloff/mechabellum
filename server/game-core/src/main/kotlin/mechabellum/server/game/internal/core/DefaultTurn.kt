@@ -18,16 +18,43 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.Turn
+import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.participant.Team
 
-internal class DefaultTurn : Turn {
-    private val initiativeRollsByTeam: MutableMap<Team, Int> = mutableMapOf()
+internal class DefaultTurn(
+    override val id: TurnId,
+    private val initiativeRollsByTeam: Map<Team, Int> = DEFAULT_INITIATIVE_ROLLS_BY_TEAM
+) : Turn {
+    init {
+        checkAllTeamsHaveInitiativeRoll()
+        checkOneTeamHasInitiative()
+    }
 
-    val teamWithInitiative: Team
-        get() = initiativeRollsByTeam.maxBy(Map.Entry<Team, Int>::value)!!.key
+    private fun checkAllTeamsHaveInitiativeRoll() {
+        Team.values().forEach { require(it in initiativeRollsByTeam) { "no initiative roll for team $it" } }
+    }
+
+    private fun checkOneTeamHasInitiative() {
+        val maxInitiativeRoll: Int = initiativeRollsByTeam.values.max()!!
+        require(initiativeRollsByTeam.values.count(maxInitiativeRoll::equals) == 1) { "no team with initiative" }
+    }
+
+    val teamWithInitiative: Team = initiativeRollsByTeam.maxBy(Map.Entry<Team, Int>::value)!!.key
 
     override fun getInitiativeRoll(team: Team): Int = initiativeRollsByTeam[team]!!
 
-    fun setInitiativeRolls(initiativeRollsByTeam: Map<Team, Int>) =
-        this.initiativeRollsByTeam.putAll(initiativeRollsByTeam)
+    fun setInitiativeRolls(initiativeRollsByTeam: Map<Team, Int>): DefaultTurn = DefaultTurn(
+        id = id,
+        initiativeRollsByTeam = initiativeRollsByTeam
+    )
+
+    companion object {
+        private val DEFAULT_INITIATIVE_ROLLS_BY_TEAM: Map<Team, Int> = defaultInitiativeRolls()
+
+        private fun defaultInitiativeRolls(): Map<Team, Int> {
+            val initiativeRollsByTeam: MutableMap<Team, Int> = Team.values().associate { it to 2 }.toMutableMap()
+            initiativeRollsByTeam[Team.values().first()] = 12
+            return initiativeRollsByTeam
+        }
+    }
 }

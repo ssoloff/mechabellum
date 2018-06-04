@@ -21,6 +21,7 @@ import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.DieRoller
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
+import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.grid.DefaultGrid
@@ -54,17 +55,24 @@ internal class DefaultGameState {
         mechRecordsById[mechId] = mechRecord
     }
 
-    fun addTurn(): DefaultTurn {
-        val turn = DefaultTurn()
-        turns.add(turn)
-        return turn
+    fun addTurn(): TurnId {
+        val turnId = TurnId(turns.size)
+        turns.add(DefaultTurn(id = turnId))
+        return turnId
     }
 
     fun getMechRecord(mechId: MechId): MechRecord =
         mechRecordsById[mechId] ?: throw IllegalArgumentException("unknown Mech ID ($mechId)")
 
+    fun getTurn(turnId: TurnId): DefaultTurn =
+        turns.getOrNull(turnId.value) ?: throw IllegalArgumentException("unknown turn ID ($turnId)")
+
     fun modifyMechRecord(mechId: MechId, action: (MechRecord) -> MechRecord) {
         mechRecordsById[mechId] = action(getMechRecord(mechId))
+    }
+
+    fun modifyTurn(turnId: TurnId, action: (DefaultTurn) -> DefaultTurn) {
+        turns[turnId.value] = action(getTurn(turnId))
     }
 
     fun newMechId(): MechId = MechId(nextMechIdValue++)

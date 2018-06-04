@@ -19,6 +19,7 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.GameSpec
+import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechId
@@ -31,6 +32,7 @@ import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
+import kotlin.properties.Delegates
 
 object DefaultGameBehavesAsGameSpec : GameSpec(::DefaultGame)
 
@@ -66,6 +68,21 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
         }
     }
 
+    describe("addTurn") {
+        it("should add a turn with the next available ID") {
+            // when: a turn is added
+            val turnId0 = subject.addTurn()
+            // and: another turn is added
+            val turnId1 = subject.addTurn()
+
+            // then: each turn should be available with the expected ID
+            turnId0 shouldEqual TurnId(0)
+            subject.getTurn(turnId0).id shouldEqual turnId0
+            turnId1 shouldEqual TurnId(1)
+            subject.getTurn(turnId1).id shouldEqual turnId1
+        }
+    }
+
     describe("getMechRecord") {
         it("should return Mech record when present") {
             // given: an existing Mech record
@@ -91,6 +108,29 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
         }
     }
 
+    describe("getTurn") {
+        it("should return turn when present") {
+            // given: an existing turn
+            val turnId = subject.addTurn()
+
+            // when: a present turn is requested
+            val turn = subject.getTurn(turnId)
+
+            // then: the requested turn should be returned
+            turn.id shouldEqual turnId
+        }
+
+        it("should throw exception when turn absent") {
+            // when: an absent turn is requested
+            val turnId = TurnId(999)
+            val operation = { subject.getTurn(turnId) }
+
+            // then: it should throw an exception
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain turnId.toString()
+        }
+    }
+
     describe("modifyMechRecord") {
         it("should modify specified record and update game state") {
             // given: an existing Mech record
@@ -98,11 +138,14 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
             subject.addMechRecord(newMechRecord(mechId))
 
             // when: the Mech record is modified
-            val newPosition = Position(5, 8)
-            subject.modifyMechRecord(mechId) { it.setPosition(newPosition) }
+            var mechRecord: DefaultGameState.MechRecord by Delegates.notNull()
+            subject.modifyMechRecord(mechId) {
+                mechRecord = it.setPosition(Position(5, 8))
+                mechRecord
+            }
 
             // then: the modified Mech record should be available on subsequent calls
-            subject.getMechRecord(mechId).position shouldEqual Option.some(newPosition)
+            subject.getMechRecord(mechId) shouldBe mechRecord
         }
 
         it("should throw exception when record does not exist") {
@@ -113,6 +156,33 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain mechId.toString()
+        }
+    }
+
+    describe("modifyTurn") {
+        it("should modify specified turn and update game state") {
+            // given: an existing turn
+            val turnId = subject.addTurn()
+
+            // when: the turn is modified
+            var turn: DefaultTurn by Delegates.notNull()
+            subject.modifyTurn(turnId) {
+                turn = it.setInitiativeRolls(mapOf(Team.ATTACKER to 9, Team.DEFENDER to 8))
+                turn
+            }
+
+            // then: the modified turn should be available on subsequent calls
+            subject.getTurn(turnId) shouldBe turn
+        }
+
+        it("should throw exception when turn does not exist") {
+            // when: an attempt is made to modify a non-existent turn
+            val turnId = TurnId(999)
+            val operation = { subject.modifyTurn(turnId) { it } }
+
+            // then: it should throw an exception
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain turnId.toString()
         }
     }
 
