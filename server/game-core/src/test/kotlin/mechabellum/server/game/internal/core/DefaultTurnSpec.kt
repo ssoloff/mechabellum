@@ -18,6 +18,7 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.TurnId
+import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
@@ -35,30 +36,34 @@ object DefaultTurnSpec : Spek({
         }
 
         describe("initiative preconditions") {
-            it("should throw exception when team absent from initiative rolls") {
-                // when: not all teams have an initiative roll
+            it("should throw exception when team absent from initiatives") {
+                // when: not all teams have an initiative
                 val operation = {
                     DefaultTurn(
                         id = TurnId(0),
-                        initiativeRollsByTeam = mapOf(Team.ATTACKER to 2)
+                        initiativesByTeam = mapOf(Team.ATTACKER to Initiative.MIN)
                     )
                 }
 
                 // then: it should throw an exception
-                operation shouldThrow IllegalArgumentException::class withMessage "no initiative roll for team ${Team.DEFENDER}"
+                operation
+                    .shouldThrow(IllegalArgumentException::class)
+                    .withMessage("expected initiative for team ${Team.DEFENDER} but was absent")
             }
 
-            it("should throw exception when there is no clear team with initiative") {
-                // when: there is no clear team with initiative
+            it("should throw exception when no team has won initiative") {
+                // when: more than one team has the max initiative
                 val operation = {
                     DefaultTurn(
                         id = TurnId(0),
-                        initiativeRollsByTeam = mapOf(Team.ATTACKER to 2, Team.DEFENDER to 2)
+                        initiativesByTeam = mapOf(Team.ATTACKER to Initiative.MIN, Team.DEFENDER to Initiative.MIN)
                     )
                 }
 
                 // then: it should throw an exception
-                operation shouldThrow IllegalArgumentException::class withMessage "no team with initiative"
+                operation
+                    .shouldThrow(IllegalArgumentException::class)
+                    .withMessage("expected 1 team to have the max initiative (${Initiative.MIN}) but was 2 teams")
             }
         }
     }

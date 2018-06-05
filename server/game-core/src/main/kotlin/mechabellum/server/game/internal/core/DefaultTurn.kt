@@ -19,42 +19,48 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.Turn
 import mechabellum.server.game.api.core.TurnId
+import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 
 internal class DefaultTurn(
     override val id: TurnId,
-    private val initiativeRollsByTeam: Map<Team, Int> = DEFAULT_INITIATIVE_ROLLS_BY_TEAM
+    private val initiativesByTeam: Map<Team, Initiative> = DEFAULT_INITIATIVES_BY_TEAM
 ) : Turn {
     init {
-        checkAllTeamsHaveInitiativeRoll()
-        checkOneTeamHasInitiative()
+        checkAllTeamsHaveInitiative()
+        checkInitiativeWinnerExists()
     }
 
-    private fun checkAllTeamsHaveInitiativeRoll() {
-        Team.values().forEach { require(it in initiativeRollsByTeam) { "no initiative roll for team $it" } }
+    private fun checkAllTeamsHaveInitiative() = Team.values().forEach {
+        require(it in initiativesByTeam) { "expected initiative for team $it but was absent" }
     }
 
-    private fun checkOneTeamHasInitiative() {
-        val maxInitiativeRoll: Int = initiativeRollsByTeam.values.max()!!
-        require(initiativeRollsByTeam.values.count(maxInitiativeRoll::equals) == 1) { "no team with initiative" }
+    private fun checkInitiativeWinnerExists() {
+        val maxInitiative: Initiative = initiativesByTeam.values.max()!!
+        val teamsWithMaxInitiative = initiativesByTeam.values.count(maxInitiative::equals)
+        require(teamsWithMaxInitiative == 1) {
+            "expected 1 team to have the max initiative ($maxInitiative) but was $teamsWithMaxInitiative teams"
+        }
     }
 
-    val teamWithInitiative: Team = initiativeRollsByTeam.maxBy(Map.Entry<Team, Int>::value)!!.key
+    val initiativeWinner: Team = initiativesByTeam.maxBy(Map.Entry<Team, Initiative>::value)!!.key
 
-    override fun getInitiativeRoll(team: Team): Int = initiativeRollsByTeam[team]!!
+    override fun getInitiative(team: Team): Initiative = initiativesByTeam[team]!!
 
-    fun setInitiativeRolls(initiativeRollsByTeam: Map<Team, Int>): DefaultTurn = DefaultTurn(
+    fun setInitiatives(initiativesByTeam: Map<Team, Initiative>): DefaultTurn = DefaultTurn(
         id = id,
-        initiativeRollsByTeam = initiativeRollsByTeam
+        initiativesByTeam = initiativesByTeam
     )
 
     companion object {
-        private val DEFAULT_INITIATIVE_ROLLS_BY_TEAM: Map<Team, Int> = defaultInitiativeRolls()
+        private val DEFAULT_INITIATIVES_BY_TEAM: Map<Team, Initiative> = defaultInitiatives()
 
-        private fun defaultInitiativeRolls(): Map<Team, Int> {
-            val initiativeRollsByTeam: MutableMap<Team, Int> = Team.values().associate { it to 2 }.toMutableMap()
-            initiativeRollsByTeam[Team.values().first()] = 12
-            return initiativeRollsByTeam
+        private fun defaultInitiatives(): Map<Team, Initiative> {
+            val initiativesByTeam: MutableMap<Team, Initiative> = Team.values()
+                .associate { it to Initiative.MIN }
+                .toMutableMap()
+            initiativesByTeam[Team.values().first()] = Initiative.MAX
+            return initiativesByTeam
         }
     }
 }

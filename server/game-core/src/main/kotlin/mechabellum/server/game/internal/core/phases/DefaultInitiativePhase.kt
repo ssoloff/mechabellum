@@ -18,6 +18,7 @@
 package mechabellum.server.game.internal.core.phases
 
 import mechabellum.server.game.api.core.TurnId
+import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 import mechabellum.server.game.internal.core.DefaultGame
@@ -28,22 +29,22 @@ internal class DefaultInitiativePhase(
     private val turnId: TurnId
 ) : DefaultPhase(game), InitiativePhase {
     init {
-        game.state.modifyTurn(turnId) { it.setInitiativeRolls(rollInitiative()) }
+        game.state.modifyTurn(turnId) { it.setInitiatives(rollInitiative()) }
     }
 
-    private fun rollInitiative(): Map<Team, Int> {
+    private fun rollInitiative(): Map<Team, Initiative> {
         while (true) {
-            val initiativeRollsByTeam = Team.values().associate {
-                it to (game.dieRoller.roll() + game.dieRoller.roll())
+            val initiativesByTeam = Team.values().associate {
+                it to Initiative(game.dieRoller.roll() + game.dieRoller.roll())
             }
-            val maxInitiativeRoll: Int = initiativeRollsByTeam.values.max()!!
-            if (initiativeRollsByTeam.values.count(maxInitiativeRoll::equals) == 1) {
-                return initiativeRollsByTeam
+            val maxInitiatives: Initiative = initiativesByTeam.values.max()!!
+            if (initiativesByTeam.values.count(maxInitiatives::equals) == 1) {
+                return initiativesByTeam
             }
         }
     }
 
     override fun end() {
-        game.phase = DefaultMovementPhase(game, game.state.getTurn(turnId).teamWithInitiative)
+        game.phase = DefaultMovementPhase(game, game.state.getTurn(turnId).initiativeWinner)
     }
 }

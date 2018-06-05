@@ -20,6 +20,7 @@ package mechabellum.server.game.api.core.phases
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.ScriptedDieRoller
+import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.newTestGameSpecification
 import mechabellum.server.game.api.core.participant.Team
 import org.amshove.kluent.shouldBeInstanceOf
@@ -50,8 +51,8 @@ abstract class InitiativePhaseSpec(
             newSubject(strategy)
 
             // then: it should roll initiative for each team in lexicographic order
-            strategy.game.turn.getInitiativeRoll(Team.ATTACKER) shouldEqual 3
-            strategy.game.turn.getInitiativeRoll(Team.DEFENDER) shouldEqual 11
+            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Initiative(3)
+            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Initiative(11)
         }
 
         it("should re-roll initiative for each team in the event of a tie") {
@@ -64,8 +65,8 @@ abstract class InitiativePhaseSpec(
             newSubject(strategy)
 
             // then: it should roll initiative for each team twice to resolve the tie
-            strategy.game.turn.getInitiativeRoll(Team.ATTACKER) shouldEqual 3
-            strategy.game.turn.getInitiativeRoll(Team.DEFENDER) shouldEqual 11
+            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Initiative(3)
+            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Initiative(11)
         }
     }
 
