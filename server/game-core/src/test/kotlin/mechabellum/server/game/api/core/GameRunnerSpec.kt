@@ -82,7 +82,7 @@ abstract class GameRunnerSpec(newSubject: () -> GameRunner) : SubjectSpek<GameRu
 
             // then
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
-            exceptionResult.exceptionMessage shouldContain "phase not active"
+            exceptionResult.exceptionMessage shouldContain "expected phase ${FakePhase::class.simpleName} to be active"
         }
     }
 })

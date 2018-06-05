@@ -39,7 +39,7 @@ object GridSpecificationSpec : Spek({
 
             // then
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
-            exceptionResult.exceptionMessage shouldContain "no deployment positions for team"
+            exceptionResult.exceptionMessage shouldContain "expected deployment positions for team ${Team.DEFENDER}"
         }
 
         on(
@@ -63,7 +63,7 @@ object GridSpecificationSpec : Spek({
 
                 // then
                 val exceptionResult = operation shouldThrow IllegalArgumentException::class
-                exceptionResult.exceptionMessage shouldContain "exceeds grid bounds"
+                exceptionResult.exceptionMessage shouldContain "but exceeded grid bounds"
             }
         }
     }

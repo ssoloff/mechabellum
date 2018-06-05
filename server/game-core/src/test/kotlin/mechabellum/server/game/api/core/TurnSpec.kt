@@ -28,10 +28,11 @@ object TurnIdSpec : Spek({
     describe("constructor") {
         it("should throw exception when value is negative") {
             // when: value is negative
-            val operation = { TurnId(-1) }
+            val value = -1
+            val operation = { TurnId(value) }
 
             // then: it should throw an exception
-            operation shouldThrow IllegalArgumentException::class withMessage "value must not be negative"
+            operation shouldThrow IllegalArgumentException::class withMessage "expected value to be non-negative but was $value"
         }
     }
 })

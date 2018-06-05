@@ -41,13 +41,13 @@ internal class DefaultDeploymentPhase(
     }
 
     private fun checkMechBelongsToDeployingTeam(mech: Mech) {
-        require(mech.team == team) { "only team $team may deploy during this phase" }
+        require(mech.team == team) { "expected team $team to be deployed during this phase but was ${mech.team}" }
     }
 
     private fun checkPositionIsWithinTeamDeploymentPositions(position: Position, team: Team) {
         val deploymentPositions = game.grid.getDeploymentPositions(team)
         require(position in deploymentPositions) {
-            "position $position is not in deployment positions $deploymentPositions for team $team"
+            "expected position $position to be present in deployment positions $deploymentPositions for team $team but was absent"
         }
     }
 

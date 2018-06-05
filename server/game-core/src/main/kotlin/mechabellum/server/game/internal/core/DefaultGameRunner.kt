@@ -28,7 +28,9 @@ import kotlin.reflect.full.cast
 
 internal class DefaultGameRunner(private val game: DefaultGame) : GameRunner {
     override fun <TPhase : Phase, R : Any> executeCommand(command: Command<TPhase, R>): R {
-        require(command.phaseType.isInstance(game.phase)) { "phase not active (${command.phaseType.simpleName}" }
+        require(command.phaseType.isInstance(game.phase)) {
+            "expected phase ${command.phaseType.simpleName} to be active but ${game.phase.javaClass.simpleName} was active"
+        }
 
         try {
             return command.execute(command.phaseType.cast(game.phase))

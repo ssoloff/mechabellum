@@ -40,7 +40,7 @@ internal class DefaultGrid(specification: GridSpecification) : Grid {
 
     override fun getCell(position: Position): Cell {
         return cellsByPosition.getOrElse(position) {
-            throw IllegalArgumentException("cell at $position does not exist")
+            throw IllegalArgumentException("expected cell at $position to be present but was absent")
         }
     }
 

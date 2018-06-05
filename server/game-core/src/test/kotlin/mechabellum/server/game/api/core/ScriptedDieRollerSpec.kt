@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.api.core
 
+import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
@@ -33,7 +34,8 @@ internal object ScriptedDieRollerSpec : SubjectSpek<ScriptedDieRoller>({
             val operation = { subject.addValues(1, 0, 6) }
 
             // then: it should throw an exception
-            operation shouldThrow IllegalArgumentException::class withMessage "value out of range"
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain "but at least one was out of range"
         }
 
         it("should throw exception if any value is greater than DIE_SIDES") {
@@ -41,7 +43,8 @@ internal object ScriptedDieRollerSpec : SubjectSpek<ScriptedDieRoller>({
             val operation = { subject.addValues(1, DieRoller.DIE_SIDES + 1, 6) }
 
             // then: it should throw an exception
-            operation shouldThrow IllegalArgumentException::class withMessage "value out of range"
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain "but at least one was out of range"
         }
     }
 
@@ -70,7 +73,7 @@ internal object ScriptedDieRollerSpec : SubjectSpek<ScriptedDieRoller>({
             val operation = { subject.roll() }
 
             // then: it should throw an exception
-            operation shouldThrow IllegalStateException::class withMessage "no die roll value available"
+            operation shouldThrow IllegalStateException::class withMessage "expected at least one value to be present but was absent"
         }
     }
 })

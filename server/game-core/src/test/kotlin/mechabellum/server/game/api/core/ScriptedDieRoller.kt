@@ -24,10 +24,13 @@ internal class ScriptedDieRoller : DieRoller {
     private val values: Queue<Int> = ArrayDeque()
 
     fun addValues(vararg values: Int) {
-        require(values.all { it in 1..DieRoller.DIE_SIDES }) { "value out of range" }
+        require(values.all { it in 1..DieRoller.DIE_SIDES }) {
+            "expected all values to be in range 1..${DieRoller.DIE_SIDES} but at least one was out of range in ${values.contentToString()}"
+        }
 
         this.values.addAll(values.toTypedArray())
     }
 
-    override fun roll(): Int = values.poll() ?: throw IllegalStateException("no die roll value available")
+    override fun roll(): Int =
+        values.poll() ?: throw IllegalStateException("expected at least one value to be present but was absent")
 }

@@ -34,7 +34,7 @@ abstract class GameSpec(newSubject: (GameSpecification) -> Game) : SubjectSpek<G
             val operation = { subject.turn }
 
             // then: an exception should be thrown
-            operation shouldThrow IllegalStateException::class withMessage "no active turn"
+            operation shouldThrow IllegalStateException::class withMessage "expected at least one turn to be present but was absent"
         }
     }
 })

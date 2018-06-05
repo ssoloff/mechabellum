@@ -34,14 +34,16 @@ data class GridSpecification(val deploymentPositionsByTeam: Map<Team, PositionRa
     }
 
     private fun checkAllTeamsHaveDeploymentPositions() {
-        Team.values().forEach { require(it in deploymentPositionsByTeam) { "no deployment positions for team $it" } }
+        Team.values().forEach {
+            require(it in deploymentPositionsByTeam) { "expected deployment positions for team $it to be present but was absent" }
+        }
     }
 
     private fun checkDeploymentPositionsAreWithinGridBounds() {
         val gridBounds = Position(0, 0) until Position(type.cols, type.rows)
         deploymentPositionsByTeam.forEach { team, deploymentPositions ->
             require((deploymentPositions.start in gridBounds) && (deploymentPositions.endInclusive in gridBounds)) {
-                "deployment positions $deploymentPositions for team $team exceeds grid bounds"
+                "expected deployment positions $deploymentPositions for team $team to be within grid bounds but exceeded grid bounds"
             }
         }
     }

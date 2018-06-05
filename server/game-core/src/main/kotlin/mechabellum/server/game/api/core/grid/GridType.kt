@@ -32,7 +32,7 @@ data class GridType(
     val rows: Int
 ) {
     init {
-        require(cols > 0) { "cols must be positive" }
-        require(rows > 0) { "rows must be positive" }
+        require(cols > 0) { "expected cols to be positive but was $cols" }
+        require(rows > 0) { "expected rows to be positive but was $rows" }
     }
 }

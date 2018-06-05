@@ -47,11 +47,12 @@ internal class DefaultGameState {
         get() = mechRecordsById.values
 
     val turn: DefaultTurn
-        get() = turns.lastOrNull() ?: throw IllegalStateException("no active turn")
+        get() = turns.lastOrNull()
+            ?: throw IllegalStateException("expected at least one turn to be present but was absent")
 
     fun addMechRecord(mechRecord: MechRecord) {
         val mechId = mechRecord.mech.id
-        require(mechId !in mechRecordsById) { "record for Mech ID exists ($mechId}" }
+        require(mechId !in mechRecordsById) { "expected Mech record with ID $mechId to be absent but was present" }
         mechRecordsById[mechId] = mechRecord
     }
 
@@ -61,11 +62,13 @@ internal class DefaultGameState {
         return turnId
     }
 
-    fun getMechRecord(mechId: MechId): MechRecord =
-        mechRecordsById[mechId] ?: throw IllegalArgumentException("unknown Mech ID ($mechId)")
+    fun getMechRecord(mechId: MechId): MechRecord = mechRecordsById.getOrElse(mechId) {
+        throw IllegalArgumentException("expected Mech record with ID $mechId to be present but was absent")
+    }
 
-    fun getTurn(turnId: TurnId): DefaultTurn =
-        turns.getOrNull(turnId.value) ?: throw IllegalArgumentException("unknown turn ID ($turnId)")
+    fun getTurn(turnId: TurnId): DefaultTurn = turns.getOrElse(turnId.value) {
+        throw IllegalArgumentException("expected turn with ID $turnId to be present but was absent")
+    }
 
     fun modifyMechRecord(mechId: MechId, action: (MechRecord) -> MechRecord) {
         mechRecordsById[mechId] = action(getMechRecord(mechId))

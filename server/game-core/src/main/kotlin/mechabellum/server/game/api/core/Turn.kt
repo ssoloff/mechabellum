@@ -29,7 +29,7 @@ import mechabellum.server.game.api.core.participant.Team
  */
 data class TurnId(val value: Int) {
     init {
-        require(value >= 0) { "value must not be negative" }
+        require(value >= 0) { "expected value to be non-negative but was $value" }
     }
 }
 
