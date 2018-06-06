@@ -57,10 +57,10 @@ abstract class GridSpec(newSubject: (GridSpecification) -> Grid) : SubjectSpek<G
             data(Position(4, 8), expected = Unit)
         ) { position, _ ->
             it("should throw exception") {
-                // when
+                // when: getting an absent cell
                 val operation = { subject.getCell(position) }
 
-                // then
+                // then: it should throw an exception
                 val exceptionResult = operation shouldThrow IllegalArgumentException::class
                 exceptionResult.exceptionMessage shouldContain position.toString()
             }

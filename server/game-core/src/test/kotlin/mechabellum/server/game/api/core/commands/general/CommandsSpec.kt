@@ -35,14 +35,14 @@ import org.jetbrains.spek.api.dsl.it
 object EndPhaseCommandSpec : Spek({
     describe("execute") {
         it("should end the phase") {
-            // given
+            // given: any phase is active
             val phase = mock<Phase>()
-            val subject = EndPhaseCommand()
 
-            // when
+            // when: the command is executed
+            val subject = EndPhaseCommand()
             subject.execute(phase)
 
-            // then
+            // then: it should end the phase
             Verify on phase that phase.end() was called
         }
     }
@@ -51,7 +51,7 @@ object EndPhaseCommandSpec : Spek({
 object GetGridCommandSpec : Spek({
     describe("execute") {
         it("should return the game grid") {
-            // given
+            // given: any phase is active with a configured grid
             val expected = mock<Grid>()
             val game = mock<Game> {
                 on { grid } doReturn expected
@@ -59,12 +59,12 @@ object GetGridCommandSpec : Spek({
             val phase = mock<Phase> {
                 on { this.game } doReturn game
             }
-            val subject = GetGridCommand()
 
-            // when
+            // when: the command is executed
+            val subject = GetGridCommand()
             val actual = subject.execute(phase)
 
-            // then
+            // then: it should return the configured grid
             actual shouldBe expected
         }
     }

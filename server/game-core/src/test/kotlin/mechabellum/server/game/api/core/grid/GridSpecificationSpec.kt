@@ -30,14 +30,14 @@ import org.jetbrains.spek.data_driven.on
 object GridSpecificationSpec : Spek({
     describe("constructor") {
         it("should throw exception when missing team deployment positions") {
-            // when
+            // when: creating a grid specification without the defender deployment position
             val operation = {
                 newTestGridSpecification().copy(
                     deploymentPositionsByTeam = mapOf(Team.ATTACKER to Position(0, 0)..Position(0, 0))
                 )
             }
 
-            // then
+            // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "expected deployment positions for team ${Team.DEFENDER}"
         }
@@ -50,7 +50,7 @@ object GridSpecificationSpec : Spek({
             data(Position(0, 0)..Position(0, 1), expected = Unit)
         ) { invalidDeploymentPositions, _ ->
             it("should throw exception") {
-                // when
+                // when: creating a grid specification with a deployment position outside the grid bounds
                 val operation = {
                     newTestGridSpecification().copy(
                         deploymentPositionsByTeam = mapOf(
@@ -61,7 +61,7 @@ object GridSpecificationSpec : Spek({
                     )
                 }
 
-                // then
+                // then: it should throw an exception
                 val exceptionResult = operation shouldThrow IllegalArgumentException::class
                 exceptionResult.exceptionMessage shouldContain "but exceeded grid bounds"
             }

@@ -33,16 +33,16 @@ import org.jetbrains.spek.api.dsl.it
 object DeployMechCommandSpec : Spek({
     describe("execute") {
         it("should deploy Mech to specified position") {
-            // given
+            // given: the deployment phase is active
             val deploymentPhase = mock<DeploymentPhase>()
+
+            // when: the command is executed
             val mech = mock<Mech>()
             val position = Position(3, 6)
             val subject = DeployMechCommand(mech, position)
-
-            // when
             subject.execute(deploymentPhase)
 
-            // then
+            // then: it should deploy the Mech to the specified position
             Verify on deploymentPhase that deploymentPhase.deployMech(mech, position) was called
         }
     }

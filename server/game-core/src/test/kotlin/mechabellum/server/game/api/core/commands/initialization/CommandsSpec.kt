@@ -36,18 +36,18 @@ import org.jetbrains.spek.api.dsl.it
 object NewMechCommandSpec : Spek({
     describe("execute") {
         it("should return new Mech") {
-            // given
+            // given: the initialization phase is active
             val expectedMech = mock<Mech>()
             val initializationPhase = mock<InitializationPhase> {
                 on { newMech(any()) } doReturn expectedMech
             }
+
+            // when: the command is executed
             val specification = newTestMechSpecification()
             val subject = NewMechCommand(specification)
-
-            // when
             val actualMech = subject.execute(initializationPhase)
 
-            // then
+            // then: it should return a new Mech
             Verify on initializationPhase that initializationPhase.newMech(specification) was called
             actualMech shouldBe expectedMech
         }

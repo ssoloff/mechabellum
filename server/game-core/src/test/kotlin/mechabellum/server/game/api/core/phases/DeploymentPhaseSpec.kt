@@ -91,41 +91,41 @@ abstract class CommonDeploymentPhaseSpec(
 
     describe("deployMech") {
         it("should place Mech at specified position") {
-            // given
+            // given: a Mech associated with the deploying team
             val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
 
-            // when
+            // when: deploying the Mech
             val position = Position(3, 2)
             subject.deployMech(mech, position)
 
-            // then
+            // then: it should be deployed to the specified position
             strategy.getMechPosition(mech.id) shouldEqual position
         }
 
         it("should throw exception when Mech does not exist") {
-            // given
+            // given: a Mech that was not created by the game
             val mechId = MechId(-1)
             val mech = mock<Mech> {
                 on { id } doReturn mechId
                 on { this.team } doReturn team
             }
 
-            // when
+            // when: deploying the Mech
             val operation = { subject.deployMech(mech, Position(3, 2)) }
 
-            // then
+            // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain mechId.toString()
         }
 
         it("should throw exception when Mech belongs to a different team") {
-            // given
+            // given: a Mech not associated with the deploying team
             val mech = strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
 
-            // when
+            // when: deploying the Mech
             val operation = { subject.deployMech(mech, Position(3, 2)) }
 
-            // then
+            // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "team"
         }
@@ -150,13 +150,13 @@ abstract class CommonDeploymentPhaseSpec(
             )
         ) { position, _ ->
             it("should throw exception") {
-                // given
+                // given: a Mech associated with the deploying team
                 val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
 
-                // when
+                // when: deploying the Mech to an invalid position
                 val operation = { subject.deployMech(mech, position) }
 
-                // then
+                // then: it should throw an exception
                 val exceptionResult = operation shouldThrow IllegalArgumentException::class
                 exceptionResult.exceptionMessage shouldContain "position"
             }

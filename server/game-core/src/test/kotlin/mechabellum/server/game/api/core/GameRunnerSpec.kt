@@ -33,54 +33,54 @@ abstract class GameRunnerSpec(newSubject: () -> GameRunner) : SubjectSpek<GameRu
 
     describe("executeCommand") {
         it("should return command result when command succeeds") {
-            // when
+            // when: executing a command that completes successfully
             val expectedResult = 42
             val actualResult = subject.executeCommand(StatelessCommand(Phase::class, { expectedResult }))
 
-            // then
+            // then: it should return the command result
             actualResult shouldEqual expectedResult
         }
 
         it("should throw exception when command fails with game exception") {
-            // when
+            // when: executing a command that throws GameException
             val exception = GameException("message")
             val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw exception }) }
 
-            // then
+            // then: it should throw the original exception
             val exceptionResult = operation shouldThrow GameException::class
             exceptionResult.exception shouldBe exception
         }
 
         it("should throw exception when command fails with unexpected checked exception") {
-            // given
+            // given: a custom checked exception
             class FakeException : Exception()
 
-            // when
+            // when: executing a command that throws a checked exception
             val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeException() }) }
 
-            // then
+            // then: it should throw an UnexpectedCommandException with the original exception as the cause
             operation shouldThrow UnexpectedCommandException::class withCause FakeException::class
         }
 
         it("should throw exception when command fails with unchecked exception") {
-            // given
+            // given: a custom unchecked exception
             class FakeRuntimeException : RuntimeException()
 
-            // when
+            // when: executing a command that throws an unchecked exception
             val operation = { subject.executeCommand(StatelessCommand(Phase::class) { throw FakeRuntimeException() }) }
 
-            // then
+            // then: it should throw the original exception
             operation shouldThrow FakeRuntimeException::class
         }
 
         it("should throw exception when command phase not active") {
-            // given
+            // given: a custom phase
             abstract class FakePhase : Phase
 
-            // when
+            // when: executing a command during the wrong phase
             val operation = { subject.executeCommand(StatelessCommand(FakePhase::class) {}) }
 
-            // then
+            // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "expected phase ${FakePhase::class.simpleName} to be active"
         }
@@ -91,14 +91,14 @@ abstract class GameRunnerFactorySpec(newSubject: () -> GameRunnerFactory) : Subj
     subject { newSubject() }
 
     describe("newGameRunner") {
-        it("should return a game runner with the requested grid specification") {
-            // when
+        it("should return a game runner with the requested game specification") {
+            // when: creating a new game runner
             val gridSpecification = newTestGridSpecification()
             val gameRunner = subject.newGameRunner(
                 newTestGameSpecification().copy(gridSpecification = gridSpecification)
             )
 
-            // then
+            // then: it should be configured using the specified game specification
             gameRunner.executeCommand(GetGridCommand()).type shouldEqual gridSpecification.type
         }
     }
