@@ -22,6 +22,7 @@ import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.GameSpecification
+import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridType
@@ -67,7 +68,9 @@ abstract class DeploymentPhaseSpec(
     interface Strategy {
         val game: Game
 
-        fun deploy(mech: Mech, position: Position)
+        fun deploy(mech: Mech, position: Position, facing: Direction)
+
+        fun getMechFacing(mechId: MechId): Direction
 
         fun getMechPosition(mechId: MechId): Position
 
@@ -90,16 +93,18 @@ abstract class CommonDeploymentPhaseSpec(
     }
 
     describe("deploy") {
-        it("should place Mech at specified position") {
+        it("should deploy Mech with specified position and facing") {
             // given: a Mech associated with the deploying team
             val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
 
             // when: deploying the Mech
             val position = Position(3, 2)
-            subject.deploy(mech, position)
+            val facing = Direction.NORTH
+            subject.deploy(mech, position, facing)
 
-            // then: it should be deployed to the specified position
+            // then: it should be deployed with the specified position and facing
             strategy.getMechPosition(mech.id) shouldEqual position
+            strategy.getMechFacing(mech.id) shouldEqual facing
         }
 
         it("should throw exception when Mech does not exist") {
@@ -111,7 +116,7 @@ abstract class CommonDeploymentPhaseSpec(
             }
 
             // when: deploying the Mech
-            val operation = { subject.deploy(mech, Position(3, 2)) }
+            val operation = { subject.deploy(mech, Position(3, 2), Direction.NORTH) }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -123,7 +128,7 @@ abstract class CommonDeploymentPhaseSpec(
             val mech = strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
 
             // when: deploying the Mech
-            val operation = { subject.deploy(mech, Position(3, 2)) }
+            val operation = { subject.deploy(mech, Position(3, 2), Direction.NORTH) }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -154,7 +159,7 @@ abstract class CommonDeploymentPhaseSpec(
                 val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
 
                 // when: deploying the Mech to an invalid position
-                val operation = { subject.deploy(mech, position) }
+                val operation = { subject.deploy(mech, position, Direction.NORTH) }
 
                 // then: it should throw an exception
                 val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -180,7 +185,7 @@ abstract class AttackerDeploymentPhaseSpec(
         it("should change active phase to initiative phase") {
             // given: all attackers have been deployed
             val attacker = strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
-            strategy.deploy(attacker, DeploymentPhaseSpec.attackerDeploymentPositions.start)
+            strategy.deploy(attacker, DeploymentPhaseSpec.attackerDeploymentPositions.start, Direction.NORTH)
 
             // when: attacker deployment phase is ended
             subject.end()
@@ -220,7 +225,7 @@ abstract class DefenderDeploymentPhaseSpec(
         it("should change active phase to initiative phase") {
             // given: all defenders have been deployed
             val defender = strategy.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
-            strategy.deploy(defender, DeploymentPhaseSpec.defenderDeploymentPositions.start)
+            strategy.deploy(defender, DeploymentPhaseSpec.defenderDeploymentPositions.start, Direction.NORTH)
 
             // when: defender deployment phase is ended
             subject.end()

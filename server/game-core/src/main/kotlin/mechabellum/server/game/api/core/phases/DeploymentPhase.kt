@@ -18,6 +18,7 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
@@ -28,10 +29,10 @@ interface DeploymentPhase : Phase {
     val team: Team
 
     /**
-     * Deploys [mech] to the specified [position].
+     * Deploys [mech] to the specified [position] with the specified [facing].
      *
      * @throws IllegalArgumentException If [mech] is not part of this game; if [mech] does not belong to the team being
      * deployed; or if [position] is outside the possible deployment positions for [mech].
      */
-    fun deploy(mech: Mech, position: Position)
+    fun deploy(mech: Mech, position: Position, facing: Direction)
 }

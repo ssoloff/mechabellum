@@ -19,6 +19,7 @@ package mechabellum.server.game.internal.core.phases
 
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
+import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.AttackerDeploymentPhaseSpec
@@ -37,8 +38,10 @@ object DefaultDeploymentPhaseSpecs {
         return object : DeploymentPhaseSpec.Strategy {
             override val game: Game = game
 
-            override fun deploy(mech: Mech, position: Position) =
-                DefaultDeploymentPhase(game, mech.team).deploy(mech, position)
+            override fun deploy(mech: Mech, position: Position, facing: Direction) =
+                DefaultDeploymentPhase(game, mech.team).deploy(mech, position, facing)
+
+            override fun getMechFacing(mechId: MechId): Direction = game.state.getMechRecord(mechId).facing.getOrThrow()
 
             override fun getMechPosition(mechId: MechId): Position =
                 game.state.getMechRecord(mechId).position.getOrThrow()

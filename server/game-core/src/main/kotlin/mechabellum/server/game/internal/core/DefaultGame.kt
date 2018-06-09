@@ -22,6 +22,7 @@ import mechabellum.server.game.api.core.DieRoller
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.TurnId
+import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.grid.DefaultGrid
@@ -82,9 +83,17 @@ internal class DefaultGameState {
 
     class MechRecord(
         val mech: DefaultMech,
+        val facing: Option<Direction> = Option.none(),
         val position: Option<Position> = Option.none()
     ) {
+        fun setFacing(facing: Direction): MechRecord = MechRecord(
+            facing = Option.some(facing),
+            mech = mech,
+            position = position
+        )
+
         fun setPosition(position: Position): MechRecord = MechRecord(
+            facing = facing,
             mech = mech,
             position = Option.some(position)
         )

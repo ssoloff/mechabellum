@@ -18,6 +18,7 @@
 package mechabellum.server.game.api.core.commands.deployment
 
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
@@ -32,18 +33,19 @@ import org.jetbrains.spek.api.dsl.it
 
 object DeployCommandSpec : Spek({
     describe("execute") {
-        it("should deploy Mech to specified position") {
+        it("should deploy Mech with specified position and facing") {
             // given: the deployment phase is active
             val deploymentPhase = mock<DeploymentPhase>()
 
             // when: the command is executed
             val mech = mock<Mech>()
             val position = Position(3, 6)
-            val subject = DeployCommand(mech, position)
+            val facing = Direction.NORTH
+            val subject = DeployCommand(mech, position, facing)
             subject.execute(deploymentPhase)
 
-            // then: it should deploy the Mech to the specified position
-            Verify on deploymentPhase that deploymentPhase.deploy(mech, position) was called
+            // then: it should deploy the Mech with the specified position and facing
+            Verify on deploymentPhase that deploymentPhase.deploy(mech, position, facing) was called
         }
     }
 })
