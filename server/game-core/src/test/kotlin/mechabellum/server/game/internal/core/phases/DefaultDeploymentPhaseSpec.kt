@@ -37,8 +37,8 @@ object DefaultDeploymentPhaseSpecs {
         return object : DeploymentPhaseSpec.Strategy {
             override val game: Game = game
 
-            override fun deployMech(mech: Mech, position: Position) =
-                DefaultDeploymentPhase(game, mech.team).deployMech(mech, position)
+            override fun deploy(mech: Mech, position: Position) =
+                DefaultDeploymentPhase(game, mech.team).deploy(mech, position)
 
             override fun getMechPosition(mechId: MechId): Position =
                 game.state.getMechRecord(mechId).position.getOrThrow()

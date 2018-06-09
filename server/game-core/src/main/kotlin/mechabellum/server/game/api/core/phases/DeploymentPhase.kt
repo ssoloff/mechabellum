@@ -33,5 +33,5 @@ interface DeploymentPhase : Phase {
      * @throws IllegalArgumentException If [mech] is not part of this game; if [mech] does not belong to the team being
      * deployed; or if [position] is outside the possible deployment positions for [mech].
      */
-    fun deployMech(mech: Mech, position: Position)
+    fun deploy(mech: Mech, position: Position)
 }

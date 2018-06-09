@@ -17,7 +17,7 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.game.api.core.commands.deployment.DeployMechCommand
+import mechabellum.server.game.api.core.commands.deployment.DeployCommand
 import mechabellum.server.game.api.core.commands.general.EndPhaseCommand
 import mechabellum.server.game.api.core.commands.initialization.NewMechCommand
 import mechabellum.server.game.api.core.grid.GridSpecification
@@ -48,13 +48,13 @@ object TrainingScenarioSpec : Spek({
             executeCommand(EndPhaseCommand())
 
             // defender deployment phase
-            executeCommand(DeployMechCommand(defender1, Position(0, 16)))
-            executeCommand(DeployMechCommand(defender2, Position(14, 16)))
+            executeCommand(DeployCommand(defender1, Position(0, 16)))
+            executeCommand(DeployCommand(defender2, Position(14, 16)))
             executeCommand(EndPhaseCommand())
 
             // attacker deployment phase
-            executeCommand(DeployMechCommand(attacker1, Position(0, 0)))
-            executeCommand(DeployMechCommand(attacker2, Position(14, 0)))
+            executeCommand(DeployCommand(attacker1, Position(0, 0)))
+            executeCommand(DeployCommand(attacker2, Position(14, 0)))
             executeCommand(EndPhaseCommand())
 
             // turn 0

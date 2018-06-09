@@ -36,6 +36,6 @@ open class StatelessDeploymentCommand<R : Any>(
  * @param mech The Mech to deploy.
  * @param position The position on the game grid where the Mech will be deployed.
  */
-class DeployMechCommand(mech: Mech, position: Position) : StatelessDeploymentCommand<Unit>({
-    it.deployMech(mech, position)
+class DeployCommand(mech: Mech, position: Position) : StatelessDeploymentCommand<Unit>({
+    it.deploy(mech, position)
 })

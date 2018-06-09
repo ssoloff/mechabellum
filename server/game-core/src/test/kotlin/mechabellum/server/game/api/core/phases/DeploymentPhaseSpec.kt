@@ -67,7 +67,7 @@ abstract class DeploymentPhaseSpec(
     interface Strategy {
         val game: Game
 
-        fun deployMech(mech: Mech, position: Position)
+        fun deploy(mech: Mech, position: Position)
 
         fun getMechPosition(mechId: MechId): Position
 
@@ -89,14 +89,14 @@ abstract class CommonDeploymentPhaseSpec(
         strategy = DeploymentPhaseSpec.newStrategy(newStrategy)
     }
 
-    describe("deployMech") {
+    describe("deploy") {
         it("should place Mech at specified position") {
             // given: a Mech associated with the deploying team
             val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
 
             // when: deploying the Mech
             val position = Position(3, 2)
-            subject.deployMech(mech, position)
+            subject.deploy(mech, position)
 
             // then: it should be deployed to the specified position
             strategy.getMechPosition(mech.id) shouldEqual position
@@ -111,7 +111,7 @@ abstract class CommonDeploymentPhaseSpec(
             }
 
             // when: deploying the Mech
-            val operation = { subject.deployMech(mech, Position(3, 2)) }
+            val operation = { subject.deploy(mech, Position(3, 2)) }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -123,7 +123,7 @@ abstract class CommonDeploymentPhaseSpec(
             val mech = strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
 
             // when: deploying the Mech
-            val operation = { subject.deployMech(mech, Position(3, 2)) }
+            val operation = { subject.deploy(mech, Position(3, 2)) }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -154,7 +154,7 @@ abstract class CommonDeploymentPhaseSpec(
                 val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
 
                 // when: deploying the Mech to an invalid position
-                val operation = { subject.deployMech(mech, position) }
+                val operation = { subject.deploy(mech, position) }
 
                 // then: it should throw an exception
                 val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -180,7 +180,7 @@ abstract class AttackerDeploymentPhaseSpec(
         it("should change active phase to initiative phase") {
             // given: all attackers have been deployed
             val attacker = strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
-            strategy.deployMech(attacker, DeploymentPhaseSpec.attackerDeploymentPositions.start)
+            strategy.deploy(attacker, DeploymentPhaseSpec.attackerDeploymentPositions.start)
 
             // when: attacker deployment phase is ended
             subject.end()
@@ -220,7 +220,7 @@ abstract class DefenderDeploymentPhaseSpec(
         it("should change active phase to initiative phase") {
             // given: all defenders have been deployed
             val defender = strategy.newMech(newTestMechSpecification().copy(team = Team.DEFENDER))
-            strategy.deployMech(defender, DeploymentPhaseSpec.defenderDeploymentPositions.start)
+            strategy.deploy(defender, DeploymentPhaseSpec.defenderDeploymentPositions.start)
 
             // when: defender deployment phase is ended
             subject.end()

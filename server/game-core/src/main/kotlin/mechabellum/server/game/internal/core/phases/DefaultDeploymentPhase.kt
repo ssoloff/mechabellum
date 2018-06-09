@@ -33,7 +33,7 @@ internal class DefaultDeploymentPhase(
     game: DefaultGame,
     override val team: Team
 ) : DefaultPhase(game), DeploymentPhase {
-    override fun deployMech(mech: Mech, position: Position) {
+    override fun deploy(mech: Mech, position: Position) {
         checkMechBelongsToDeployingTeam(mech)
         checkPositionIsWithinTeamDeploymentPositions(position, mech.team)
 
