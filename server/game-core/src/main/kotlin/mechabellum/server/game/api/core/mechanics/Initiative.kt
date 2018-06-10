@@ -17,7 +17,13 @@
 
 package mechabellum.server.game.api.core.mechanics
 
-/** An initiative result. */
+/**
+ * An initiative result.
+ *
+ * @property value The initiative value.
+ *
+ * @throws IllegalArgumentException If [value] is not in the range [2,12].
+ */
 data class Initiative(val value: Int) : Comparable<Initiative> {
     init {
         require(value in MIN_VALUE..MAX_VALUE) {
