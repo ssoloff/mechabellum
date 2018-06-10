@@ -20,6 +20,8 @@ package mechabellum.server.game.api.core
 import mechabellum.server.game.api.core.commands.deployment.DeployCommand
 import mechabellum.server.game.api.core.commands.general.EndPhaseCommand
 import mechabellum.server.game.api.core.commands.initialization.NewMechCommand
+import mechabellum.server.game.api.core.commands.movement.TurnCommand
+import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridType
@@ -35,7 +37,8 @@ import java.util.ServiceLoader
 /** This spec attempts to play an entire game using the training scenario from the Quick-Start rules. */
 object TrainingScenarioSpec : Spek({
     describe("game implementation") {
-        val gameRunner = DomainObjects.newGameRunner()
+        val dieRoller = ScriptedDieRoller()
+        val gameRunner = DomainObjects.newGameRunner(dieRoller)
 
         fun <TPhase : Phase, R : Any> executeCommand(command: Command<TPhase, R>): R =
             gameRunner.executeCommand(command)
@@ -56,6 +59,7 @@ object TrainingScenarioSpec : Spek({
             // attacker deployment phase
             executeCommand(DeployCommand(attacker1, Position(0, 0), Direction.SOUTH))
             executeCommand(DeployCommand(attacker2, Position(14, 0), Direction.SOUTH))
+            dieRoller.addValues(6, 6, 1, 1) // attacker wins initiative
             executeCommand(EndPhaseCommand())
 
             // turn 0
@@ -63,15 +67,21 @@ object TrainingScenarioSpec : Spek({
             // initiative phase
             executeCommand(EndPhaseCommand())
 
+            // attacker movement phase
+            executeCommand(TurnCommand(attacker1, -Angle.ONE))
+            executeCommand(TurnCommand(attacker2, Angle.ONE))
+            // TODO: implement end() in order to move to defender movement phase
+
             // TODO: implement remainder of scenario
         }
     }
 }) {
     private object DomainObjects {
-        fun newGameRunner(): GameRunner {
+        fun newGameRunner(dieRoller: DieRoller): GameRunner {
             val gameRunnerFactory = ServiceLoader.load(GameRunnerFactory::class.java).first()
             return gameRunnerFactory.newGameRunner(
                 GameSpecification(
+                    dieRoller = dieRoller,
                     gridSpecification = GridSpecification(
                         deploymentPositionsByTeam = mapOf(
                             Team.ATTACKER to Position(0, 0)..Position(14, 0),
