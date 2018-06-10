@@ -34,18 +34,18 @@ abstract class InitiativePhaseSpec(
     newStrategy: (GameSpecification) -> Strategy,
     newSubject: (Strategy) -> InitiativePhase
 ) : Spek({
-    var scriptedDieRoller: ScriptedDieRoller by Delegates.notNull()
+    var dieRoller: ScriptedDieRoller by Delegates.notNull()
     var strategy: Strategy by Delegates.notNull()
 
     beforeEachTest {
-        scriptedDieRoller = ScriptedDieRoller()
-        strategy = newStrategy(newTestGameSpecification().copy(dieRoller = scriptedDieRoller))
+        dieRoller = ScriptedDieRoller()
+        strategy = newStrategy(newTestGameSpecification().copy(dieRoller = dieRoller))
     }
 
     describe("constructor") {
         it("should roll initiative for each team") {
             // given: a die roller that produces a sequence that will result in unique initiative values
-            scriptedDieRoller.addValues(1, 2, 5, 6)
+            dieRoller.addValues(1, 2, 5, 6)
 
             // when: initiative phase is created
             newSubject(strategy)
@@ -57,9 +57,9 @@ abstract class InitiativePhaseSpec(
 
         it("should re-roll initiative for each team in the event of a tie") {
             // given: a die roller that produces a sequence that will result in identical initiative values
-            scriptedDieRoller.addValues(1, 3, 3, 1)
+            dieRoller.addValues(1, 3, 3, 1)
             // and: followed by a sequence that will result in unique initiative values
-            scriptedDieRoller.addValues(1, 2, 5, 6)
+            dieRoller.addValues(1, 2, 5, 6)
 
             // when: initiative phase is created
             newSubject(strategy)
@@ -73,7 +73,7 @@ abstract class InitiativePhaseSpec(
     describe("end") {
         it("should change active phase to attacker movement phase when attacker has initiative") {
             // given: the attacker has initiative
-            scriptedDieRoller.addValues(6, 6, 1, 1)
+            dieRoller.addValues(6, 6, 1, 1)
             val subject = newSubject(strategy)
 
             // when: initiative phase is ended
@@ -86,7 +86,7 @@ abstract class InitiativePhaseSpec(
 
         it("should change active phase to defender movement phase when defender has initiative") {
             // given: the defender has initiative
-            scriptedDieRoller.addValues(1, 1, 6, 6)
+            dieRoller.addValues(1, 1, 6, 6)
             val subject = newSubject(strategy)
 
             // when: initiative phase is ended
