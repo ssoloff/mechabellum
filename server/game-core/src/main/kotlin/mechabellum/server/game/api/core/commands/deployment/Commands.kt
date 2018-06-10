@@ -31,8 +31,8 @@ open class StatelessDeploymentCommand<R : Any>(
 /**
  * Command that deploys a Mech to a position on the game grid with an initial facing.
  *
- * When executed, throws [IllegalArgumentException] if the Mech is not part of the game; or if the position is outside
- * the possible deployment positions for the Mech.
+ * When executed, throws [IllegalArgumentException] if the Mech is not part of the game; if the Mech does not belong to
+ * the team being deployed; or if the position is outside the possible deployment positions for the Mech.
  *
  * @param mech The Mech to deploy.
  * @param position The position on the game grid where the Mech will be deployed.
