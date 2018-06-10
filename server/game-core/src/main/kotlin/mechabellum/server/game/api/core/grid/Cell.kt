@@ -21,4 +21,9 @@ package mechabellum.server.game.api.core.grid
 interface Cell {
     /** The cell position. */
     val position: Position
+
+    companion object {
+        /** The count of sides in a cell. */
+        const val SIDE_COUNT: Int = 6
+    }
 }

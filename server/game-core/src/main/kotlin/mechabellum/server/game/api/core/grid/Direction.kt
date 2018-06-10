@@ -17,38 +17,42 @@
 
 package mechabellum.server.game.api.core.grid
 
-/** A direction on a hexagonal grid. */
-enum class Direction(private val clockwiseOffsetFromNorth: Int) {
-    NORTH(0),
-    NORTHEAST(1),
-    SOUTHEAST(2),
-    SOUTH(3),
-    SOUTHWEST(4),
-    NORTHWEST(5);
+/** A direction on a [Grid]. All directions are normal to a cell side. */
+enum class Direction(private val normalizedAngleFromNorth: Angle) {
+    NORTH(Angle.ZERO),
+    NORTHEAST(Angle.ONE),
+    SOUTHEAST(Angle.TWO),
+    SOUTH(Angle.THREE),
+    SOUTHWEST((-Angle.TWO).normalize()),
+    NORTHWEST((-Angle.ONE).normalize());
 
     init {
-        assert(clockwiseOffsetFromNorth >= 0)
+        assert(normalizedAngleFromNorth.isNormalized())
     }
 
-    /** The direction immediately clockwise (-60 degrees) from this direction. */
+    /** The direction immediately clockwise (+1 sextant or +60 degrees) from this direction. */
     val clockwise: Direction
-        get() = getDirectionAtRelativeClockwiseOffset(1)
+        get() = this + Angle.ONE
 
-    /** The direction immediately counterclockwise (+60 degrees) from this direction. */
+    /** The direction immediately counterclockwise (-1 sextant or -60 degrees) from this direction. */
     val counterclockwise: Direction
-        get() = getDirectionAtRelativeClockwiseOffset(DIRECTION_COUNT - 1)
+        get() = this - Angle.ONE
 
-    /** The direction directly opposite (±180 degrees) from this direction. */
+    /** The direction directly opposite (±3 sextants or ±180 degrees) from this direction. */
     val opposite: Direction
-        get() = getDirectionAtRelativeClockwiseOffset(DIRECTION_COUNT / 2)
+        get() = this + Angle.THREE
 
-    private fun getDirectionAtRelativeClockwiseOffset(offset: Int): Direction {
-        assert(offset >= 0)
-        return DIRECTIONS_IN_CLOCKWISE_ORDER_FROM_NORTH[(clockwiseOffsetFromNorth + offset) % DIRECTION_COUNT]
+    /** Returns the direction relative to this direction after subtracting [angle]. */
+    operator fun minus(angle: Angle): Direction = this + (-angle)
+
+    /** Returns the direction relative to this direction after adding [angle]. */
+    operator fun plus(angle: Angle): Direction {
+        val newNormalizedAngleFromNorth = (normalizedAngleFromNorth + angle).normalize()
+        return DIRECTIONS_ORDERED_BY_NORMALIZED_ANGLE_FROM_NORTH[newNormalizedAngleFromNorth.value]
     }
 
-    private companion object {
-        val DIRECTIONS_IN_CLOCKWISE_ORDER_FROM_NORTH = values().sortedBy(Direction::clockwiseOffsetFromNorth)
-        val DIRECTION_COUNT = DIRECTIONS_IN_CLOCKWISE_ORDER_FROM_NORTH.size
+    companion object {
+        private val DIRECTIONS_ORDERED_BY_NORMALIZED_ANGLE_FROM_NORTH =
+            values().sortedBy(Direction::normalizedAngleFromNorth)
     }
 }

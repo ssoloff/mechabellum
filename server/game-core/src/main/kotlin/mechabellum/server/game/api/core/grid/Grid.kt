@@ -22,6 +22,9 @@ import mechabellum.server.game.api.core.participant.Team
 /**
  * A hexagonal grid.
  *
+ * The grid uses a left-handed coordinate system: positive x is right, and positive y is down. Thus, positive angles are
+ * clockwise, while negative angles are counterclockwise.
+ *
  * The grid uses an odd-q vertical layout. "odd-q" means each odd column is shifted down (positive y) a half-cell.
  * "Vertical" layout means each cell is a flat-topped hex (rather than a pointy-topped hex).
  */

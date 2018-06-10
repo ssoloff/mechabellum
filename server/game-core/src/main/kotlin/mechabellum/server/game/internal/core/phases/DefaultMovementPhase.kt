@@ -17,8 +17,10 @@
 
 package mechabellum.server.game.internal.core.phases
 
+import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.MovementPhase
+import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultPhase
 
@@ -28,5 +30,15 @@ internal class DefaultMovementPhase(
 ) : DefaultPhase(game), MovementPhase {
     override fun end() {
         TODO("not implemented")
+    }
+
+    override fun turn(mech: Mech, angle: Angle) {
+        checkMechBelongsToMovingTeam(mech)
+
+        game.state.modifyMechRecord(mech.id) { it.setFacing(it.facing.getOrThrow() + angle) }
+    }
+
+    private fun checkMechBelongsToMovingTeam(mech: Mech) {
+        require(mech.team == team) { "expected team $team to be moved during this phase but was ${mech.team}" }
     }
 }
