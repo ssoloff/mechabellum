@@ -50,6 +50,7 @@ abstract class MovementPhaseSpec(
     beforeEachTest {
         strategy = newStrategy(newTestGameSpecification())
     }
+
     describe("deploy") {
         it("should turn Mech by specified angle") {
             // given: a Mech associated with the moving team and facing north
