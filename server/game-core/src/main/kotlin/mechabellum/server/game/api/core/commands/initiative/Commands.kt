@@ -15,17 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.phases
+package mechabellum.server.game.api.core.commands.initiative
 
-import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.StatelessCommand
+import mechabellum.server.game.api.core.phases.InitiativePhase
 
-/** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
-interface InitiativePhase : Phase {
-    /**
-     * @throws IllegalStateException If initiative has not been rolled.
-     */
-    override fun end()
+/** Superclass for stateless commands that are executed during the initiative phase. */
+open class StatelessInitiativeCommand<R : Any>(
+    action: (InitiativePhase) -> R
+) : StatelessCommand<InitiativePhase, R>(InitiativePhase::class, action)
 
-    /** Rolls initiative for all teams, resolving ties to ensure there is an initiative winner. */
-    fun rollInitiative()
-}
+/** Command that rolls initiative for all teams, resolving ties to ensure there is an initiative winner. */
+class RollInitiativeCommand : StatelessInitiativeCommand<Unit>({
+    it.rollInitiative()
+})

@@ -17,7 +17,11 @@
 
 package mechabellum.server.game.api.core
 
+import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.common.api.test.DataClassSpec
+import mechabellum.server.game.api.core.mechanics.Initiative
+import mechabellum.server.game.api.core.participant.Team
+import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.amshove.kluent.withMessage
 import org.jetbrains.spek.api.Spek
@@ -38,3 +42,32 @@ object TurnIdSpec : Spek({
 })
 
 object TurnIdBehavesAsDataClassSpec : DataClassSpec({ TurnId(0) })
+
+abstract class TurnSpec(val newTurn: (Map<Team, Initiative>) -> Turn) : Spek({
+    describe("getInitiative") {
+        val team = Team.ATTACKER
+
+        it("should return Some when initiative present") {
+            // given: a turn with initiative for team
+            val initiative = Initiative.MAX
+            val subject = newTurn(mapOf(team to initiative))
+
+            // when: getting team initiative
+            val initiativeOption = subject.getInitiative(team)
+
+            // then: it should return team initiative
+            initiativeOption shouldEqual Option.some(initiative)
+        }
+
+        it("should return None when initiative absent") {
+            // given: a turn without initiative for team
+            val subject = newTurn(mapOf())
+
+            // when: getting team initiative
+            val initiativeOption = subject.getInitiative(team)
+
+            // then: it should return empty
+            initiativeOption shouldEqual Option.none()
+        }
+    }
+})

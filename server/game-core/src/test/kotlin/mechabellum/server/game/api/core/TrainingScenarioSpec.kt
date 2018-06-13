@@ -20,6 +20,7 @@ package mechabellum.server.game.api.core
 import mechabellum.server.game.api.core.commands.deployment.DeployCommand
 import mechabellum.server.game.api.core.commands.general.EndPhaseCommand
 import mechabellum.server.game.api.core.commands.initialization.NewMechCommand
+import mechabellum.server.game.api.core.commands.initiative.RollInitiativeCommand
 import mechabellum.server.game.api.core.commands.movement.TurnCommand
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Direction
@@ -59,12 +60,13 @@ object TrainingScenarioSpec : Spek({
             // attacker deployment phase
             executeCommand(DeployCommand(attacker1, Position(0, 0), Direction.SOUTH))
             executeCommand(DeployCommand(attacker2, Position(14, 0), Direction.SOUTH))
-            dieRoller.addValues(6, 6, 1, 1) // attacker wins initiative
             executeCommand(EndPhaseCommand())
 
             // turn 0
 
             // initiative phase
+            dieRoller.addValues(6, 6, 1, 1) // attacker wins initiative
+            executeCommand(RollInitiativeCommand())
             executeCommand(EndPhaseCommand())
 
             // attacker movement phase

@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.internal.core.phases
 
+import mechabellum.server.common.api.core.util.getOrThrow
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
@@ -28,11 +29,20 @@ internal class DefaultInitiativePhase(
     game: DefaultGame,
     private val turnId: TurnId
 ) : DefaultPhase(game), InitiativePhase {
-    init {
-        game.state.modifyTurn(turnId) { it.setInitiatives(rollInitiative()) }
+    override fun end() {
+        game.phase = DefaultMovementPhase(
+            game,
+            game.state.getTurn(turnId).initiativeWinner.getOrThrow {
+                IllegalStateException("expected initiative to be rolled but was not")
+            }
+        )
     }
 
-    private fun rollInitiative(): Map<Team, Initiative> {
+    override fun rollInitiative() {
+        game.state.modifyTurn(turnId) { it.setInitiatives(rollInitiativeAndResolveTies()) }
+    }
+
+    private fun rollInitiativeAndResolveTies(): Map<Team, Initiative> {
         while (true) {
             val initiativesByTeam = Team.values().associate {
                 it to Initiative(game.dieRoller.roll() + game.dieRoller.roll())
@@ -42,9 +52,5 @@ internal class DefaultInitiativePhase(
                 return initiativesByTeam
             }
         }
-    }
-
-    override fun end() {
-        game.phase = DefaultMovementPhase(game, game.state.getTurn(turnId).initiativeWinner)
     }
 }
