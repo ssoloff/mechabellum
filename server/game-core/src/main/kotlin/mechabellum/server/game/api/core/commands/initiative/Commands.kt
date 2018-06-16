@@ -18,6 +18,7 @@
 package mechabellum.server.game.api.core.commands.initiative
 
 import mechabellum.server.game.api.core.StatelessCommand
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 
 /** Superclass for stateless commands that are executed during the initiative phase. */
@@ -25,7 +26,12 @@ open class StatelessInitiativeCommand<R : Any>(
     action: (InitiativePhase) -> R
 ) : StatelessCommand<InitiativePhase, R>(InitiativePhase::class, action)
 
-/** Command that rolls initiative for all teams, resolving ties to ensure there is an initiative winner. */
-class RollInitiativeCommand : StatelessInitiativeCommand<Unit>({
-    it.rollInitiative()
+/**
+ * Command that rolls initiative for [team].
+ *
+ * When executed, throws [IllegalStateException] if initiative has been rolled for all teams and a winner has been
+ * determined; or if all teams have not yet rolled initiative but initiative has already been rolled for [team].
+ */
+class RollInitiativeCommand(val team: Team) : StatelessInitiativeCommand<Unit>({
+    it.rollInitiative(team)
 })

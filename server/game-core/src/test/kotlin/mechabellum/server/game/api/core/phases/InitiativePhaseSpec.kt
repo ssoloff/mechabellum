@@ -48,30 +48,62 @@ abstract class InitiativePhaseSpec(
     }
 
     describe("rollInitiative") {
-        it("should roll initiative for each team") {
-            // given: a die roller that produces a sequence that will result in unique initiative values
-            dieRoller.addValues(1, 2, 5, 6)
+        it("should roll initiative only for specified team") {
+            // given: a die roller that produces an initiative result sequence of (11)
+            dieRoller.addValues(5, 6)
 
-            // when: initiative is rolled
-            subject.rollInitiative()
+            // when: initiative is rolled for attacker
+            subject.rollInitiative(Team.ATTACKER)
 
-            // then: it should roll initiative for each team in lexicographic order
-            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(3))
-            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.some(Initiative(11))
+            // then: it should roll initiative 11 for attacker
+            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(11))
+            // but: it should not roll initiative for defender
+            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.none()
         }
 
-        it("should re-roll initiative for each team in the event of a tie") {
-            // given: a die roller that produces a sequence that will result in identical initiative values
-            dieRoller.addValues(1, 3, 3, 1)
-            // and: followed by a sequence that will result in unique initiative values
-            dieRoller.addValues(1, 2, 5, 6)
+        it("should allow rolling for initiative for all teams at least once") {
+            // given: a die roller that produces an initiative result sequence of (11, 3)
+            dieRoller.addValues(5, 6, 1, 2)
 
-            // when: initiative is rolled
-            subject.rollInitiative()
+            // when: initiative is rolled for attacker
+            subject.rollInitiative(Team.ATTACKER)
+            // and: initiative is rolled for defender
+            subject.rollInitiative(Team.DEFENDER)
 
-            // then: it should roll initiative for each team twice to resolve the tie
-            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(3))
-            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.some(Initiative(11))
+            // then: it should roll initiative 11 for attacker
+            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(11))
+            // and: it should roll initiative 3 for defender
+            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.some(Initiative(3))
+        }
+
+        it("should throw exception when re-rolling team initiative in the same iteration") {
+            // given: a die roller that produces an initiative result sequence of (11, 3)
+            dieRoller.addValues(5, 6, 1, 2)
+
+            // when: initiative is rolled for attacker
+            subject.rollInitiative(Team.ATTACKER)
+            // and: initiative is re-rolled for attacker
+            val operation = { subject.rollInitiative(Team.ATTACKER) }
+
+            // then: it should throw an exception
+            operation shouldThrow IllegalStateException::class withMessage "illegal attempt to re-roll initiative for team ${Team.ATTACKER}"
+        }
+
+        it("should allow another iteration of rolling for initiative if no winner in most recent iteration") {
+            // given: a die roller that produces an initiative result sequence of (11, 11, 7, 3)
+            dieRoller.addValues(5, 6, 5, 6, 3, 4, 1, 2)
+
+            // when: initiative is rolled for attacker and defender
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
+            // and: initiative is re-rolled for attacker and defender
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
+
+            // then: it should roll initiative 7 for attacker
+            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(7))
+            // and: it should roll initiative 3 for defender
+            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.some(Initiative(3))
         }
     }
 
@@ -79,7 +111,8 @@ abstract class InitiativePhaseSpec(
         it("should change active phase to attacker movement phase when attacker has initiative") {
             // given: the attacker has initiative
             dieRoller.addValues(6, 6, 1, 1)
-            subject.rollInitiative()
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
 
             // when: initiative phase is ended
             subject.end()
@@ -92,7 +125,8 @@ abstract class InitiativePhaseSpec(
         it("should change active phase to defender movement phase when defender has initiative") {
             // given: the defender has initiative
             dieRoller.addValues(1, 1, 6, 6)
-            subject.rollInitiative()
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
 
             // when: initiative phase is ended
             subject.end()
@@ -102,14 +136,40 @@ abstract class InitiativePhaseSpec(
             (strategy.game.phase as MovementPhase).team shouldEqual Team.DEFENDER
         }
 
-        it("should throw exception when initiative has not been rolled") {
-            // given: initiative has not been rolled
+        it("should throw exception when no team has rolled initiative") {
+            // given: no team has rolled initiative
 
             // when: initiative phase is ended
             val operation = { subject.end() }
 
             // then: it should throw an exception
-            operation shouldThrow IllegalStateException::class withMessage "expected initiative to be rolled but was not"
+            operation shouldThrow IllegalStateException::class withMessage "team(s) [${Team.ATTACKER}, ${Team.DEFENDER}] have not rolled initiative"
+        }
+
+        it("should throw exception when one team has not rolled initiative") {
+            // given: attacker has rolled initiative
+            dieRoller.addValues(1, 1)
+            subject.rollInitiative(Team.ATTACKER)
+            // but: defender has not rolled initiative
+
+            // when: initiative phase is ended
+            val operation = { subject.end() }
+
+            // then: it should throw an exception
+            operation shouldThrow IllegalStateException::class withMessage "team(s) [${Team.DEFENDER}] have not rolled initiative"
+        }
+
+        it("should throw exception when all teams have rolled initiative but there is no winner") {
+            // given: attacker and defender have rolled same initiative result
+            dieRoller.addValues(1, 1, 1, 1)
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
+
+            // when: initiative phase is ended
+            val operation = { subject.end() }
+
+            // then: it should throw an exception
+            operation shouldThrow IllegalStateException::class withMessage "all teams rolled initiative but there is no winner; each team must re-roll"
         }
     }
 }) {

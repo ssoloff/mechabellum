@@ -168,7 +168,7 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
             // when: the turn is modified
             var turn: DefaultTurn by Delegates.notNull()
             subject.modifyTurn(turnId) {
-                turn = it.setInitiatives(mapOf(Team.ATTACKER to Initiative.MIN, Team.DEFENDER to Initiative.MAX))
+                turn = it.setInitiative(Team.ATTACKER, Initiative.MIN)
                 turn
             }
 

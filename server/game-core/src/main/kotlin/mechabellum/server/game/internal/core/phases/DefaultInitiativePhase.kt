@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.internal.core.phases
 
+import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.common.api.core.util.getOrThrow
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.mechanics.Initiative
@@ -24,33 +25,45 @@ import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultPhase
+import mechabellum.server.game.internal.core.DefaultTurn
 
 internal class DefaultInitiativePhase(
     game: DefaultGame,
     private val turnId: TurnId
 ) : DefaultPhase(game), InitiativePhase {
+    private val turn: DefaultTurn
+        get() = game.state.getTurn(turnId)
+
     override fun end() {
-        game.phase = DefaultMovementPhase(
-            game,
-            game.state.getTurn(turnId).initiativeWinner.getOrThrow {
-                IllegalStateException("expected initiative to be rolled but was not")
-            }
-        )
+        checkAllTeamsHaveRolledInitiative()
+        val initiativeWinner = checkInitiativeWinnerExists()
+
+        game.phase = DefaultMovementPhase(game, initiativeWinner)
     }
 
-    override fun rollInitiative() {
-        game.state.modifyTurn(turnId) { it.setInitiatives(rollInitiativeAndResolveTies()) }
+    private fun checkAllTeamsHaveRolledInitiative() = turn.teamsWithoutInitiative.let {
+        if (it.isNotEmpty()) {
+            throw IllegalStateException("team(s) $it have not rolled initiative")
+        }
     }
 
-    private fun rollInitiativeAndResolveTies(): Map<Team, Initiative> {
-        while (true) {
-            val initiativesByTeam = Team.values().associate {
-                it to Initiative(game.dieRoller.roll() + game.dieRoller.roll())
-            }
-            val maxInitiatives: Initiative = initiativesByTeam.values.max()!!
-            if (initiativesByTeam.values.count(maxInitiatives::equals) == 1) {
-                return initiativesByTeam
-            }
+    private fun checkInitiativeWinnerExists(): Team = turn.initiativeWinner.getOrThrow {
+        IllegalStateException("all teams rolled initiative but there is no winner; each team must re-roll")
+    }
+
+    override fun rollInitiative(team: Team) {
+        checkTeamCanRollInitiative(team)
+
+        game.state.modifyTurn(turnId) {
+            it.setInitiative(team, Initiative(game.dieRoller.roll() + game.dieRoller.roll()))
+        }
+    }
+
+    private fun checkTeamCanRollInitiative(team: Team) {
+        if ((turn.initiativeRollsIncomplete && (turn.getInitiative(team) is Option.Some)) ||
+            (turn.initiativeWinner is Option.Some)
+        ) {
+            throw IllegalStateException("illegal attempt to re-roll initiative for team $team")
         }
     }
 }

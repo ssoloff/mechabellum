@@ -18,6 +18,7 @@
 package mechabellum.server.game.api.core.commands.initiative
 
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 import org.amshove.kluent.Verify
 import org.amshove.kluent.called
@@ -35,11 +36,12 @@ object RollInitiativeCommandSpec : Spek({
             val initiativePhase = mock<InitiativePhase>()
 
             // when: the command is executed
-            val subject = RollInitiativeCommand()
+            val team = Team.ATTACKER
+            val subject = RollInitiativeCommand(team)
             subject.execute(initiativePhase)
 
             // then: it should roll initiative
-            Verify on initiativePhase that initiativePhase.rollInitiative() was called
+            Verify on initiativePhase that initiativePhase.rollInitiative(team) was called
         }
     }
 })

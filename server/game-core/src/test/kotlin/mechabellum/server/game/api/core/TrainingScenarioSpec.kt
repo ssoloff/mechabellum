@@ -65,8 +65,10 @@ object TrainingScenarioSpec : Spek({
             // turn 0
 
             // initiative phase
-            dieRoller.addValues(6, 6, 1, 1) // attacker wins initiative
-            executeCommand(RollInitiativeCommand())
+            dieRoller.addValues(6, 6) // attacker initiative = 12 (winner)
+            executeCommand(RollInitiativeCommand(Team.ATTACKER))
+            dieRoller.addValues(1, 1) // defender initiative = 2 (loser)
+            executeCommand(RollInitiativeCommand(Team.DEFENDER))
             executeCommand(EndPhaseCommand())
 
             // attacker movement phase

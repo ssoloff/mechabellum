@@ -18,14 +18,26 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.participant.Team
 
 /** The first phase within a turn in which each team's initiative is determined for the remainder of the turn. */
 interface InitiativePhase : Phase {
     /**
-     * @throws IllegalStateException If initiative has not been rolled.
+     * @throws IllegalStateException If initiative has been rolled for all teams but there is no winner (e.g. if there
+     * is a tie for the highest roll); or if all teams have not yet rolled initiative in the latest iteration.
      */
     override fun end()
 
-    /** Rolls initiative for all teams, resolving ties to ensure there is an initiative winner. */
-    fun rollInitiative()
+    /**
+     * Rolls initiative for [team].
+     *
+     * All teams must roll for initiative. If, after all teams have rolled initiative, there is a winner (e.g. no ties
+     * for the highest roll), the initiative phase is complete and no further initiative rolls can be made. If, after
+     * all teams have rolled initiative, there is no winner, then each team must roll again. The results of each
+     * iteration are retained for purposes of review.
+     *
+     * @throws IllegalStateException If initiative has been rolled for all teams and a winner has been determined; or
+     * if all teams have not yet rolled initiative but initiative has already been rolled for [team].
+     */
+    fun rollInitiative(team: Team)
 }
