@@ -35,7 +35,7 @@ abstract class GameRunnerSpec(newSubject: () -> GameRunner) : SubjectSpek<GameRu
         it("should return command result when command succeeds") {
             // when: executing a command that completes successfully
             val expectedResult = 42
-            val actualResult = subject.executeCommand(StatelessCommand(Phase::class, { expectedResult }))
+            val actualResult = subject.executeCommand(StatelessCommand(Phase::class) { expectedResult })
 
             // then: it should return the command result
             actualResult shouldEqual expectedResult

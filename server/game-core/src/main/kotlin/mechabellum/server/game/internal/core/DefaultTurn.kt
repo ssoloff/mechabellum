@@ -40,7 +40,7 @@ internal class DefaultTurn(
         } else {
             initiativesByTeamHistory.last().let {
                 val maxInitiative = it.values.max()
-                val teamsWithMaxInitiative = it.filterValues({ it == maxInitiative }).keys
+                val teamsWithMaxInitiative = it.filterValues { it == maxInitiative }.keys
                 if (teamsWithMaxInitiative.size == 1) Option.some(teamsWithMaxInitiative.first()) else Option.none()
             }
         }
