@@ -51,12 +51,14 @@ internal class DefaultInitiativePhase(
         IllegalStateException("all teams rolled initiative but there is no winner; each team must re-roll")
     }
 
-    override fun rollInitiative(team: Team) {
+    override fun rollInitiative(team: Team): Initiative {
         checkTeamCanRollInitiative(team)
 
+        val initiative = Initiative(game.dieRoller.roll() + game.dieRoller.roll())
         game.state.modifyTurn(turnId) {
-            it.setInitiative(team, Initiative(game.dieRoller.roll() + game.dieRoller.roll()))
+            it.setInitiative(team, initiative)
         }
+        return initiative
     }
 
     private fun checkTeamCanRollInitiative(team: Team) {

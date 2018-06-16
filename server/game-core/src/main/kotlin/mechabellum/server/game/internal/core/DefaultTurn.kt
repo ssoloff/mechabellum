@@ -48,7 +48,7 @@ internal class DefaultTurn(
     val teamsWithoutInitiative: Collection<Team>
         get() = Team.values().toList() - initiativesByTeamHistory.last().keys
 
-    override fun getInitiative(team: Team): Option<Initiative> = Option.of(initiativesByTeamHistory.last()[team])
+    fun getInitiative(team: Team): Option<Initiative> = Option.of(initiativesByTeamHistory.last()[team])
 
     fun setInitiative(team: Team, initiative: Initiative): DefaultTurn {
         val newInitiativesByTeamHistory = initiativesByTeamHistory.toMutableList()

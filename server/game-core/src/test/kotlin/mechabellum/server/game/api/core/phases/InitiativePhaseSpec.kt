@@ -17,7 +17,6 @@
 
 package mechabellum.server.game.api.core.phases
 
-import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.ScriptedDieRoller
@@ -48,17 +47,15 @@ abstract class InitiativePhaseSpec(
     }
 
     describe("rollInitiative") {
-        it("should roll initiative only for specified team") {
+        it("should roll initiative for specified team") {
             // given: a die roller that produces an initiative result sequence of (11)
             dieRoller.addValues(5, 6)
 
             // when: initiative is rolled for attacker
-            subject.rollInitiative(Team.ATTACKER)
+            val attackerInitiative = subject.rollInitiative(Team.ATTACKER)
 
             // then: it should roll initiative 11 for attacker
-            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(11))
-            // but: it should not roll initiative for defender
-            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.none()
+            attackerInitiative shouldEqual Initiative(11)
         }
 
         it("should allow rolling for initiative for all teams at least once") {
@@ -66,14 +63,14 @@ abstract class InitiativePhaseSpec(
             dieRoller.addValues(5, 6, 1, 2)
 
             // when: initiative is rolled for attacker
-            subject.rollInitiative(Team.ATTACKER)
+            val attackerInitiative = subject.rollInitiative(Team.ATTACKER)
             // and: initiative is rolled for defender
-            subject.rollInitiative(Team.DEFENDER)
+            val defenderInitiative = subject.rollInitiative(Team.DEFENDER)
 
             // then: it should roll initiative 11 for attacker
-            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(11))
+            attackerInitiative shouldEqual Initiative(11)
             // and: it should roll initiative 3 for defender
-            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.some(Initiative(3))
+            defenderInitiative shouldEqual Initiative(3)
         }
 
         it("should throw exception when re-rolling team initiative in the same iteration") {
@@ -97,13 +94,13 @@ abstract class InitiativePhaseSpec(
             subject.rollInitiative(Team.ATTACKER)
             subject.rollInitiative(Team.DEFENDER)
             // and: initiative is re-rolled for attacker and defender
-            subject.rollInitiative(Team.ATTACKER)
-            subject.rollInitiative(Team.DEFENDER)
+            val attackerInitiative = subject.rollInitiative(Team.ATTACKER)
+            val defenderInitiative = subject.rollInitiative(Team.DEFENDER)
 
             // then: it should roll initiative 7 for attacker
-            strategy.game.turn.getInitiative(Team.ATTACKER) shouldEqual Option.some(Initiative(7))
+            attackerInitiative shouldEqual Initiative(7)
             // and: it should roll initiative 3 for defender
-            strategy.game.turn.getInitiative(Team.DEFENDER) shouldEqual Option.some(Initiative(3))
+            defenderInitiative shouldEqual Initiative(3)
         }
     }
 

@@ -17,10 +17,6 @@
 
 package mechabellum.server.game.api.core
 
-import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.mechanics.Initiative
-import mechabellum.server.game.api.core.participant.Team
-
 /**
  * The unique identifier of a turn within a game.
  *
@@ -47,7 +43,4 @@ data class TurnId(val value: Int) {
 interface Turn {
     /** The turn identifier. */
     val id: TurnId
-
-    /** Returns the initiative for [team] or empty if initiative has not yet been determined. */
-    fun getInitiative(team: Team): Option<Initiative>
 }

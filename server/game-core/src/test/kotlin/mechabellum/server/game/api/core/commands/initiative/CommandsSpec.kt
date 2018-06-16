@@ -17,12 +17,15 @@
 
 package mechabellum.server.game.api.core.commands.initiative
 
+import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 import org.amshove.kluent.Verify
 import org.amshove.kluent.called
 import org.amshove.kluent.on
+import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.that
 import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
@@ -31,17 +34,22 @@ import org.jetbrains.spek.api.dsl.it
 
 object RollInitiativeCommandSpec : Spek({
     describe("execute") {
-        it("should roll initiative") {
+        it("should roll initiative and return the result") {
             // given: the initiative phase is active
-            val initiativePhase = mock<InitiativePhase>()
+            val team = Team.ATTACKER
+            val expected = Initiative.MIN
+            val initiativePhase = mock<InitiativePhase> {
+                on { rollInitiative(team) } doReturn expected
+            }
 
             // when: the command is executed
-            val team = Team.ATTACKER
             val subject = RollInitiativeCommand(team)
-            subject.execute(initiativePhase)
+            val actual = subject.execute(initiativePhase)
 
             // then: it should roll initiative
             Verify on initiativePhase that initiativePhase.rollInitiative(team) was called
+            // and: return the result
+            actual shouldEqual expected
         }
     }
 })

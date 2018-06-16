@@ -19,7 +19,6 @@ package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.TurnId
-import mechabellum.server.game.api.core.TurnSpec
 import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 import org.amshove.kluent.shouldBeEmpty
@@ -187,6 +186,33 @@ object DefaultTurnSpec : Spek({
         }
     }
 
+    describe("getInitiative") {
+        val team = Team.ATTACKER
+
+        it("should return Some when initiative present") {
+            // given: a turn with initiative for team
+            val initiative = Initiative.MAX
+            val subject = DefaultTurn(id = TurnId(0), initiativesByTeamHistory = listOf(mapOf(team to initiative)))
+
+            // when: getting team initiative
+            val initiativeOption = subject.getInitiative(team)
+
+            // then: it should return team initiative
+            initiativeOption shouldEqual Option.some(initiative)
+        }
+
+        it("should return None when initiative absent") {
+            // given: a turn without initiative for team
+            val subject = DefaultTurn(id = TurnId(0), initiativesByTeamHistory = listOf(mapOf()))
+
+            // when: getting team initiative
+            val initiativeOption = subject.getInitiative(team)
+
+            // then: it should return empty
+            initiativeOption shouldEqual Option.none()
+        }
+    }
+
     describe("setInitiative") {
         it("should set initiative in current iteration when current iteration is incomplete") {
             // given: current initiative iteration is incomplete
@@ -221,9 +247,3 @@ object DefaultTurnSpec : Spek({
         }
     }
 })
-
-object DefaultTurnBehavesAsTurnSpec : TurnSpec(
-    newTurn = { initiativesByTeam ->
-        DefaultTurn(id = TurnId(0), initiativesByTeamHistory = listOf(initiativesByTeam))
-    }
-)
