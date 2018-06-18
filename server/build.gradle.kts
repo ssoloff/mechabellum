@@ -39,14 +39,14 @@ buildscript {
 
 plugins {
     base
-    id("com.github.ben-manes.versions") version "0.17.0"
+    id("com.github.ben-manes.versions") version "0.19.0"
 }
 
 val javaVersion by extra { JavaVersion.VERSION_1_8 }
 val junitVersion by extra { "5.2.0" }
 val kluentVersion by extra { "1.38" }
 val kotlinVersion: String by extra
-val mockitoVersion by extra { "2.18.3" }
+val mockitoVersion by extra { "2.19.0" }
 val spekVersion by extra { "1.1.5" }
 
 allprojects {
