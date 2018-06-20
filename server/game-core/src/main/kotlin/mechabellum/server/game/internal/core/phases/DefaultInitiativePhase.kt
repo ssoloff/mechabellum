@@ -41,13 +41,13 @@ internal class DefaultInitiativePhase(
         game.phase = DefaultMovementPhase(game, initiativeWinner)
     }
 
-    private fun checkAllTeamsHaveRolledInitiative() = turn.teamsWithoutInitiative.let {
+    private fun checkAllTeamsHaveRolledInitiative() = turn.initiativeHistory.teamsWithoutInitiative.let {
         if (it.isNotEmpty()) {
             throw IllegalStateException("team(s) $it have not rolled initiative")
         }
     }
 
-    private fun checkInitiativeWinnerExists(): Team = turn.initiativeWinner.getOrThrow {
+    private fun checkInitiativeWinnerExists(): Team = turn.initiativeHistory.initiativeWinner.getOrThrow {
         IllegalStateException("all teams rolled initiative but there is no winner; each team must re-roll")
     }
 
@@ -55,17 +55,17 @@ internal class DefaultInitiativePhase(
         checkTeamCanRollInitiative(team)
 
         val initiative = Initiative(game.dieRoller.roll() + game.dieRoller.roll())
-        game.state.modifyTurn(turnId) {
-            it.setInitiative(team, initiative)
-        }
+        game.state.modifyTurn(turnId) { it.setInitiativeHistory(it.initiativeHistory.setInitiative(team, initiative)) }
         return initiative
     }
 
     private fun checkTeamCanRollInitiative(team: Team) {
-        if ((turn.initiativeRollsIncomplete && (turn.getInitiative(team) is Option.Some)) ||
-            (turn.initiativeWinner is Option.Some)
-        ) {
-            throw IllegalStateException("illegal attempt to re-roll initiative for team $team")
+        turn.initiativeHistory.let {
+            if ((it.initiativeRollsIncomplete && (it.getInitiative(team) is Option.Some)) ||
+                (it.initiativeWinner is Option.Some)
+            ) {
+                throw IllegalStateException("illegal attempt to re-roll initiative for team $team")
+            }
         }
     }
 }

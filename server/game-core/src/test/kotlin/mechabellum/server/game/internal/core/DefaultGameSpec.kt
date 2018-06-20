@@ -21,7 +21,6 @@ import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.GameSpec
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Position
-import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.unit.DefaultMech
@@ -168,7 +167,7 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
             // when: the turn is modified
             var turn: DefaultTurn by Delegates.notNull()
             subject.modifyTurn(turnId) {
-                turn = it.setInitiative(Team.ATTACKER, Initiative.MIN)
+                turn = DefaultTurn(TurnId(999))
                 turn
             }
 

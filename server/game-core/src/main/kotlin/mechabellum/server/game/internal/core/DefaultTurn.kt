@@ -17,50 +17,16 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Turn
 import mechabellum.server.game.api.core.TurnId
-import mechabellum.server.game.api.core.mechanics.Initiative
-import mechabellum.server.game.api.core.participant.Team
+import mechabellum.server.game.internal.core.mechanics.InitiativeHistory
 
 internal class DefaultTurn(
     override val id: TurnId,
-    private val initiativesByTeamHistory: List<Map<Team, Initiative>> = listOf(mapOf())
+    val initiativeHistory: InitiativeHistory = InitiativeHistory()
 ) : Turn {
-    init {
-        require(initiativesByTeamHistory.isNotEmpty()) { "expected initiative history to not be empty but was empty" }
-    }
-
-    val initiativeRollsIncomplete: Boolean
-        get() = initiativesByTeamHistory.last().size != Team.values().size
-
-    val initiativeWinner: Option<Team>
-        get() = if (initiativeRollsIncomplete) {
-            Option.none()
-        } else {
-            initiativesByTeamHistory.last().let {
-                val maxInitiative = it.values.max()
-                val teamsWithMaxInitiative = it.filterValues { it == maxInitiative }.keys
-                if (teamsWithMaxInitiative.size == 1) Option.some(teamsWithMaxInitiative.first()) else Option.none()
-            }
-        }
-
-    val teamsWithoutInitiative: Collection<Team>
-        get() = Team.values().toList() - initiativesByTeamHistory.last().keys
-
-    fun getInitiative(team: Team): Option<Initiative> = Option.of(initiativesByTeamHistory.last()[team])
-
-    fun setInitiative(team: Team, initiative: Initiative): DefaultTurn {
-        val newInitiativesByTeamHistory = initiativesByTeamHistory.toMutableList()
-        val initiativesByTeam = newInitiativesByTeamHistory.last()
-        if (initiativesByTeam.keys.containsAll(Team.values().toList())) {
-            newInitiativesByTeamHistory.add(mapOf(team to initiative))
-        } else {
-            val newInitiativesByTeam = initiativesByTeam.toMutableMap()
-            newInitiativesByTeam[team] = initiative
-            newInitiativesByTeamHistory[newInitiativesByTeamHistory.lastIndex] = newInitiativesByTeam
-        }
-
-        return DefaultTurn(id = id, initiativesByTeamHistory = newInitiativesByTeamHistory)
-    }
+    fun setInitiativeHistory(initiativeHistory: InitiativeHistory): DefaultTurn = DefaultTurn(
+        id = id,
+        initiativeHistory = initiativeHistory
+    )
 }
