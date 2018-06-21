@@ -21,7 +21,7 @@ val spekVersion: String by rootProject
 
 dependencies {
     "implementation"(kotlin("reflect", kotlinVersion))
-    "implementation"("nl.jqno.equalsverifier", "equalsverifier", "2.4.6")
+    "implementation"("nl.jqno.equalsverifier", "equalsverifier", "2.4.7")
     "implementation"("org.amshove.kluent", "kluent", kluentVersion)
     "implementation"("org.jetbrains.spek", "spek-api", spekVersion) {
         exclude("org.jetbrains.kotlin")

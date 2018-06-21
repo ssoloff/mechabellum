@@ -39,7 +39,7 @@ buildscript {
 
 plugins {
     base
-    id("com.github.ben-manes.versions") version "0.19.0"
+    id("com.github.ben-manes.versions") version "0.20.0"
 }
 
 val javaVersion by extra { JavaVersion.VERSION_1_8 }
