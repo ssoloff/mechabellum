@@ -19,7 +19,7 @@ package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
-import mechabellum.server.game.api.core.ScriptedDieRoller
+import mechabellum.server.game.api.core.mechanics.ScriptedDieRoller
 import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.newTestGameSpecification
 import mechabellum.server.game.api.core.participant.Team

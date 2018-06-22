@@ -27,6 +27,8 @@ import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridType
 import mechabellum.server.game.api.core.grid.Position
+import mechabellum.server.game.api.core.mechanics.DieRoller
+import mechabellum.server.game.api.core.mechanics.ScriptedDieRoller
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.MechType

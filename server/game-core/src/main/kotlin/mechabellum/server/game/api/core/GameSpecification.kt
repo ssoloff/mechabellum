@@ -19,6 +19,8 @@ package mechabellum.server.game.api.core
 
 import mechabellum.server.game.api.core.grid.Grid
 import mechabellum.server.game.api.core.grid.GridSpecification
+import mechabellum.server.game.api.core.mechanics.DieRoller
+import mechabellum.server.game.api.core.mechanics.UniformDieRoller
 
 /**
  * A specification for creating a new [Game].

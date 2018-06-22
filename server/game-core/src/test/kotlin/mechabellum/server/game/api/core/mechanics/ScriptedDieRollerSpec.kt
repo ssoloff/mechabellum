@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core
+package mechabellum.server.game.api.core.mechanics
 
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
@@ -77,3 +77,11 @@ internal object ScriptedDieRollerSpec : SubjectSpek<ScriptedDieRoller>({
         }
     }
 })
+
+object ScriptedDieRollerBehavesAsDieRollerSpec : DieRollerSpec(
+    newSubject = { valueCount ->
+        val subject = ScriptedDieRoller()
+        subject.addValues(*IntArray(valueCount) { 1 })
+        subject
+    }
+)

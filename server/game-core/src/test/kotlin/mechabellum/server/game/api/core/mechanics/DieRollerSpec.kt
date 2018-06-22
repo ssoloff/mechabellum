@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core
+package mechabellum.server.game.api.core.mechanics
 
 import org.amshove.kluent.shouldBeGreaterOrEqualTo
 import org.amshove.kluent.shouldBeLessOrEqualTo
@@ -23,12 +23,14 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
-abstract class DieRollerSpec(newSubject: () -> DieRoller) : SubjectSpek<DieRoller>({
-    subject { newSubject() }
+abstract class DieRollerSpec(newSubject: (Int) -> DieRoller) : SubjectSpek<DieRoller>({
+    val valueCount = 100
+
+    subject { newSubject(valueCount) }
 
     describe("roll") {
         it("should return an integer between 1 and 6 inclusive") {
-            for (i in 1..100) {
+            for (i in 1..valueCount) {
                 val roll = subject.roll()
                 roll shouldBeGreaterOrEqualTo 1
                 roll shouldBeLessOrEqualTo 6
@@ -37,4 +39,4 @@ abstract class DieRollerSpec(newSubject: () -> DieRoller) : SubjectSpek<DieRolle
     }
 })
 
-object UniformDieRollerBehavesAsDieRollerSpec : DieRollerSpec(::UniformDieRoller)
+object UniformDieRollerBehavesAsDieRollerSpec : DieRollerSpec({ UniformDieRoller() })

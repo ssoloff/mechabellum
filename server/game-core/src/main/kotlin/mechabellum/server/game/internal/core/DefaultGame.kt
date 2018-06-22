@@ -18,7 +18,7 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.DieRoller
+import mechabellum.server.game.api.core.mechanics.DieRoller
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.TurnId
