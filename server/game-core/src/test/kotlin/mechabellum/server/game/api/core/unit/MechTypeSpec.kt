@@ -18,5 +18,8 @@
 package mechabellum.server.game.api.core.unit
 
 import mechabellum.server.common.api.test.DataClassSpec
+import org.jetbrains.spek.api.Spek
+
+object MechTypeSpecificationSpec : Spek({}) // no-op placeholder spec for this file
 
 object MechTypeBehavesAsDataClassSpec : DataClassSpec({ newTestMechType() })

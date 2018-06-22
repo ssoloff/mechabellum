@@ -23,6 +23,9 @@ import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.DefaultGame
+import org.jetbrains.spek.api.Spek
+
+object DefaultInitializationPhaseSpec : Spek({}) // no-op placeholder spec for this file
 
 object DefaultInitializationPhaseBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
     newStrategy = { gameSpecification ->

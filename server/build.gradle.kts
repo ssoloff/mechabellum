@@ -33,7 +33,7 @@ buildscript {
 
     dependencies {
         classpath(kotlin("gradle-plugin", kotlinVersion))
-        classpath("gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.12.0")
+        classpath("gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.13.0")
     }
 }
 

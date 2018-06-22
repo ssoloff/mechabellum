@@ -18,5 +18,8 @@
 package mechabellum.server.game.internal.core.grid
 
 import mechabellum.server.game.api.core.grid.GridSpec
+import org.jetbrains.spek.api.Spek
+
+object DefaultGridSpec : Spek({}) // no-op placeholder spec for this file
 
 object DefaultGridBehavesAsGridSpec : GridSpec(::DefaultGrid)

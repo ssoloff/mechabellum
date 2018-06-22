@@ -23,8 +23,8 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.subject.SubjectSpek
 
-object UniformDieRollerSpec : SubjectSpek<UniformDieRoller>({
-    subject { UniformDieRoller() }
+abstract class DieRollerSpec(newSubject: () -> DieRoller) : SubjectSpek<DieRoller>({
+    subject { newSubject() }
 
     describe("roll") {
         it("should return an integer between 1 and 6 inclusive") {
@@ -36,3 +36,5 @@ object UniformDieRollerSpec : SubjectSpek<UniformDieRoller>({
         }
     }
 })
+
+object UniformDieRollerBehavesAsDieRollerSpec : DieRollerSpec(::UniformDieRoller)

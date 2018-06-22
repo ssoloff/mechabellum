@@ -30,6 +30,8 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
+object CommandsSpec : Spek({}) // only necessary until a second command spec is added to this file
+
 object TurnCommandSpec : Spek({
     describe("execute") {
         it("should turn Mech by specified angle") {

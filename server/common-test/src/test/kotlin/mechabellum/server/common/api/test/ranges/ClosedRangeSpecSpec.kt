@@ -17,6 +17,10 @@
 
 package mechabellum.server.common.api.test.ranges
 
+import org.jetbrains.spek.api.Spek
+
+object ClosedRangeSpecSpec : Spek({}) // no-op placeholder spec for this file
+
 object IntRangeBehavesAsClosedRangeSpec : ClosedRangeSpec<Int>(
     inRangeValue = 5,
     newEmptyInstance = { IntRange(0, -1) },
