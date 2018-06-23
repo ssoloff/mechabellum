@@ -18,5 +18,11 @@
 package mechabellum.server.game.internal.core
 
 import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.TurnId
 
 internal abstract class DefaultPhase(override val game: DefaultGame) : Phase
+
+internal abstract class DefaultTurnPhase(game: DefaultGame, protected val turnId: TurnId) : DefaultPhase(game) {
+    protected val turn: DefaultTurn
+        get() = game.state.getTurn(turnId)
+}

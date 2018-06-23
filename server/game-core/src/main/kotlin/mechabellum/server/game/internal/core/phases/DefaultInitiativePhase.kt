@@ -24,21 +24,17 @@ import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase
 import mechabellum.server.game.internal.core.DefaultGame
-import mechabellum.server.game.internal.core.DefaultPhase
-import mechabellum.server.game.internal.core.DefaultTurn
+import mechabellum.server.game.internal.core.DefaultTurnPhase
 
 internal class DefaultInitiativePhase(
     game: DefaultGame,
-    private val turnId: TurnId
-) : DefaultPhase(game), InitiativePhase {
-    private val turn: DefaultTurn
-        get() = game.state.getTurn(turnId)
-
+    turnId: TurnId
+) : DefaultTurnPhase(game, turnId), InitiativePhase {
     override fun end() {
         checkAllTeamsHaveRolledInitiative()
         val initiativeWinner = checkInitiativeWinnerExists()
 
-        game.phase = DefaultMovementPhase(game, initiativeWinner)
+        game.phase = DefaultMovementPhase(game = game, team = initiativeWinner, turnId = turnId)
     }
 
     private fun checkAllTeamsHaveRolledInitiative() = turn.initiativeHistory.teamsWithoutInitiative.let {

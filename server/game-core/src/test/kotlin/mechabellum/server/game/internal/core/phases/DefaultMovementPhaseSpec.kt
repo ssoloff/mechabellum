@@ -44,5 +44,8 @@ object DefaultMovementPhaseBehavesAsMovementPhaseSpec : MovementPhaseSpec(
                 DefaultInitializationPhase(game).newMech(mechSpecification)
         }
     },
-    newSubject = { strategy, team -> DefaultMovementPhase(strategy.game as DefaultGame, team) }
+    newSubject = { strategy, team ->
+        val game = strategy.game as DefaultGame
+        DefaultMovementPhase(game = game, team = team, turnId = game.state.addTurn())
+    }
 )
