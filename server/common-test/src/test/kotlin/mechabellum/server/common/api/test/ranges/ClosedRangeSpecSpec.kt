@@ -1,3 +1,5 @@
+// ktlint-disable filename
+
 /*
  * Copyright (C) 2018 Mechabellum contributors
  *
@@ -16,10 +18,6 @@
  */
 
 package mechabellum.server.common.api.test.ranges
-
-import org.jetbrains.spek.api.Spek
-
-object ClosedRangeSpecSpec : Spek({}) // no-op placeholder spec for this file
 
 object IntRangeBehavesAsClosedRangeSpec : ClosedRangeSpec<Int>(
     inRangeValue = 5,

@@ -1,3 +1,5 @@
+// ktlint-disable filename
+
 /*
  * Copyright (C) 2018 Mechabellum contributors
  *
@@ -20,9 +22,6 @@ package mechabellum.server.game.internal.core.phases
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.phases.InitiativePhaseSpec
 import mechabellum.server.game.internal.core.DefaultGame
-import org.jetbrains.spek.api.Spek
-
-object DefaultInitiativePhaseSpec : Spek({}) // no-op placeholder spec for this file
 
 object DefaultInitiativePhaseBehavesAsInitializationPhaseSpec : InitiativePhaseSpec(
     newStrategy = { gameSpecification ->

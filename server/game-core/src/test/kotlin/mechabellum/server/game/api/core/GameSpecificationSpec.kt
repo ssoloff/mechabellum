@@ -1,3 +1,5 @@
+// ktlint-disable filename
+
 /*
  * Copyright (C) 2018 Mechabellum contributors
  *
@@ -18,8 +20,5 @@
 package mechabellum.server.game.api.core
 
 import mechabellum.server.common.api.test.DataClassSpec
-import org.jetbrains.spek.api.Spek
-
-object GameSpecificationSpec : Spek({}) // no-op placeholder spec for this file
 
 object GameSpecificationBehavesAsDataClassSpec : DataClassSpec({ newTestGameSpecification() })

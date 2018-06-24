@@ -1,3 +1,6 @@
+// ktlint-disable filename
+// (only necessary until a second command spec is added to this file)
+
 /*
  * Copyright (C) 2018 Mechabellum contributors
  *
@@ -30,8 +33,6 @@ import org.amshove.kluent.was
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-
-object CommandsSpec : Spek({}) // only necessary until a second command spec is added to this file
 
 object DeployCommandSpec : Spek({
     describe("execute") {
