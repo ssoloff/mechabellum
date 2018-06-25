@@ -39,39 +39,39 @@ object InitiativeHistorySpec : Spek({
         }
     }
 
-    describe("initiativeRollsIncomplete") {
-        it("should return true when no team has rolled initiative") {
+    describe("initiativeRollsComplete") {
+        it("should return false when no team has rolled initiative") {
             // given: no team has rolled initiative
             val subject = InitiativeHistory(listOf(mapOf()))
 
-            // when: asking if initiative rolls are incomplete
-            val initiativeRollsIncomplete = subject.initiativeRollsIncomplete
+            // when: asking if initiative rolls are complete
+            val initiativeRollsComplete = subject.initiativeRollsComplete
 
-            // then: it should return true
-            initiativeRollsIncomplete shouldEqual true
+            // then: it should return false
+            initiativeRollsComplete shouldEqual false
         }
 
-        it("should return true when one team has rolled initiative") {
+        it("should return false when one team has rolled initiative") {
             // given: one team has rolled initiative
             val subject = InitiativeHistory(listOf(mapOf(Team.ATTACKER to Initiative.MIN)))
 
-            // when: asking if initiative rolls are incomplete
-            val initiativeRollsIncomplete = subject.initiativeRollsIncomplete
+            // when: asking if initiative rolls are complete
+            val initiativeRollsComplete = subject.initiativeRollsComplete
 
-            // then: it should return true
-            initiativeRollsIncomplete shouldEqual true
+            // then: it should return false
+            initiativeRollsComplete shouldEqual false
         }
 
-        it("should return false when all teams have rolled initiative") {
+        it("should return true when all teams have rolled initiative") {
             // given: all teams have rolled initiative
             val subject =
                 InitiativeHistory(listOf(mapOf(Team.ATTACKER to Initiative.MIN, Team.DEFENDER to Initiative.MIN)))
 
-            // when: asking if initiative rolls are incomplete
-            val initiativeRollsIncomplete = subject.initiativeRollsIncomplete
+            // when: asking if initiative rolls are complete
+            val initiativeRollsComplete = subject.initiativeRollsComplete
 
-            // then: it should return false
-            initiativeRollsIncomplete shouldEqual false
+            // then: it should return true
+            initiativeRollsComplete shouldEqual true
         }
     }
 

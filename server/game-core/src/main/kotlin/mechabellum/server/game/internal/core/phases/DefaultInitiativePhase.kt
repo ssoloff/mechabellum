@@ -38,9 +38,7 @@ internal class DefaultInitiativePhase(
     }
 
     private fun checkAllTeamsHaveRolledInitiative() = turn.initiativeHistory.teamsWithoutInitiative.let {
-        if (it.isNotEmpty()) {
-            throw IllegalStateException("team(s) $it have not rolled initiative")
-        }
+        check(it.isEmpty()) { "team(s) $it have not rolled initiative" }
     }
 
     private fun checkInitiativeWinnerExists(): Team = turn.initiativeHistory.initiativeWinner.getOrThrow {
@@ -57,11 +55,13 @@ internal class DefaultInitiativePhase(
 
     private fun checkTeamCanRollInitiative(team: Team) {
         turn.initiativeHistory.let {
-            if ((it.initiativeRollsIncomplete && (it.getInitiative(team) is Option.Some)) ||
-                (it.initiativeWinner is Option.Some)
-            ) {
-                throw IllegalStateException("illegal attempt to re-roll initiative for team $team")
-            }
+            check(
+                if (it.initiativeRollsComplete) {
+                    it.initiativeWinner is Option.None
+                } else {
+                    it.getInitiative(team) is Option.None
+                }
+            ) { "illegal attempt to re-roll initiative for team $team" }
         }
     }
 }

@@ -31,16 +31,16 @@ internal class InitiativeHistory(private val iterations: List<InitiativeIteratio
     private val currentIteration: InitiativeIteration
         get() = iterations.last()
 
-    val initiativeRollsIncomplete: Boolean
-        get() = currentIteration.size != Team.values().size
+    val initiativeRollsComplete: Boolean
+        get() = currentIteration.size == Team.values().size
 
     val initiativeWinner: Option<Team>
-        get() = if (initiativeRollsIncomplete) {
-            Option.none()
-        } else {
+        get() = if (initiativeRollsComplete) {
             val maxInitiative = currentIteration.values.max()
             val teamsWithMaxInitiative = currentIteration.filterValues { it == maxInitiative }.keys
             if (teamsWithMaxInitiative.size == 1) Option.some(teamsWithMaxInitiative.first()) else Option.none()
+        } else {
+            Option.none()
         }
 
     val teamsWithoutInitiative: Collection<Team>
