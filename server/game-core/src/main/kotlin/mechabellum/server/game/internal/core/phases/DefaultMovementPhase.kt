@@ -20,16 +20,18 @@ package mechabellum.server.game.internal.core.phases
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.participant.Team
+import mechabellum.server.game.api.core.participant.Teamable
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultTurnPhase
+import mechabellum.server.game.internal.core.participant.DefaultTeamable
 
 internal class DefaultMovementPhase(
     game: DefaultGame,
-    override val team: Team,
+    team: Team,
     turnId: TurnId
-) : DefaultTurnPhase(game, turnId), MovementPhase {
+) : DefaultTurnPhase(game, turnId), MovementPhase, Teamable by DefaultTeamable(team) {
     override fun end() {
         TODO("not implemented")
     }

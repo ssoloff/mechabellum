@@ -22,18 +22,20 @@ import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
+import mechabellum.server.game.api.core.participant.Teamable
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultMessageFactory
 import mechabellum.server.game.internal.core.DefaultPhase
+import mechabellum.server.game.internal.core.participant.DefaultTeamable
 import mechabellum.server.game.internal.core.unit.DefaultMech
 
 internal class DefaultDeploymentPhase(
     game: DefaultGame,
-    override val team: Team
-) : DefaultPhase(game), DeploymentPhase {
+    team: Team
+) : DefaultPhase(game), DeploymentPhase, Teamable by DefaultTeamable(team) {
     override fun deploy(mech: Mech, position: Position, facing: Direction) {
         checkMechBelongsToDeployingTeam(mech)
         checkPositionIsWithinTeamDeploymentPositions(position, mech.team)

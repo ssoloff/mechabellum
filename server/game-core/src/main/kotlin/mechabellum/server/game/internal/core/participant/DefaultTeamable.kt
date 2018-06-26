@@ -15,21 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.phases
+package mechabellum.server.game.internal.core.participant
 
-import mechabellum.server.game.api.core.Phase
-import mechabellum.server.game.api.core.grid.Direction
-import mechabellum.server.game.api.core.grid.Position
+import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.participant.Teamable
-import mechabellum.server.game.api.core.unit.Mech
 
-/** The phase during which units from one team are deployed to the game grid. */
-interface DeploymentPhase : Phase, Teamable {
-    /**
-     * Deploys [mech] to the specified [position] with the specified [facing].
-     *
-     * @throws IllegalArgumentException If [mech] is not part of this game; if [mech] does not belong to the team being
-     * deployed; or if [position] is outside the possible deployment positions for [mech].
-     */
-    fun deploy(mech: Mech, position: Position, facing: Direction)
-}
+internal class DefaultTeamable(override val team: Team) : Teamable

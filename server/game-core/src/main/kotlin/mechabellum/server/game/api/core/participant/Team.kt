@@ -22,3 +22,9 @@ enum class Team {
     ATTACKER,
     DEFENDER
 }
+
+/** A context that has an associated team. */
+interface Teamable {
+    /** The team associated with the context. */
+    val team: Team
+}
