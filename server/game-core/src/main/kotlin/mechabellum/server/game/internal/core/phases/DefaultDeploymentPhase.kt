@@ -18,17 +18,13 @@
 package mechabellum.server.game.internal.core.phases
 
 import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.DeploymentPhase
 import mechabellum.server.game.api.core.unit.Mech
-import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.DefaultGame
-import mechabellum.server.game.internal.core.DefaultMessageFactory
 import mechabellum.server.game.internal.core.DefaultPhase
-import mechabellum.server.game.internal.core.unit.DefaultMech
 
 internal class DefaultDeploymentPhase(
     game: DefaultGame,
@@ -62,17 +58,10 @@ internal class DefaultDeploymentPhase(
     }
 
     private fun checkAllTeamMechsDeployed() {
-        game.state.mechRecords
+        val undeployedMechIds = game.state.mechRecords
             .filter { it.mech.team == team }
-            .find { it.position is Option.None }
-            ?.let { throw GameException(Messages.mechHasNotBeenDeployed(it.mech)) }
+            .filter { it.position is Option.None }
+            .map { it.mech.id }
+        check(undeployedMechIds.isEmpty()) { "Mechs $undeployedMechIds from team $team have not been deployed" }
     }
-
-    private interface Messages {
-        fun mechHasNotBeenDeployed(mechId: MechId): String
-
-        companion object : Messages by DefaultMessageFactory.get(Messages::class)
-    }
-
-    private fun Messages.mechHasNotBeenDeployed(mech: DefaultMech): String = mechHasNotBeenDeployed(mech.id)
 }

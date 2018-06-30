@@ -16,6 +16,5 @@
  */
 
 dependencies {
-    "implementation"("com.github.rodionmoiseev.c10n", "c10n-core", "1.2")
     "testImplementation"(project(":common-test"))
 }

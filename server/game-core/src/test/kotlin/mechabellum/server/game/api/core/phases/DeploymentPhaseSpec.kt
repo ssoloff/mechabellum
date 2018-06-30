@@ -20,7 +20,6 @@ package mechabellum.server.game.api.core.phases
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
@@ -203,8 +202,8 @@ abstract class AttackerDeploymentPhaseSpec(
 
             // then: an exception should be thrown
             operation
-                .shouldThrow(GameException::class)
-                .withMessage("Mech with ID ${attacker.id} has not been deployed")
+                .shouldThrow(IllegalStateException::class)
+                .withMessage("Mechs ${listOf(attacker.id)} from team ${Team.ATTACKER} have not been deployed")
         }
     }
 })
@@ -244,8 +243,8 @@ abstract class DefenderDeploymentPhaseSpec(
 
             // then: an exception should be thrown
             operation
-                .shouldThrow(GameException::class)
-                .withMessage("Mech with ID ${defender.id} has not been deployed")
+                .shouldThrow(IllegalStateException::class)
+                .withMessage("Mechs ${listOf(defender.id)} from team ${Team.DEFENDER} have not been deployed")
         }
     }
 })

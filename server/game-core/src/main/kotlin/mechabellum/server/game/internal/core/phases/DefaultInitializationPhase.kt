@@ -17,14 +17,12 @@
 
 package mechabellum.server.game.internal.core.phases
 
-import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultGameState
-import mechabellum.server.game.internal.core.DefaultMessageFactory
 import mechabellum.server.game.internal.core.DefaultPhase
 import mechabellum.server.game.internal.core.unit.DefaultMech
 
@@ -36,10 +34,8 @@ internal class DefaultInitializationPhase(game: DefaultGame) : DefaultPhase(game
     }
 
     private fun checkAllTeamsHaveAtLeastOneMech() {
-        for (team in Team.values()) {
-            if (game.state.mechRecords.none { it.mech.team == team }) {
-                throw GameException(Messages.teamHasNoMechs(team))
-            }
+        Team.values().forEach { team ->
+            check(game.state.mechRecords.any { it.mech.team == team }) { "$team has no Mechs" }
         }
     }
 
@@ -51,12 +47,4 @@ internal class DefaultInitializationPhase(game: DefaultGame) : DefaultPhase(game
         game.state.addMechRecord(DefaultGameState.MechRecord(mech))
         return mech
     }
-
-    private interface Messages {
-        fun teamHasNoMechs(teamName: String): String
-
-        companion object : Messages by DefaultMessageFactory.get(Messages::class)
-    }
-
-    private fun Messages.teamHasNoMechs(team: Team): String = teamHasNoMechs(team.name.toLowerCase())
 }

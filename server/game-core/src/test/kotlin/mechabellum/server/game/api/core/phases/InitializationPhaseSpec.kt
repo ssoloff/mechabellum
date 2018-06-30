@@ -18,7 +18,6 @@
 package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Game
-import mechabellum.server.game.api.core.GameException
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.newTestGameSpecification
 import mechabellum.server.game.api.core.participant.Team
@@ -72,7 +71,7 @@ abstract class InitializationPhaseSpec(
             val operation = { subject.end() }
 
             // then: an exception should be thrown
-            operation shouldThrow GameException::class withMessage "attacker has no Mechs"
+            operation shouldThrow IllegalStateException::class withMessage "${Team.ATTACKER} has no Mechs"
         }
 
         it("should throw exception when defender has no Mechs") {
@@ -84,7 +83,7 @@ abstract class InitializationPhaseSpec(
             val operation = { subject.end() }
 
             // then: an exception should be thrown
-            operation shouldThrow GameException::class withMessage "defender has no Mechs"
+            operation shouldThrow IllegalStateException::class withMessage "${Team.DEFENDER} has no Mechs"
         }
     }
 

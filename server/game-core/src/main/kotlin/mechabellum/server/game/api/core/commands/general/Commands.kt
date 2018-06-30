@@ -29,8 +29,7 @@ open class StatelessGeneralCommand<R : Any>(
 /**
  * Command that ends the current phase and activates the next appropriate phase.
  *
- * When executed, throws [mechabellum.server.game.api.core.GameException] if the current phase is not in an appropriate
- * state to be ended.
+ * When executed, throws [IllegalStateException] if the current phase is not in an appropriate state to be ended.
  */
 class EndPhaseCommand : StatelessGeneralCommand<Unit>({
     it.end()

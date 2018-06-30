@@ -32,7 +32,7 @@ interface Phase {
     /**
      * Ends this phase and activates the next appropriate phase.
      *
-     * @throws mechabellum.server.game.api.core.GameException If this phase is not in an appropriate state to be ended.
+     * @throws IllegalStateException If this phase is not in an appropriate state to be ended.
      */
     fun end()
 }
