@@ -19,7 +19,7 @@ plugins {
     application
 }
 
-val ktorVersion by extra { "0.9.2" }
+val ktorVersion by extra { "0.9.3" }
 
 repositories {
     maven("https://dl.bintray.com/kotlin/ktor")

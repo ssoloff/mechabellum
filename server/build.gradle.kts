@@ -33,11 +33,7 @@ buildscript {
 
     dependencies {
         classpath(kotlin("gradle-plugin", kotlinVersion))
-        classpath("gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.13.0")
-    }
-
-    configurations.getByName("classpath") {
-        resolutionStrategy { force("com.github.shyiko:ktlint:0.24.0") }
+        classpath("gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.14.0")
     }
 }
 
