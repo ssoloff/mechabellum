@@ -34,7 +34,7 @@ internal class DefaultDeploymentPhase(
         checkMechBelongsToDeployingTeam(mech)
         checkPositionIsWithinTeamDeploymentPositions(position, mech.team)
 
-        game.state.modifyMechRecord(mech.id) { it.setFacing(facing).setPosition(position) }
+        game.state.modifyMech(mech.id) { it.setFacing(facing).setPosition(position) }
     }
 
     private fun checkMechBelongsToDeployingTeam(mech: Mech) {
@@ -58,10 +58,10 @@ internal class DefaultDeploymentPhase(
     }
 
     private fun checkAllTeamMechsDeployed() {
-        val undeployedMechIds = game.state.mechRecords
-            .filter { it.mech.team == team }
+        val undeployedMechIds = game.state.mechs
+            .filter { it.team == team }
             .filter { it.position is Option.None }
-            .map { it.mech.id }
+            .map { it.id }
         check(undeployedMechIds.isEmpty()) { "Mechs $undeployedMechIds from team $team have not been deployed" }
     }
 }

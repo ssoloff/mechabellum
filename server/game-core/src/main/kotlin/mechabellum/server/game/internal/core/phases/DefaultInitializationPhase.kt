@@ -17,12 +17,12 @@
 
 package mechabellum.server.game.internal.core.phases
 
+import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitializationPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.internal.core.DefaultGame
-import mechabellum.server.game.internal.core.DefaultGameState
 import mechabellum.server.game.internal.core.DefaultPhase
 import mechabellum.server.game.internal.core.unit.DefaultMech
 
@@ -35,16 +35,18 @@ internal class DefaultInitializationPhase(game: DefaultGame) : DefaultPhase(game
 
     private fun checkAllTeamsHaveAtLeastOneMech() {
         Team.values().forEach { team ->
-            check(game.state.mechRecords.any { it.mech.team == team }) { "$team has no Mechs" }
+            check(game.state.mechs.any { it.team == team }) { "$team has no Mechs" }
         }
     }
 
     override fun newMech(specification: MechSpecification): Mech {
         val mech = DefaultMech(
+            facing = Option.none(),
             id = game.state.newMechId(),
+            position = Option.none(),
             team = specification.team
         )
-        game.state.addMechRecord(DefaultGameState.MechRecord(mech))
+        game.state.addMech(mech)
         return mech
     }
 }

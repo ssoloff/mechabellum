@@ -36,7 +36,7 @@ object DefaultTurnSpec : Spek({
             val newInitiativeHistory = InitiativeHistory(listOf(mapOf(Team.ATTACKER to Initiative.MIN)))
             val newSubject = subject.setInitiativeHistory(newInitiativeHistory)
 
-            // then: it should return a turn using the new initiative history
+            // then: it should return a turn with the new initiative history
             newSubject.initiativeHistory shouldBe newInitiativeHistory
         }
     }

@@ -39,28 +39,30 @@ object DefaultGameBehavesAsGameSpec : GameSpec(::DefaultGame)
 internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
     subject { DefaultGameState() }
 
-    fun newMechRecord(mechId: MechId): DefaultGameState.MechRecord = DefaultGameState.MechRecord(
-        mech = DefaultMech(mechId, Team.ATTACKER),
-        position = Option.none()
+    fun newMech(mechId: MechId): DefaultMech = DefaultMech(
+        facing = Option.none(),
+        id = mechId,
+        position = Option.none(),
+        team = Team.ATTACKER
     )
 
-    describe("addMechRecord") {
-        it("should add Mech record when ID absent") {
-            // when: a Mech record is added with an absent ID
-            val expected = newMechRecord(MechId(0))
-            subject.addMechRecord(expected)
+    describe("addMech") {
+        it("should add Mech when ID absent") {
+            // when: a Mech is added with an absent ID
+            val expected = newMech(MechId(0))
+            subject.addMech(expected)
 
-            // then: the Mech record should be added
-            subject.getMechRecord(expected.mech.id) shouldBe expected
+            // then: the Mech should be added
+            subject.getMech(expected.id) shouldBe expected
         }
 
         it("should throw exception when ID present") {
-            // given: an existing Mech record
+            // given: an existing Mech
             val mechId = MechId(0)
-            subject.addMechRecord(newMechRecord(mechId))
+            subject.addMech(newMech(mechId))
 
-            // when: a Mech record is added with the same ID
-            val operation = { subject.addMechRecord(newMechRecord(mechId)) }
+            // when: a Mech is added with the same ID
+            val operation = { subject.addMech(newMech(mechId)) }
 
             // then: an exception should be thrown
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -83,24 +85,24 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
         }
     }
 
-    describe("getMechRecord") {
-        it("should return Mech record when present") {
-            // given: an existing Mech record
+    describe("getMech") {
+        it("should return Mech when present") {
+            // given: an existing Mech
             val mechId = MechId(0)
-            val expected = newMechRecord(mechId)
-            subject.addMechRecord(expected)
+            val expected = newMech(mechId)
+            subject.addMech(expected)
 
-            // when: a present Mech record is requested
-            val actual = subject.getMechRecord(mechId)
+            // when: a present Mech is requested
+            val actual = subject.getMech(mechId)
 
-            // then: the requested Mech record should be returned
+            // then: the requested Mech should be returned
             actual shouldBe expected
         }
 
-        it("should throw exception when record absent") {
-            // when: an absent Mech record is requested
+        it("should throw exception when Mech absent") {
+            // when: an absent Mech is requested
             val mechId = MechId(-1)
-            val operation = { subject.getMechRecord(mechId) }
+            val operation = { subject.getMech(mechId) }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -131,27 +133,27 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
         }
     }
 
-    describe("modifyMechRecord") {
-        it("should modify specified record and update game state") {
-            // given: an existing Mech record
+    describe("modifyMech") {
+        it("should modify specified Mech and update game state") {
+            // given: an existing Mech
             val mechId = MechId(0)
-            subject.addMechRecord(newMechRecord(mechId))
+            subject.addMech(newMech(mechId))
 
-            // when: the Mech record is modified
-            var mechRecord: DefaultGameState.MechRecord by Delegates.notNull()
-            subject.modifyMechRecord(mechId) {
-                mechRecord = it.setPosition(Position(5, 8))
-                mechRecord
+            // when: the Mech is modified
+            var mech: DefaultMech by Delegates.notNull()
+            subject.modifyMech(mechId) {
+                mech = it.setPosition(Position(5, 8))
+                mech
             }
 
-            // then: the modified Mech record should be available on subsequent calls
-            subject.getMechRecord(mechId) shouldBe mechRecord
+            // then: the modified Mech should be available on subsequent calls
+            subject.getMech(mechId) shouldBe mech
         }
 
-        it("should throw exception when record does not exist") {
-            // when: an attempt is made to modify a non-existent Mech record
+        it("should throw exception when Mech does not exist") {
+            // when: an attempt is made to modify a non-existent Mech
             val mechId = MechId(-1)
-            val operation = { subject.modifyMechRecord(mechId) { it } }
+            val operation = { subject.modifyMech(mechId) { it } }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class

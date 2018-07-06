@@ -19,6 +19,7 @@ package mechabellum.server.game.api.core.phases
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Direction
@@ -69,9 +70,7 @@ abstract class DeploymentPhaseSpec(
 
         fun deploy(mech: Mech, position: Position, facing: Direction)
 
-        fun getMechFacing(mechId: MechId): Direction
-
-        fun getMechPosition(mechId: MechId): Position
+        fun getMech(mechId: MechId): Mech
 
         fun newMech(mechSpecification: MechSpecification): Mech
     }
@@ -102,8 +101,8 @@ abstract class CommonDeploymentPhaseSpec(
             subject.deploy(mech, position, facing)
 
             // then: it should be deployed with the specified position and facing
-            strategy.getMechPosition(mech.id) shouldEqual position
-            strategy.getMechFacing(mech.id) shouldEqual facing
+            strategy.getMech(mech.id).position shouldEqual Option.some(position)
+            strategy.getMech(mech.id).facing shouldEqual Option.some(facing)
         }
 
         it("should throw exception when Mech does not exist") {

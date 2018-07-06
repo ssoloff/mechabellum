@@ -32,7 +32,7 @@ object DefaultInitializationPhaseBehavesAsInitializationPhaseSpec : Initializati
         object : Strategy {
             override val game: Game = game
 
-            override fun getMech(mechId: MechId): Mech = game.state.getMechRecord(mechId).mech
+            override fun getMech(mechId: MechId): Mech = game.state.getMech(mechId)
 
             override fun newMech(mechSpecification: MechSpecification): Mech =
                 DefaultInitializationPhase(game).newMech(mechSpecification)

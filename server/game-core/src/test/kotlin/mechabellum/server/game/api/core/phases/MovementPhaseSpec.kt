@@ -19,6 +19,7 @@ package mechabellum.server.game.api.core.phases
 
 import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
+import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Angle
@@ -61,7 +62,7 @@ abstract class MovementPhaseSpec(
             subject.turn(mech, Angle.TWO)
 
             // then: it should be facing southeast
-            strategy.getMechFacing(mech.id) shouldEqual Direction.SOUTHEAST
+            strategy.getMech(mech.id).facing shouldEqual Option.some(Direction.SOUTHEAST)
         }
 
         it("should throw exception when Mech does not exist") {
@@ -98,7 +99,7 @@ abstract class MovementPhaseSpec(
 
         fun deploy(mech: Mech, position: Position, facing: Direction)
 
-        fun getMechFacing(mechId: MechId): Direction
+        fun getMech(mechId: MechId): Mech
 
         fun newMech(mechSpecification: MechSpecification): Mech
     }

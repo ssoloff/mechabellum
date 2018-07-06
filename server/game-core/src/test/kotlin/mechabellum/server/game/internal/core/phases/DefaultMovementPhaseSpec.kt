@@ -37,7 +37,7 @@ object DefaultMovementPhaseBehavesAsMovementPhaseSpec : MovementPhaseSpec(
             override fun deploy(mech: Mech, position: Position, facing: Direction) =
                 DefaultDeploymentPhase(game, mech.team).deploy(mech, position, facing)
 
-            override fun getMechFacing(mechId: MechId): Direction = game.state.getMechRecord(mechId).facing.getOrThrow()
+            override fun getMech(mechId: MechId): Mech = game.state.getMech(mechId)
 
             override fun newMech(mechSpecification: MechSpecification): Mech =
                 DefaultInitializationPhase(game).newMech(mechSpecification)

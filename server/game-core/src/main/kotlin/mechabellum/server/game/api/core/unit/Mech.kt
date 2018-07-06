@@ -17,6 +17,9 @@
 
 package mechabellum.server.game.api.core.unit
 
+import mechabellum.server.common.api.core.util.Option
+import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 
 /** The unique identifier of a Mech within a game. */
@@ -24,8 +27,20 @@ data class MechId(val value: Int)
 
 /** A Mech. */
 interface Mech {
+    /**
+     * The Mech facing or empty if the Mech currently has no explicit facing (e.g. it has not yet been deployed or it
+     * has left the grid).
+     */
+    val facing: Option<Direction>
+
     /** The Mech identifier. */
     val id: MechId
+
+    /**
+     * The Mech position or empty if the Mech currently has no explicit position (e.g. it has not yet been deployed or
+     * it has left the grid).
+     */
+    val position: Option<Position>
 
     /** The team to which the Mech belongs. */
     val team: Team

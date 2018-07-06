@@ -17,13 +17,10 @@
 
 package mechabellum.server.game.internal.core
 
-import mechabellum.server.common.api.core.util.Option
-import mechabellum.server.game.api.core.mechanics.DieRoller
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.TurnId
-import mechabellum.server.game.api.core.grid.Direction
-import mechabellum.server.game.api.core.grid.Position
+import mechabellum.server.game.api.core.mechanics.DieRoller
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.internal.core.grid.DefaultGrid
 import mechabellum.server.game.internal.core.phases.DefaultInitializationPhase
@@ -40,21 +37,20 @@ internal class DefaultGame(specification: GameSpecification) : Game {
 }
 
 internal class DefaultGameState {
-    private val mechRecordsById: MutableMap<MechId, MechRecord> = hashMapOf()
+    private val mechsById: MutableMap<MechId, DefaultMech> = hashMapOf()
     private var nextMechIdValue: Int = 0
     private val turns: MutableList<DefaultTurn> = mutableListOf()
 
-    val mechRecords: Collection<MechRecord>
-        get() = mechRecordsById.values
+    val mechs: Collection<DefaultMech>
+        get() = mechsById.values
 
     val turn: DefaultTurn
         get() = turns.lastOrNull()
             ?: throw IllegalStateException("expected at least one turn to be present but was absent")
 
-    fun addMechRecord(mechRecord: MechRecord) {
-        val mechId = mechRecord.mech.id
-        require(mechId !in mechRecordsById) { "expected Mech record with ID $mechId to be absent but was present" }
-        mechRecordsById[mechId] = mechRecord
+    fun addMech(mech: DefaultMech) {
+        require(mech.id !in mechsById) { "expected Mech with ID ${mech.id} to be absent but was present" }
+        mechsById[mech.id] = mech
     }
 
     fun addTurn(): TurnId {
@@ -63,16 +59,16 @@ internal class DefaultGameState {
         return turnId
     }
 
-    fun getMechRecord(mechId: MechId): MechRecord = mechRecordsById.getOrElse(mechId) {
-        throw IllegalArgumentException("expected Mech record with ID $mechId to be present but was absent")
+    fun getMech(mechId: MechId): DefaultMech = mechsById.getOrElse(mechId) {
+        throw IllegalArgumentException("expected Mech with ID $mechId to be present but was absent")
     }
 
     fun getTurn(turnId: TurnId): DefaultTurn = turns.getOrElse(turnId.value) {
         throw IllegalArgumentException("expected turn with ID $turnId to be present but was absent")
     }
 
-    fun modifyMechRecord(mechId: MechId, action: (MechRecord) -> MechRecord) {
-        mechRecordsById[mechId] = action(getMechRecord(mechId))
+    fun modifyMech(mechId: MechId, action: (DefaultMech) -> DefaultMech) {
+        mechsById[mechId] = action(getMech(mechId))
     }
 
     fun modifyTurn(turnId: TurnId, action: (DefaultTurn) -> DefaultTurn) {
@@ -80,22 +76,4 @@ internal class DefaultGameState {
     }
 
     fun newMechId(): MechId = MechId(nextMechIdValue++)
-
-    class MechRecord(
-        val mech: DefaultMech,
-        val facing: Option<Direction> = Option.none(),
-        val position: Option<Position> = Option.none()
-    ) {
-        fun setFacing(facing: Direction): MechRecord = MechRecord(
-            facing = Option.some(facing),
-            mech = mech,
-            position = position
-        )
-
-        fun setPosition(position: Position): MechRecord = MechRecord(
-            facing = facing,
-            mech = mech,
-            position = Option.some(position)
-        )
-    }
 }

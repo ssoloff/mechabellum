@@ -37,7 +37,7 @@ internal class DefaultMovementPhase(
     override fun turn(mech: Mech, angle: Angle) {
         checkMechBelongsToMovingTeam(mech)
 
-        game.state.modifyMechRecord(mech.id) { it.setFacing(it.facing.getOrThrow() + angle) }
+        game.state.modifyMech(mech.id) { it.setFacing(it.facing.getOrThrow() + angle) }
     }
 
     private fun checkMechBelongsToMovingTeam(mech: Mech) {
