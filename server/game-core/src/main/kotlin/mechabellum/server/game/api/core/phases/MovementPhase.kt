@@ -19,6 +19,7 @@ package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Phase
 import mechabellum.server.game.api.core.grid.Angle
+import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 
@@ -26,6 +27,14 @@ import mechabellum.server.game.api.core.unit.Mech
 interface MovementPhase : Phase {
     /** The team that may move during this phase. */
     val team: Team
+
+    /**
+     * Changes the position of [mech] by moving it the specified displacement ([magnitude] in cells and [direction]).
+     *
+     * @throws IllegalArgumentException If [mech] is not part of this game; or if [mech] does not belong to the team
+     * being moved.
+     */
+    fun move(mech: Mech, magnitude: Int, direction: Direction)
 
     /**
      * Changes the facing of [mech] by turning it the specified [angle].

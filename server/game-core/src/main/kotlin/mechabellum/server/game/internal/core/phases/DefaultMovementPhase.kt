@@ -19,6 +19,8 @@ package mechabellum.server.game.internal.core.phases
 
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Angle
+import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
@@ -34,13 +36,36 @@ internal class DefaultMovementPhase(
         TODO("not implemented")
     }
 
-    override fun turn(mech: Mech, angle: Angle) {
+    override fun move(mech: Mech, magnitude: Int, direction: Direction) {
         checkMechBelongsToMovingTeam(mech)
 
-        game.state.modifyMech(mech.id) { it.setFacing(it.facing.getOrThrow() + angle) }
+        game.state.modifyMech(mech.id) {
+            val normalizedMagnitude = if (magnitude >= 0) magnitude else -magnitude
+            val normalizedDirection = if (magnitude >= 0) direction else direction.opposite
+            var displacementsRemaining = normalizedMagnitude
+            var newPosition = it.position.getOrThrow()
+            while (displacementsRemaining-- > 0) {
+                val isOddColumn = (newPosition.col and 1) != 0
+                newPosition = when (normalizedDirection) {
+                    Direction.NORTH -> Position(newPosition.col, newPosition.row - 1)
+                    Direction.NORTHEAST -> Position(newPosition.col + 1, newPosition.row - if (isOddColumn) 0 else 1)
+                    Direction.SOUTHEAST -> Position(newPosition.col + 1, newPosition.row + if (isOddColumn) 1 else 0)
+                    Direction.SOUTH -> Position(newPosition.col, newPosition.row + 1)
+                    Direction.SOUTHWEST -> Position(newPosition.col - 1, newPosition.row + if (isOddColumn) 1 else 0)
+                    Direction.NORTHWEST -> Position(newPosition.col - 1, newPosition.row - if (isOddColumn) 0 else 1)
+                }
+            }
+            it.setPosition(newPosition)
+        }
     }
 
     private fun checkMechBelongsToMovingTeam(mech: Mech) {
         require(mech.team == team) { "expected team $team to be moved during this phase but was ${mech.team}" }
+    }
+
+    override fun turn(mech: Mech, angle: Angle) {
+        checkMechBelongsToMovingTeam(mech)
+
+        game.state.modifyMech(mech.id) { it.setFacing(it.facing.getOrThrow() + angle) }
     }
 }

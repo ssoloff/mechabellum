@@ -19,6 +19,7 @@ package mechabellum.server.game.api.core.commands.movement
 
 import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.grid.Angle
+import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
 
@@ -26,6 +27,20 @@ import mechabellum.server.game.api.core.unit.Mech
 open class StatelessMovementCommand<R : Any>(
     action: (MovementPhase) -> R
 ) : StatelessCommand<MovementPhase, R>(MovementPhase::class, action)
+
+/**
+ * Command that moves a Mech to change its position.
+ *
+ * When executed, throws [IllegalArgumentException] if the Mech is not part of the game; or if the Mech does not belong
+ * to the team being moved.
+ *
+ * @param mech The Mech to move.
+ * @param magnitude The magnitude (in cells) of the displacement by which the Mech will be moved.
+ * @param direction The direction of the displacement by which the Mech will be moved.
+ */
+class MoveCommand(mech: Mech, magnitude: Int, direction: Direction) : StatelessMovementCommand<Unit>({
+    it.move(mech, magnitude, direction)
+})
 
 /**
  * Command that turns a Mech to change its facing.
