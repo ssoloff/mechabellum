@@ -20,12 +20,12 @@ package mechabellum.server.game.internal.core.phases
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Direction
-import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultTurnPhase
+import mechabellum.server.game.internal.core.grid.CubePosition
 
 internal class DefaultMovementPhase(
     game: DefaultGame,
@@ -42,20 +42,34 @@ internal class DefaultMovementPhase(
         game.state.modifyMech(mech.id) {
             val normalizedMagnitude = if (magnitude >= 0) magnitude else -magnitude
             val normalizedDirection = if (magnitude >= 0) direction else direction.opposite
-            var displacementsRemaining = normalizedMagnitude
-            var newPosition = it.position.getOrThrow()
-            while (displacementsRemaining-- > 0) {
-                val isOddColumn = (newPosition.col and 1) != 0
-                newPosition = when (normalizedDirection) {
-                    Direction.NORTH -> Position(newPosition.col, newPosition.row - 1)
-                    Direction.NORTHEAST -> Position(newPosition.col + 1, newPosition.row - if (isOddColumn) 0 else 1)
-                    Direction.SOUTHEAST -> Position(newPosition.col + 1, newPosition.row + if (isOddColumn) 1 else 0)
-                    Direction.SOUTH -> Position(newPosition.col, newPosition.row + 1)
-                    Direction.SOUTHWEST -> Position(newPosition.col - 1, newPosition.row + if (isOddColumn) 1 else 0)
-                    Direction.NORTHWEST -> Position(newPosition.col - 1, newPosition.row - if (isOddColumn) 0 else 1)
-                }
+            val cubePosition = CubePosition.fromOffsetPosition(it.position.getOrThrow())
+            val newCubePosition = when (normalizedDirection) {
+                Direction.NORTH -> cubePosition.copy(
+                    y = cubePosition.y + normalizedMagnitude,
+                    z = cubePosition.z - normalizedMagnitude
+                )
+                Direction.NORTHEAST -> cubePosition.copy(
+                    x = cubePosition.x + normalizedMagnitude,
+                    z = cubePosition.z - normalizedMagnitude
+                )
+                Direction.SOUTHEAST -> cubePosition.copy(
+                    x = cubePosition.x + normalizedMagnitude,
+                    y = cubePosition.y - normalizedMagnitude
+                )
+                Direction.SOUTH -> cubePosition.copy(
+                    y = cubePosition.y - normalizedMagnitude,
+                    z = cubePosition.z + normalizedMagnitude
+                )
+                Direction.SOUTHWEST -> cubePosition.copy(
+                    x = cubePosition.x - normalizedMagnitude,
+                    z = cubePosition.z + normalizedMagnitude
+                )
+                Direction.NORTHWEST -> cubePosition.copy(
+                    x = cubePosition.x - normalizedMagnitude,
+                    y = cubePosition.y + normalizedMagnitude
+                )
             }
-            it.setPosition(newPosition)
+            it.setPosition(newCubePosition.toOffsetPosition())
         }
     }
 
