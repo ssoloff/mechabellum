@@ -17,6 +17,8 @@
 
 package mechabellum.server.game.api.core.grid
 
+import mechabellum.server.game.internal.core.grid.toCubePosition
+
 /**
  * A position on a hexagonal grid.
  *
@@ -25,6 +27,9 @@ package mechabellum.server.game.api.core.grid
  */
 data class Position(val col: Int, val row: Int) : Comparable<Position> {
     override fun compareTo(other: Position): Int = COMPARATOR.compare(this, other)
+
+    /** Returns the position relative to this position after adding [displacement]. */
+    operator fun plus(displacement: Displacement): Position = (toCubePosition() + displacement).toOffsetPosition()
 
     /** Creates a range from this value to the specified [other] value. */
     operator fun rangeTo(other: Position): PositionRange = PositionRange(this, other)

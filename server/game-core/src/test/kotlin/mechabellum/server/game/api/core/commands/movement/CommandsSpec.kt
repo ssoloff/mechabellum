@@ -23,6 +23,7 @@ package mechabellum.server.game.api.core.commands.movement
 import com.nhaarman.mockito_kotlin.mock
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Displacement
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
 import org.amshove.kluent.Verify
@@ -42,13 +43,12 @@ object MoveCommandSpec : Spek({
 
             // when: the command is executed
             val mech = mock<Mech>()
-            val magnitude = 1
-            val direction = Direction.NORTHEAST
-            val subject = MoveCommand(mech, magnitude, direction)
+            val displacement = Displacement(1, Direction.NORTHEAST)
+            val subject = MoveCommand(mech, displacement)
             subject.execute(movementPhase)
 
             // then: it should move the Mech by the specified displacement
-            Verify on movementPhase that movementPhase.move(mech, magnitude, direction) was called
+            Verify on movementPhase that movementPhase.move(mech, displacement) was called
         }
     }
 })

@@ -17,23 +17,33 @@
 
 package mechabellum.server.game.internal.core.grid
 
+import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Displacement
 import mechabellum.server.game.api.core.grid.Position
 
 internal data class CubePosition(val x: Int, val y: Int, val z: Int) {
+    operator fun plus(displacement: Displacement): CubePosition = when (displacement.direction) {
+        Direction.NORTH -> copy(y = y + displacement.magnitude, z = z - displacement.magnitude)
+        Direction.NORTHEAST -> copy(x = x + displacement.magnitude, z = z - displacement.magnitude)
+        Direction.SOUTHEAST -> copy(x = x + displacement.magnitude, y = y - displacement.magnitude)
+        Direction.SOUTH -> copy(y = y - displacement.magnitude, z = z + displacement.magnitude)
+        Direction.SOUTHWEST -> copy(x = x - displacement.magnitude, z = z + displacement.magnitude)
+        Direction.NORTHWEST -> copy(x = x - displacement.magnitude, y = y + displacement.magnitude)
+    }
+
     fun toOffsetPosition(): Position {
         val col = x
-        val row = z + (x - (if (isOddColumn(col)) 1 else 0)) / 2
+        val row = z + (x - col.parity) / 2
         return Position(col, row)
     }
+}
 
-    companion object {
-        fun fromOffsetPosition(offsetPosition: Position): CubePosition {
-            val x = offsetPosition.col
-            val z = offsetPosition.row - (offsetPosition.col - (if (isOddColumn(offsetPosition.col)) 1 else 0)) / 2
-            val y = -x - z
-            return CubePosition(x, y, z)
-        }
+private val Int.parity: Int
+    get() = if ((this and 1) != 0) 1 else 0
 
-        private fun isOddColumn(col: Int): Boolean = (col and 1) != 0
-    }
+internal fun Position.toCubePosition(): CubePosition {
+    val x = col
+    val z = row - (col - col.parity) / 2
+    val y = -x - z
+    return CubePosition(x, y, z)
 }

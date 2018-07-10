@@ -19,7 +19,7 @@ package mechabellum.server.game.api.core.commands.movement
 
 import mechabellum.server.game.api.core.StatelessCommand
 import mechabellum.server.game.api.core.grid.Angle
-import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Displacement
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
 
@@ -35,11 +35,10 @@ open class StatelessMovementCommand<R : Any>(
  * to the team being moved.
  *
  * @param mech The Mech to move.
- * @param magnitude The magnitude (in cells) of the displacement by which the Mech will be moved.
- * @param direction The direction of the displacement by which the Mech will be moved.
+ * @param displacement The displacement by which the Mech will be moved.
  */
-class MoveCommand(mech: Mech, magnitude: Int, direction: Direction) : StatelessMovementCommand<Unit>({
-    it.move(mech, magnitude, direction)
+class MoveCommand(mech: Mech, displacement: Displacement) : StatelessMovementCommand<Unit>({
+    it.move(mech, displacement)
 })
 
 /**

@@ -24,8 +24,33 @@ import org.amshove.kluent.shouldEqual
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.data_driven.data
+import org.jetbrains.spek.data_driven.on
 
 object PositionSpec : Spek({
+    describe("plus") {
+        on(
+            "${Position(0, 0)} + %s",
+            data(Displacement(0, Direction.NORTH), expected = Position(0, 0)),
+            data(Displacement(1, Direction.NORTH), expected = Position(0, -1)),
+            data(Displacement(1, Direction.NORTHEAST), expected = Position(1, -1)),
+            data(Displacement(1, Direction.SOUTHEAST), expected = Position(1, 0)),
+            data(Displacement(1, Direction.SOUTH), expected = Position(0, 1)),
+            data(Displacement(1, Direction.SOUTHWEST), expected = Position(-1, 0)),
+            data(Displacement(1, Direction.NORTHWEST), expected = Position(-1, -1)),
+            data(Displacement(2, Direction.NORTH), expected = Position(0, -2)),
+            data(Displacement(2, Direction.NORTHEAST), expected = Position(2, -1)),
+            data(Displacement(2, Direction.SOUTHEAST), expected = Position(2, 1)),
+            data(Displacement(2, Direction.SOUTH), expected = Position(0, 2)),
+            data(Displacement(2, Direction.SOUTHWEST), expected = Position(-2, 1)),
+            data(Displacement(2, Direction.NORTHWEST), expected = Position(-2, -1))
+        ) { displacement, expected ->
+            it("should return $expected") {
+                Position(0, 0) + displacement shouldEqual expected
+            }
+        }
+    }
+
     describe("rangeTo") {
         it("should return a position range with an inclusive end") {
             val start = Position(1, 2)

@@ -19,13 +19,12 @@ package mechabellum.server.game.internal.core.phases
 
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Angle
-import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Displacement
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultTurnPhase
-import mechabellum.server.game.internal.core.grid.CubePosition
 
 internal class DefaultMovementPhase(
     game: DefaultGame,
@@ -36,41 +35,10 @@ internal class DefaultMovementPhase(
         TODO("not implemented")
     }
 
-    override fun move(mech: Mech, magnitude: Int, direction: Direction) {
+    override fun move(mech: Mech, displacement: Displacement) {
         checkMechBelongsToMovingTeam(mech)
 
-        game.state.modifyMech(mech.id) {
-            val normalizedMagnitude = if (magnitude >= 0) magnitude else -magnitude
-            val normalizedDirection = if (magnitude >= 0) direction else direction.opposite
-            val cubePosition = CubePosition.fromOffsetPosition(it.position.getOrThrow())
-            val newCubePosition = when (normalizedDirection) {
-                Direction.NORTH -> cubePosition.copy(
-                    y = cubePosition.y + normalizedMagnitude,
-                    z = cubePosition.z - normalizedMagnitude
-                )
-                Direction.NORTHEAST -> cubePosition.copy(
-                    x = cubePosition.x + normalizedMagnitude,
-                    z = cubePosition.z - normalizedMagnitude
-                )
-                Direction.SOUTHEAST -> cubePosition.copy(
-                    x = cubePosition.x + normalizedMagnitude,
-                    y = cubePosition.y - normalizedMagnitude
-                )
-                Direction.SOUTH -> cubePosition.copy(
-                    y = cubePosition.y - normalizedMagnitude,
-                    z = cubePosition.z + normalizedMagnitude
-                )
-                Direction.SOUTHWEST -> cubePosition.copy(
-                    x = cubePosition.x - normalizedMagnitude,
-                    z = cubePosition.z + normalizedMagnitude
-                )
-                Direction.NORTHWEST -> cubePosition.copy(
-                    x = cubePosition.x - normalizedMagnitude,
-                    y = cubePosition.y + normalizedMagnitude
-                )
-            }
-            it.setPosition(newCubePosition.toOffsetPosition())
-        }
+        game.state.modifyMech(mech.id) { it.setPosition(it.position.getOrThrow() + displacement) }
     }
 
     private fun checkMechBelongsToMovingTeam(mech: Mech) {

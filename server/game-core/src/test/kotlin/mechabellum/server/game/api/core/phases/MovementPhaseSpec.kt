@@ -24,6 +24,7 @@ import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Displacement
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.grid.newTestGridSpecification
 import mechabellum.server.game.api.core.grid.newTestGridType
@@ -38,8 +39,6 @@ import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import org.jetbrains.spek.data_driven.data
-import org.jetbrains.spek.data_driven.on
 import org.jetbrains.spek.subject.SubjectSpek
 import kotlin.properties.Delegates
 
@@ -56,97 +55,23 @@ abstract class MovementPhaseSpec(
         strategy = newStrategy(
             newTestGameSpecification().copy(
                 gridSpecification = newTestGridSpecification().copy(
-                    deploymentPositionsByTeam = mapOf(
-                        Team.ATTACKER to Position(0, 0)..Position(5, 5),
-                        Team.DEFENDER to Position(0, 0)..Position(5, 5)
-                    ),
-                    type = newTestGridType().copy(cols = 6, rows = 6)
+                    type = newTestGridType().copy(cols = 3, rows = 3)
                 )
             )
         )
     }
 
     describe("move") {
-        on(
-            "initial position=(3,3), magnitude=%s, direction=%s",
-            data(-2, Direction.NORTH, expected = Position(3, 5)),
-            data(-2, Direction.NORTHEAST, expected = Position(1, 4)),
-            data(-2, Direction.SOUTHEAST, expected = Position(1, 2)),
-            data(-2, Direction.SOUTH, expected = Position(3, 1)),
-            data(-2, Direction.SOUTHWEST, expected = Position(5, 2)),
-            data(-2, Direction.NORTHWEST, expected = Position(5, 4)),
-            data(-1, Direction.NORTH, expected = Position(3, 4)),
-            data(-1, Direction.NORTHEAST, expected = Position(2, 4)),
-            data(-1, Direction.SOUTHEAST, expected = Position(2, 3)),
-            data(-1, Direction.SOUTH, expected = Position(3, 2)),
-            data(-1, Direction.SOUTHWEST, expected = Position(4, 3)),
-            data(-1, Direction.NORTHWEST, expected = Position(4, 4)),
-            data(0, Direction.NORTH, expected = Position(3, 3)),
-            data(1, Direction.NORTH, expected = Position(3, 2)),
-            data(1, Direction.NORTHEAST, expected = Position(4, 3)),
-            data(1, Direction.SOUTHEAST, expected = Position(4, 4)),
-            data(1, Direction.SOUTH, expected = Position(3, 4)),
-            data(1, Direction.SOUTHWEST, expected = Position(2, 4)),
-            data(1, Direction.NORTHWEST, expected = Position(2, 3)),
-            data(2, Direction.NORTH, expected = Position(3, 1)),
-            data(2, Direction.NORTHEAST, expected = Position(5, 2)),
-            data(2, Direction.SOUTHEAST, expected = Position(5, 4)),
-            data(2, Direction.SOUTH, expected = Position(3, 5)),
-            data(2, Direction.SOUTHWEST, expected = Position(1, 4)),
-            data(2, Direction.NORTHWEST, expected = Position(1, 2))
-        ) { magnitude, direction, expected ->
-            it("should move Mech to position $expected") {
-                // given: a Mech associated with the moving team positioned in cell (3,3) and facing in direction of movement
-                val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
-                strategy.deploy(mech, Position(3, 3), direction)
+        it("should move Mech by specified displacement") {
+            // given: a Mech associated with the moving team positioned in cell (0,0) and facing southeast
+            val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
+            strategy.deploy(mech, Position(0, 0), Direction.SOUTHEAST)
 
-                // when: moving the Mech by the specified displacement
-                subject.move(mech, magnitude, direction)
+            // when: moving the Mech 2 cells to the southeast
+            subject.move(mech, Displacement(2, Direction.SOUTHEAST))
 
-                // then: it should be positioned in the expected cell
-                strategy.getMech(mech.id).position shouldEqual Option.some(expected)
-            }
-        }
-
-        on(
-            "initial position=(2,2), magnitude=%s, direction=%s",
-            data(-2, Direction.NORTH, expected = Position(2, 4)),
-            data(-2, Direction.NORTHEAST, expected = Position(0, 3)),
-            data(-2, Direction.SOUTHEAST, expected = Position(0, 1)),
-            data(-2, Direction.SOUTH, expected = Position(2, 0)),
-            data(-2, Direction.SOUTHWEST, expected = Position(4, 1)),
-            data(-2, Direction.NORTHWEST, expected = Position(4, 3)),
-            data(-1, Direction.NORTH, expected = Position(2, 3)),
-            data(-1, Direction.NORTHEAST, expected = Position(1, 2)),
-            data(-1, Direction.SOUTHEAST, expected = Position(1, 1)),
-            data(-1, Direction.SOUTH, expected = Position(2, 1)),
-            data(-1, Direction.SOUTHWEST, expected = Position(3, 1)),
-            data(-1, Direction.NORTHWEST, expected = Position(3, 2)),
-            data(0, Direction.NORTH, expected = Position(2, 2)),
-            data(1, Direction.NORTH, expected = Position(2, 1)),
-            data(1, Direction.NORTHEAST, expected = Position(3, 1)),
-            data(1, Direction.SOUTHEAST, expected = Position(3, 2)),
-            data(1, Direction.SOUTH, expected = Position(2, 3)),
-            data(1, Direction.SOUTHWEST, expected = Position(1, 2)),
-            data(1, Direction.NORTHWEST, expected = Position(1, 1)),
-            data(2, Direction.NORTH, expected = Position(2, 0)),
-            data(2, Direction.NORTHEAST, expected = Position(4, 1)),
-            data(2, Direction.SOUTHEAST, expected = Position(4, 3)),
-            data(2, Direction.SOUTH, expected = Position(2, 4)),
-            data(2, Direction.SOUTHWEST, expected = Position(0, 3)),
-            data(2, Direction.NORTHWEST, expected = Position(0, 1))
-        ) { magnitude, direction, expected ->
-            it("should move Mech to position $expected") {
-                // given: a Mech associated with the moving team positioned in cell (2,2) and facing in direction of movement
-                val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
-                strategy.deploy(mech, Position(2, 2), direction)
-
-                // when: moving the Mech by the specified displacement
-                subject.move(mech, magnitude, direction)
-
-                // then: it should be positioned in the expected cell
-                strategy.getMech(mech.id).position shouldEqual Option.some(expected)
-            }
+            // then: it should be positioned in cell (2,1)
+            strategy.getMech(mech.id).position shouldEqual Option.some(Position(2, 1))
         }
 
         it("should throw exception when Mech does not exist") {
@@ -158,7 +83,7 @@ abstract class MovementPhaseSpec(
             }
 
             // when: moving the Mech
-            val operation = { subject.move(mech, 1, Direction.NORTH) }
+            val operation = { subject.move(mech, Displacement(1, Direction.NORTH)) }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
@@ -170,7 +95,7 @@ abstract class MovementPhaseSpec(
             val mech = strategy.newMech(newTestMechSpecification().copy(team = Team.ATTACKER))
 
             // when: moving the Mech
-            val operation = { subject.move(mech, 1, Direction.NORTH) }
+            val operation = { subject.move(mech, Displacement(1, Direction.NORTH)) }
 
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
