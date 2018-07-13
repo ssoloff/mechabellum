@@ -21,5 +21,10 @@ package mechabellum.server.game.api.core.unit
  * The data describing a type of [Mech].
  *
  * @property name The unique name for this type of Mech (e.g. "HBK-4G Hunchback").
+ * @property walkingMovementPoints The number of movement points available to Mechs of this type when walking.
  */
-data class MechType(val name: String)
+data class MechType(val name: String, val walkingMovementPoints: Int) {
+    init {
+        require(walkingMovementPoints > 0) { "expected walking movement points to be positive but was $walkingMovementPoints" }
+    }
+}

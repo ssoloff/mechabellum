@@ -24,4 +24,4 @@ fun newTestMechSpecification(): MechSpecification = MechSpecification(
     type = newTestMechType()
 )
 
-fun newTestMechType(): MechType = MechType("TST-001 Test Mech")
+fun newTestMechType(): MechType = MechType(name = "TST-001 Test Mech", walkingMovementPoints = 6)

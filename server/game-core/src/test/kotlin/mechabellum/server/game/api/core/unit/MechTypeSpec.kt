@@ -1,5 +1,3 @@
-// ktlint-disable filename
-
 /*
  * Copyright (C) 2018 Mechabellum contributors
  *
@@ -20,5 +18,23 @@
 package mechabellum.server.game.api.core.unit
 
 import mechabellum.server.common.api.test.DataClassSpec
+import org.amshove.kluent.shouldThrow
+import org.amshove.kluent.withMessage
+import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
+import org.jetbrains.spek.api.dsl.it
+
+object MechTypeSpec : Spek({
+    describe("constructor") {
+        it("should throw exception when walking movement points is non-positive") {
+            // when: creating a Mech type with non-positive walking movement points
+            val walkingMovementPoints = 0
+            val operation = { newTestMechType().copy(walkingMovementPoints = walkingMovementPoints) }
+
+            // then: it should throw an exception
+            operation shouldThrow IllegalArgumentException::class withMessage "expected walking movement points to be positive but was $walkingMovementPoints"
+        }
+    }
+})
 
 object MechTypeBehavesAsDataClassSpec : DataClassSpec({ newTestMechType() })
