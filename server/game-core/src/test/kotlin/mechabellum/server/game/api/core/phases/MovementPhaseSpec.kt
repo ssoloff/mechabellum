@@ -34,6 +34,7 @@ import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
 import mechabellum.server.game.api.core.unit.MechSpecification
 import mechabellum.server.game.api.core.unit.newTestMechSpecification
+import mechabellum.server.game.api.core.unit.newTestMechType
 import org.amshove.kluent.shouldContain
 import org.amshove.kluent.shouldEqual
 import org.amshove.kluent.shouldThrow
@@ -116,11 +117,29 @@ abstract class MovementPhaseSpec(
             strategy.getMech(mech.id).facing shouldEqual Option.some(Direction.SOUTHEAST)
         }
 
+        it("should reduce Mech's available movement points by one per sextant turned") {
+            // given: a Mech associated with the moving team and having six movement points
+            val mech = strategy.newMech(
+                newTestMechSpecification().copy(
+                    team = team,
+                    type = newTestMechType().copy(movementPoints = 6)
+                )
+            )
+            strategy.deploy(mech, Position(0, 0), Direction.NORTH)
+
+            // when: turning the Mech +2 sextants
+            subject.turn(mech, Angle.TWO)
+
+            // then: it should have four movement points
+            strategy.getMech(mech.id).movementPoints shouldEqual 4
+        }
+
         it("should throw exception when Mech does not exist") {
             // given: a Mech that was not created by the game
             val mechId = MechId(-1)
             val mech = mock<Mech> {
                 on { id } doReturn mechId
+                on { movementPoints } doReturn 1
                 on { this.team } doReturn team
             }
 
@@ -142,6 +161,24 @@ abstract class MovementPhaseSpec(
             // then: it should throw an exception
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "team"
+        }
+
+        it("should throw exception when Mech has insufficient movement points") {
+            // given: a Mech associated with the moving team and having one movement point
+            val mech = strategy.newMech(
+                newTestMechSpecification().copy(
+                    team = team,
+                    type = newTestMechType().copy(movementPoints = 1)
+                )
+            )
+            strategy.deploy(mech, Position(0, 0), Direction.NORTH)
+
+            // when: turning the Mech +2 sextants
+            val operation = { subject.turn(mech, Angle.TWO) }
+
+            // then: it should throw an exception
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain "movement points"
         }
     }
 }) {

@@ -43,6 +43,7 @@ internal class DefaultInitializationPhase(game: DefaultGame) : DefaultPhase(game
         val mech = DefaultMech(
             facing = Option.none(),
             id = game.state.newMechId(),
+            movementPoints = specification.type.movementPoints,
             position = Option.none(),
             team = specification.team
         )

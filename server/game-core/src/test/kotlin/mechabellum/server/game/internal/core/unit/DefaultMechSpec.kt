@@ -23,21 +23,23 @@ import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.MechId
 import org.amshove.kluent.shouldEqual
-import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.subject.SubjectSpek
 
-object DefaultMechSpec : Spek({
+internal object DefaultMechSpec : SubjectSpek<DefaultMech>({
+    subject {
+        DefaultMech(
+            facing = Option.none(),
+            id = MechId(0),
+            movementPoints = 6,
+            position = Option.none(),
+            team = Team.ATTACKER
+        )
+    }
+
     describe("setFacing") {
         it("should set facing") {
-            // given: a Mech
-            val subject = DefaultMech(
-                facing = Option.none(),
-                id = MechId(0),
-                position = Option.none(),
-                team = Team.ATTACKER
-            )
-
             // when: setting facing
             val newFacing = Direction.SOUTH
             val newSubject = subject.setFacing(newFacing)
@@ -47,16 +49,19 @@ object DefaultMechSpec : Spek({
         }
     }
 
+    describe("setMovementPoints") {
+        it("should set movement points") {
+            // when: setting movement points
+            val newMovementPoints = 6
+            val newSubject = subject.setMovementPoints(newMovementPoints)
+
+            // then: it should return a Mech with the new movement points
+            newSubject.movementPoints shouldEqual newMovementPoints
+        }
+    }
+
     describe("setPosition") {
         it("should set position") {
-            // given: a Mech
-            val subject = DefaultMech(
-                facing = Option.none(),
-                id = MechId(0),
-                position = Option.none(),
-                team = Team.ATTACKER
-            )
-
             // when: setting position
             val newPosition = Position(4, 8)
             val newSubject = subject.setPosition(newPosition)

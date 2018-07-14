@@ -42,6 +42,7 @@ internal object DefaultGameStateSpec : SubjectSpek<DefaultGameState>({
     fun newMech(mechId: MechId): DefaultMech = DefaultMech(
         facing = Option.none(),
         id = mechId,
+        movementPoints = 6,
         position = Option.none(),
         team = Team.ATTACKER
     )

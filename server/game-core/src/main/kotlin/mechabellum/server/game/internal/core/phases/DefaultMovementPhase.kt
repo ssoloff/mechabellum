@@ -47,7 +47,18 @@ internal class DefaultMovementPhase(
 
     override fun turn(mech: Mech, angle: Angle) {
         checkMechBelongsToMovingTeam(mech)
+        checkMechHasSufficientMovementPointsForTurn(mech, angle)
 
-        game.state.modifyMech(mech.id) { it.setFacing(it.facing.getOrThrow() + angle) }
+        game.state.modifyMech(mech.id) {
+            it
+                .setFacing(it.facing.getOrThrow() + angle)
+                .setMovementPoints(it.movementPoints - angle.value)
+        }
+    }
+
+    private fun checkMechHasSufficientMovementPointsForTurn(mech: Mech, angle: Angle) {
+        require(mech.movementPoints >= angle.value) {
+            "expected Mech to have at least ${angle.value} movement points but was ${mech.movementPoints}"
+        }
     }
 }

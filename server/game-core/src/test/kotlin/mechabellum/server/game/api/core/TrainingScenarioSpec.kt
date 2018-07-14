@@ -101,9 +101,9 @@ object TrainingScenarioSpec : Spek({
     }
 
     private object MechTypes {
-        val CICADA = MechType(name = "CDA-2A Cicada", walkingMovementPoints = 8)
-        val ENFORCER = MechType(name = "ENF-4R Enforcer", walkingMovementPoints = 4)
-        val HERMES_II = MechType(name = "HER-2S Hermes II", walkingMovementPoints = 6)
-        val HUNCHBACK = MechType(name = "HBK-4G Hunchback", walkingMovementPoints = 4)
+        val CICADA = MechType(movementPoints = 8, name = "CDA-2A Cicada")
+        val ENFORCER = MechType(movementPoints = 4, name = "ENF-4R Enforcer")
+        val HERMES_II = MechType(movementPoints = 6, name = "HER-2S Hermes II")
+        val HUNCHBACK = MechType(movementPoints = 4, name = "HBK-4G Hunchback")
     }
 }

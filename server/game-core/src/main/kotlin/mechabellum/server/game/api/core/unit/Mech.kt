@@ -36,6 +36,9 @@ interface Mech {
     /** The Mech identifier. */
     val id: MechId
 
+    /** The number of movement points remaining for use by the Mech in the current turn. */
+    val movementPoints: Int
+
     /**
      * The Mech position or empty if the Mech currently has no explicit position (e.g. it has not yet been deployed or
      * it has left the grid).

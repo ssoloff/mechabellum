@@ -26,13 +26,13 @@ import org.jetbrains.spek.api.dsl.it
 
 object MechTypeSpec : Spek({
     describe("constructor") {
-        it("should throw exception when walking movement points is non-positive") {
-            // when: creating a Mech type with non-positive walking movement points
-            val walkingMovementPoints = 0
-            val operation = { newTestMechType().copy(walkingMovementPoints = walkingMovementPoints) }
+        it("should throw exception when movement points is non-positive") {
+            // when: creating a Mech type with non-positive movement points
+            val movementPoints = 0
+            val operation = { newTestMechType().copy(movementPoints = movementPoints) }
 
             // then: it should throw an exception
-            operation shouldThrow IllegalArgumentException::class withMessage "expected walking movement points to be positive but was $walkingMovementPoints"
+            operation shouldThrow IllegalArgumentException::class withMessage "expected movement points to be positive but was $movementPoints"
         }
     }
 })

@@ -20,11 +20,13 @@ package mechabellum.server.game.api.core.unit
 /**
  * The data describing a type of [Mech].
  *
+ * @property movementPoints The number of movement points available to Mechs of this type.
  * @property name The unique name for this type of Mech (e.g. "HBK-4G Hunchback").
- * @property walkingMovementPoints The number of movement points available to Mechs of this type when walking.
+ *
+ * @throws IllegalArgumentException If [movementPoints] is not positive.
  */
-data class MechType(val name: String, val walkingMovementPoints: Int) {
+data class MechType(val movementPoints: Int, val name: String) {
     init {
-        require(walkingMovementPoints > 0) { "expected walking movement points to be positive but was $walkingMovementPoints" }
+        require(movementPoints > 0) { "expected movement points to be positive but was $movementPoints" }
     }
 }

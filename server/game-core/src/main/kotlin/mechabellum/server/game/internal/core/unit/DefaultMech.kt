@@ -27,12 +27,26 @@ import mechabellum.server.game.api.core.unit.MechId
 internal class DefaultMech(
     override val facing: Option<Direction>,
     override val id: MechId,
+    override val movementPoints: Int,
     override val position: Option<Position>,
     override val team: Team
 ) : Mech {
+    init {
+        assert(movementPoints >= 0) { "expected movement points to be non-negative but was $movementPoints" }
+    }
+
     fun setFacing(facing: Direction): DefaultMech = DefaultMech(
         facing = Option.some(facing),
         id = id,
+        movementPoints = movementPoints,
+        position = position,
+        team = team
+    )
+
+    fun setMovementPoints(movementPoints: Int): DefaultMech = DefaultMech(
+        facing = facing,
+        id = id,
+        movementPoints = movementPoints,
         position = position,
         team = team
     )
@@ -40,6 +54,7 @@ internal class DefaultMech(
     fun setPosition(position: Position): DefaultMech = DefaultMech(
         facing = facing,
         id = id,
+        movementPoints = movementPoints,
         position = Option.some(position),
         team = team
     )
