@@ -44,8 +44,8 @@ class MoveCommand(mech: Mech, displacement: Displacement) : StatelessMovementCom
 /**
  * Command that turns a Mech to change its facing.
  *
- * When executed, throws [IllegalArgumentException] if the Mech is not part of the game; or if the Mech does not belong
- * to the team being moved.
+ * When executed, throws [IllegalArgumentException] if the Mech is not part of this game; if the Mech does not belong
+ * to the team being moved; or if the Mech has insufficient movement points to turn the specified angle.
  *
  * @param mech The Mech to turn.
  * @param angle The angle by which the Mech will be turned.

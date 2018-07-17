@@ -39,8 +39,8 @@ interface MovementPhase : Phase {
     /**
      * Changes the facing of [mech] by turning it the specified [angle].
      *
-     * @throws IllegalArgumentException If [mech] is not part of this game; or if [mech] does not belong to the team
-     * being moved.
+     * @throws IllegalArgumentException If [mech] is not part of this game; if [mech] does not belong to the team being
+     * moved; or if [mech] has insufficient movement points to turn the specified [angle].
      */
     fun turn(mech: Mech, angle: Angle)
 }
