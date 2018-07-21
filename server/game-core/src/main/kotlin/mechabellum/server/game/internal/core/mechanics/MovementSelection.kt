@@ -15,20 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.participant
+package mechabellum.server.game.internal.core.mechanics
 
-/** A team participating in a game. */
-enum class Team {
-    ATTACKER {
-        override val opponent: Team
-            get() = DEFENDER
-    },
+import mechabellum.server.game.api.core.unit.MechId
 
-    DEFENDER {
-        override val opponent: Team
-            get() = ATTACKER
-    };
-
-    /** The team that opposes this team. */
-    abstract val opponent: Team
-}
+internal data class MovementSelection(val mechId: MechId)

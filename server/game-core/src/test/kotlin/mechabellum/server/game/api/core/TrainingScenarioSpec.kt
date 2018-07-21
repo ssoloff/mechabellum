@@ -21,9 +21,12 @@ import mechabellum.server.game.api.core.commands.deployment.DeployCommand
 import mechabellum.server.game.api.core.commands.general.EndPhaseCommand
 import mechabellum.server.game.api.core.commands.initialization.NewMechCommand
 import mechabellum.server.game.api.core.commands.initiative.RollInitiativeCommand
+import mechabellum.server.game.api.core.commands.movement.MoveCommand
+import mechabellum.server.game.api.core.commands.movement.SelectCommand
 import mechabellum.server.game.api.core.commands.movement.TurnCommand
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Direction
+import mechabellum.server.game.api.core.grid.Displacement
 import mechabellum.server.game.api.core.grid.GridSpecification
 import mechabellum.server.game.api.core.grid.GridType
 import mechabellum.server.game.api.core.grid.Position
@@ -66,17 +69,40 @@ object TrainingScenarioSpec : Spek({
 
             // turn 0
 
-            // initiative phase
+            // -- initiative phase
             dieRoller.addValues(6, 6) // attacker initiative = 12 (winner)
             executeCommand(RollInitiativeCommand(Team.ATTACKER))
             dieRoller.addValues(1, 1) // defender initiative = 2 (loser)
             executeCommand(RollInitiativeCommand(Team.DEFENDER))
             executeCommand(EndPhaseCommand())
 
-            // attacker movement phase
-            executeCommand(TurnCommand(attacker1, -Angle.ONE))
-            executeCommand(TurnCommand(attacker2, Angle.ONE))
-            // TODO: implement end() in order to move to defender movement phase
+            // -- movement phases
+
+            // ---- defender movement phase
+            executeCommand(SelectCommand(defender1))
+            executeCommand(MoveCommand(Displacement(3, Direction.NORTH)))
+            executeCommand(TurnCommand(Angle.ONE))
+            executeCommand(EndPhaseCommand())
+
+            // ---- attacker movement phase
+            executeCommand(SelectCommand(attacker1))
+            executeCommand(MoveCommand(Displacement(3, Direction.SOUTH)))
+            executeCommand(TurnCommand(-Angle.ONE))
+            executeCommand(EndPhaseCommand())
+
+            // ---- defender movement phase
+            executeCommand(SelectCommand(defender2))
+            executeCommand(MoveCommand(Displacement(3, Direction.NORTH)))
+            executeCommand(TurnCommand(-Angle.ONE))
+            executeCommand(EndPhaseCommand())
+
+            // ---- attacker movement phase
+            executeCommand(SelectCommand(attacker2))
+            executeCommand(MoveCommand(Displacement(3, Direction.SOUTH)))
+            executeCommand(TurnCommand(Angle.ONE))
+            executeCommand(EndPhaseCommand())
+
+            // -- weapon attack phases
 
             // TODO: implement remainder of scenario
         }

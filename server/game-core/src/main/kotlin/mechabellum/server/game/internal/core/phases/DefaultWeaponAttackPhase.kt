@@ -15,20 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.participant
+package mechabellum.server.game.internal.core.phases
 
-/** A team participating in a game. */
-enum class Team {
-    ATTACKER {
-        override val opponent: Team
-            get() = DEFENDER
-    },
+import mechabellum.server.game.api.core.TurnId
+import mechabellum.server.game.api.core.participant.Team
+import mechabellum.server.game.api.core.phases.WeaponAttackPhase
+import mechabellum.server.game.internal.core.DefaultGame
+import mechabellum.server.game.internal.core.DefaultTurnPhase
 
-    DEFENDER {
-        override val opponent: Team
-            get() = ATTACKER
-    };
-
-    /** The team that opposes this team. */
-    abstract val opponent: Team
+internal class DefaultWeaponAttackPhase(
+    game: DefaultGame,
+    override val team: Team,
+    turnId: TurnId
+) : DefaultTurnPhase(game, turnId), WeaponAttackPhase {
+    override fun end() {
+        TODO("not implemented")
+    }
 }

@@ -45,8 +45,7 @@ internal class DefaultGameState {
         get() = mechsById.values
 
     val turn: DefaultTurn
-        get() = turns.lastOrNull()
-            ?: throw IllegalStateException("expected at least one turn to be present but was absent")
+        get() = turns.lastOrNull() ?: throw IllegalStateException("no turns present")
 
     fun addMech(mech: DefaultMech) {
         require(mech.id !in mechsById) { "expected Mech with ID ${mech.id} to be absent but was present" }

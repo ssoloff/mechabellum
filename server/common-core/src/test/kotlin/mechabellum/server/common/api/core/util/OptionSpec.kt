@@ -59,6 +59,12 @@ object OptionNoneSpec : Spek({
         }
     }
 
+    describe("map") {
+        it("should return None") {
+            subject.map { 0 } shouldEqual Option.none()
+        }
+    }
+
     describe("toString") {
         it("should return None") {
             subject.toString() shouldEqual "None"
@@ -103,6 +109,12 @@ object OptionSomeSpec : Spek({
     describe("getOrThrowWithSupplier") {
         it("should return value") {
             subject.getOrThrow(::IllegalStateException) shouldEqual value
+        }
+    }
+
+    describe("map") {
+        it("should return Some containing mapped value") {
+            subject.map { 2.0 * it.toDouble() } shouldEqual Option.some(2.0 * value)
         }
     }
 

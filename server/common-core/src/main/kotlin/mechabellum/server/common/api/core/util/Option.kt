@@ -22,6 +22,12 @@ sealed class Option<out T : Any> {
     /** Returns the value if present; otherwise throws [NoSuchElementException]. */
     abstract fun getOrThrow(): T
 
+    /**
+     * Returns a new container containing the value obtained by applying [mapper] to the contained value if present;
+     * otherwise returns the empty container.
+     */
+    abstract fun <U : Any> map(mapper: (T) -> U): Option<U>
+
     companion object {
         private val NONE = None()
 
@@ -39,12 +45,16 @@ sealed class Option<out T : Any> {
     class None internal constructor() : Option<Nothing>() {
         override fun getOrThrow(): Nothing = throw NoSuchElementException("no value present")
 
+        override fun <U : Any> map(mapper: (Nothing) -> U): Option<U> = none()
+
         override fun toString(): String = "None"
     }
 
     /** Option that represents the presence of [value]. */
     data class Some<out T : Any> internal constructor(val value: T) : Option<T>() {
         override fun getOrThrow(): T = value
+
+        override fun <U : Any> map(mapper: (T) -> U): Option<U> = some(mapper(value))
 
         override fun toString(): String = "Some($value)"
     }

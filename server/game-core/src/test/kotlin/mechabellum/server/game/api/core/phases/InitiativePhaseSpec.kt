@@ -19,8 +19,8 @@ package mechabellum.server.game.api.core.phases
 
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
-import mechabellum.server.game.api.core.mechanics.ScriptedDieRoller
 import mechabellum.server.game.api.core.mechanics.Initiative
+import mechabellum.server.game.api.core.mechanics.ScriptedDieRoller
 import mechabellum.server.game.api.core.newTestGameSpecification
 import mechabellum.server.game.api.core.participant.Team
 import org.amshove.kluent.shouldBeInstanceOf
@@ -44,6 +44,72 @@ abstract class InitiativePhaseSpec(
     beforeEachTest {
         dieRoller = ScriptedDieRoller()
         strategy = newStrategy(newTestGameSpecification().copy(dieRoller = dieRoller))
+    }
+
+    describe("end") {
+        it("should change active phase to defender movement phase when attacker won initiative") {
+            // given: the attacker won initiative
+            dieRoller.addValues(6, 6, 1, 1)
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
+
+            // when: initiative phase is ended
+            subject.end()
+
+            // then: defender movement phase should be active
+            strategy.game.phase shouldBeInstanceOf MovementPhase::class
+            (strategy.game.phase as MovementPhase).team shouldEqual Team.DEFENDER
+        }
+
+        it("should change active phase to attacker movement phase when defender won initiative") {
+            // given: the defender won initiative
+            dieRoller.addValues(1, 1, 6, 6)
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
+
+            // when: initiative phase is ended
+            subject.end()
+
+            // then: attacker movement phase should be active
+            strategy.game.phase shouldBeInstanceOf MovementPhase::class
+            (strategy.game.phase as MovementPhase).team shouldEqual Team.ATTACKER
+        }
+
+        it("should throw exception when no team has rolled initiative") {
+            // given: no team has rolled initiative
+
+            // when: initiative phase is ended
+            val operation = { subject.end() }
+
+            // then: it should throw an exception
+            operation shouldThrow IllegalStateException::class withMessage "team(s) [${Team.ATTACKER}, ${Team.DEFENDER}] have not rolled initiative"
+        }
+
+        it("should throw exception when one team has not rolled initiative") {
+            // given: attacker has rolled initiative
+            dieRoller.addValues(1, 1)
+            subject.rollInitiative(Team.ATTACKER)
+            // but: defender has not rolled initiative
+
+            // when: initiative phase is ended
+            val operation = { subject.end() }
+
+            // then: it should throw an exception
+            operation shouldThrow IllegalStateException::class withMessage "team(s) [${Team.DEFENDER}] have not rolled initiative"
+        }
+
+        it("should throw exception when all teams have rolled initiative but there is no winner") {
+            // given: attacker and defender have rolled same initiative result
+            dieRoller.addValues(1, 1, 1, 1)
+            subject.rollInitiative(Team.ATTACKER)
+            subject.rollInitiative(Team.DEFENDER)
+
+            // when: initiative phase is ended
+            val operation = { subject.end() }
+
+            // then: it should throw an exception
+            operation shouldThrow IllegalStateException::class withMessage "all teams rolled initiative but there is no winner; each team must re-roll"
+        }
     }
 
     describe("rollInitiative") {
@@ -101,72 +167,6 @@ abstract class InitiativePhaseSpec(
             attackerInitiative shouldEqual Initiative(7)
             // and: it should roll initiative 3 for defender
             defenderInitiative shouldEqual Initiative(3)
-        }
-    }
-
-    describe("end") {
-        it("should change active phase to attacker movement phase when attacker has initiative") {
-            // given: the attacker has initiative
-            dieRoller.addValues(6, 6, 1, 1)
-            subject.rollInitiative(Team.ATTACKER)
-            subject.rollInitiative(Team.DEFENDER)
-
-            // when: initiative phase is ended
-            subject.end()
-
-            // then: attacker movement phase should be active
-            strategy.game.phase shouldBeInstanceOf MovementPhase::class
-            (strategy.game.phase as MovementPhase).team shouldEqual Team.ATTACKER
-        }
-
-        it("should change active phase to defender movement phase when defender has initiative") {
-            // given: the defender has initiative
-            dieRoller.addValues(1, 1, 6, 6)
-            subject.rollInitiative(Team.ATTACKER)
-            subject.rollInitiative(Team.DEFENDER)
-
-            // when: initiative phase is ended
-            subject.end()
-
-            // then: defender movement phase should be active
-            strategy.game.phase shouldBeInstanceOf MovementPhase::class
-            (strategy.game.phase as MovementPhase).team shouldEqual Team.DEFENDER
-        }
-
-        it("should throw exception when no team has rolled initiative") {
-            // given: no team has rolled initiative
-
-            // when: initiative phase is ended
-            val operation = { subject.end() }
-
-            // then: it should throw an exception
-            operation shouldThrow IllegalStateException::class withMessage "team(s) [${Team.ATTACKER}, ${Team.DEFENDER}] have not rolled initiative"
-        }
-
-        it("should throw exception when one team has not rolled initiative") {
-            // given: attacker has rolled initiative
-            dieRoller.addValues(1, 1)
-            subject.rollInitiative(Team.ATTACKER)
-            // but: defender has not rolled initiative
-
-            // when: initiative phase is ended
-            val operation = { subject.end() }
-
-            // then: it should throw an exception
-            operation shouldThrow IllegalStateException::class withMessage "team(s) [${Team.DEFENDER}] have not rolled initiative"
-        }
-
-        it("should throw exception when all teams have rolled initiative but there is no winner") {
-            // given: attacker and defender have rolled same initiative result
-            dieRoller.addValues(1, 1, 1, 1)
-            subject.rollInitiative(Team.ATTACKER)
-            subject.rollInitiative(Team.DEFENDER)
-
-            // when: initiative phase is ended
-            val operation = { subject.end() }
-
-            // then: it should throw an exception
-            operation shouldThrow IllegalStateException::class withMessage "all teams rolled initiative but there is no winner; each team must re-roll"
         }
     }
 }) {

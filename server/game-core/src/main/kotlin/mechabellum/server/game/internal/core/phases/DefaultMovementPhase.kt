@@ -17,6 +17,7 @@
 
 package mechabellum.server.game.internal.core.phases
 
+import mechabellum.server.common.api.core.util.getOrThrow
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Displacement
@@ -25,6 +26,7 @@ import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.internal.core.DefaultGame
 import mechabellum.server.game.internal.core.DefaultTurnPhase
+import mechabellum.server.game.internal.core.mechanics.MovementSelection
 
 internal class DefaultMovementPhase(
     game: DefaultGame,
@@ -32,33 +34,69 @@ internal class DefaultMovementPhase(
     turnId: TurnId
 ) : DefaultTurnPhase(game, turnId), MovementPhase {
     override fun end() {
-        TODO("not implemented")
+        checkMovementSelectionIsActive()
+
+        game.phase = if (haveAllMechsMoved()) {
+            DefaultWeaponAttackPhase(
+                game = game,
+                team = turn.initiativeHistory.initiativeWinner.getOrThrow().opponent,
+                turnId = turnId
+            )
+        } else {
+            DefaultMovementPhase(game = game, team = team.opponent, turnId = turnId)
+        }
+        game.state.modifyTurn(turnId) { turn -> turn.endMovementSelection() }
     }
 
-    override fun move(mech: Mech, displacement: Displacement) {
-        checkMechBelongsToMovingTeam(mech)
-
-        game.state.modifyMech(mech.id) { it.setPosition(it.position.getOrThrow() + displacement) }
+    private fun checkMovementSelectionIsActive(): MovementSelection = turn.movementSelection.getOrThrow {
+        IllegalStateException("no active movement selection")
     }
 
-    private fun checkMechBelongsToMovingTeam(mech: Mech) {
-        require(mech.team == team) { "expected team $team to be moved during this phase but was ${mech.team}" }
-    }
+    private fun haveAllMechsMoved(): Boolean = turn.movementSelections.size == game.state.mechs.size
 
-    override fun turn(mech: Mech, angle: Angle) {
-        checkMechBelongsToMovingTeam(mech)
-        checkMechHasSufficientMovementPointsForTurn(mech, angle)
+    override fun move(displacement: Displacement) {
+        val movementSelection = checkMovementSelectionIsActive()
 
-        game.state.modifyMech(mech.id) {
-            it
-                .setFacing(it.facing.getOrThrow() + angle)
-                .setMovementPoints(it.movementPoints - angle.value)
+        game.state.modifyMech(movementSelection.mechId) { mech ->
+            mech.setPosition(mech.position.getOrThrow() + displacement)
         }
     }
 
-    private fun checkMechHasSufficientMovementPointsForTurn(mech: Mech, angle: Angle) {
+    override fun select(mech: Mech) {
+        checkMechExists(mech)
+        checkMechBelongsToMovingTeam(mech)
+        checkMechHasNotAlreadyMoved(mech)
+
+        game.state.modifyTurn(turnId) { turn -> turn.beginMovementSelection(MovementSelection(mech.id)) }
+    }
+
+    private fun checkMechExists(mech: Mech) {
+        game.state.getMech(mech.id)
+    }
+
+    private fun checkMechBelongsToMovingTeam(mech: Mech) = require(mech.team == team) {
+        "expected team $team to be moved during this phase but was ${mech.team}"
+    }
+
+    private fun checkMechHasNotAlreadyMoved(mech: Mech) =
+        require(turn.movementSelections.none { it.mechId == mech.id }) {
+            "Mech with ID ${mech.id} has already moved during the current turn"
+        }
+
+    override fun turn(angle: Angle) {
+        val movementSelection = checkMovementSelectionIsActive()
+
+        game.state.modifyMech(movementSelection.mechId) { mech ->
+            checkMechHasSufficientMovementPointsForTurn(mech, angle)
+
+            mech
+                .setFacing(mech.facing.getOrThrow() + angle)
+                .setMovementPoints(mech.movementPoints - angle.value)
+        }
+    }
+
+    private fun checkMechHasSufficientMovementPointsForTurn(mech: Mech, angle: Angle) =
         require(mech.movementPoints >= angle.value) {
             "expected Mech to have at least ${angle.value} movement points but was ${mech.movementPoints}"
         }
-    }
 }

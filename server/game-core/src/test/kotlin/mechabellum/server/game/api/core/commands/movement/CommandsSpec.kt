@@ -37,36 +37,51 @@ import org.jetbrains.spek.api.dsl.it
 
 object MoveCommandSpec : Spek({
     describe("execute") {
-        it("should move Mech by specified displacement") {
+        it("should move the specified displacement") {
+            // given: the movement phase is active
+            val movementPhase = mock<MovementPhase>()
+
+            // when: the command is executed
+            val displacement = Displacement(1, Direction.NORTHEAST)
+            val subject = MoveCommand(displacement)
+            subject.execute(movementPhase)
+
+            // then: it should move the specified displacement
+            Verify on movementPhase that movementPhase.move(displacement) was called
+        }
+    }
+})
+
+object SelectCommandSpec : Spek({
+    describe("execute") {
+        it("should select Mech") {
             // given: the movement phase is active
             val movementPhase = mock<MovementPhase>()
 
             // when: the command is executed
             val mech = mock<Mech>()
-            val displacement = Displacement(1, Direction.NORTHEAST)
-            val subject = MoveCommand(mech, displacement)
+            val subject = SelectCommand(mech)
             subject.execute(movementPhase)
 
-            // then: it should move the Mech by the specified displacement
-            Verify on movementPhase that movementPhase.move(mech, displacement) was called
+            // then: it should select the Mech
+            Verify on movementPhase that movementPhase.select(mech) was called
         }
     }
 })
 
 object TurnCommandSpec : Spek({
     describe("execute") {
-        it("should turn Mech by specified angle") {
+        it("should turn the specified angle") {
             // given: the movement phase is active
             val movementPhase = mock<MovementPhase>()
 
             // when: the command is executed
-            val mech = mock<Mech>()
             val angle = Angle.ONE
-            val subject = TurnCommand(mech, angle)
+            val subject = TurnCommand(angle)
             subject.execute(movementPhase)
 
-            // then: it should turn the Mech by the specified angle
-            Verify on movementPhase that movementPhase.turn(mech, angle) was called
+            // then: it should turn the specified angle
+            Verify on movementPhase that movementPhase.turn(angle) was called
         }
     }
 })

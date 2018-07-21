@@ -1,3 +1,5 @@
+// ktlint-disable filename
+
 /*
  * Copyright (C) 2018 Mechabellum contributors
  *
@@ -15,20 +17,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.participant
+package mechabellum.server.game.internal.core.mechanics
 
-/** A team participating in a game. */
-enum class Team {
-    ATTACKER {
-        override val opponent: Team
-            get() = DEFENDER
-    },
+import mechabellum.server.common.api.test.DataClassSpec
+import mechabellum.server.game.api.core.unit.MechId
 
-    DEFENDER {
-        override val opponent: Team
-            get() = ATTACKER
-    };
-
-    /** The team that opposes this team. */
-    abstract val opponent: Team
-}
+object MovementSelectionBehavesAsDataClassSpec : DataClassSpec({ MovementSelection(MechId(0)) })

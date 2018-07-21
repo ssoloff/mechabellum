@@ -19,7 +19,6 @@
 
 package mechabellum.server.game.internal.core.phases
 
-import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.phases.InitializationPhaseSpec
 import mechabellum.server.game.api.core.unit.Mech
 import mechabellum.server.game.api.core.unit.MechId
@@ -28,9 +27,8 @@ import mechabellum.server.game.internal.core.DefaultGame
 
 object DefaultInitializationPhaseBehavesAsInitializationPhaseSpec : InitializationPhaseSpec(
     newStrategy = { gameSpecification ->
-        val game = DefaultGame(gameSpecification)
         object : Strategy {
-            override val game: Game = game
+            override val game: DefaultGame = DefaultGame(gameSpecification)
 
             override fun getMech(mechId: MechId): Mech = game.state.getMech(mechId)
 

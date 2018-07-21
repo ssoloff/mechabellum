@@ -34,7 +34,7 @@ internal class DefaultInitiativePhase(
         checkAllTeamsHaveRolledInitiative()
         val initiativeWinner = checkInitiativeWinnerExists()
 
-        game.phase = DefaultMovementPhase(game = game, team = initiativeWinner, turnId = turnId)
+        game.phase = DefaultMovementPhase(game = game, team = initiativeWinner.opponent, turnId = turnId)
     }
 
     private fun checkAllTeamsHaveRolledInitiative() = turn.initiativeHistory.teamsWithoutInitiative.let {

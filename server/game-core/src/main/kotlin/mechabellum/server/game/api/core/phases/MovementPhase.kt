@@ -23,24 +23,41 @@ import mechabellum.server.game.api.core.grid.Displacement
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.unit.Mech
 
-/** The second phase within a turn in which all Mechs are moved. This phase is split into one sub-phase per team. */
+/** The second phase within a turn in which all Mechs are moved. This phase is split into one sub-phase per Mech. */
 interface MovementPhase : Phase {
     /** The team that may move during this phase. */
     val team: Team
 
     /**
-     * Changes the position of [mech] by moving it the specified [displacement].
-     *
-     * @throws IllegalArgumentException If [mech] is not part of this game; or if [mech] does not belong to the team
-     * being moved.
+     * @throws IllegalStateException If a Mech is not selected.
      */
-    fun move(mech: Mech, displacement: Displacement)
+    override fun end()
 
     /**
-     * Changes the facing of [mech] by turning it the specified [angle].
+     * Changes the position of the selected Mech by moving it the specified [displacement].
+     *
+     * @throws IllegalStateException If a Mech is not selected.
+     */
+    fun move(displacement: Displacement)
+
+    /**
+     * Selects the [mech] to move during this phase.
+     *
+     * This method begins a movement selection for [mech], which is completed when ending the phase. This method must
+     * be the first method called on this interface during the movement phase.
      *
      * @throws IllegalArgumentException If [mech] is not part of this game; if [mech] does not belong to the team being
-     * moved; or if [mech] has insufficient movement points to turn the specified [angle].
+     * moved; or if [mech] already has a movement selection for the current turn.
+     * @throws IllegalStateException If a Mech has already been selected for movement in this phase.
      */
-    fun turn(mech: Mech, angle: Angle)
+    fun select(mech: Mech)
+
+    /**
+     * Changes the facing of the selected Mech by turning it the specified [angle].
+     *
+     * @throws IllegalArgumentException If the selected Mech has insufficient movement points to turn the specified
+     * [angle].
+     * @throws IllegalStateException If a Mech is not selected.
+     */
+    fun turn(angle: Angle)
 }

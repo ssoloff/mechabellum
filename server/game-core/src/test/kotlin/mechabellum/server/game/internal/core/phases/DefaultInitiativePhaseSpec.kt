@@ -19,19 +19,21 @@
 
 package mechabellum.server.game.internal.core.phases
 
-import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.phases.InitiativePhaseSpec
 import mechabellum.server.game.internal.core.DefaultGame
 
 object DefaultInitiativePhaseBehavesAsInitializationPhaseSpec : InitiativePhaseSpec(
     newStrategy = { gameSpecification ->
-        val game = DefaultGame(gameSpecification)
         object : Strategy {
-            override val game: Game = game
+            override val game: DefaultGame = DefaultGame(gameSpecification)
+
+            init {
+                game.state.addTurn()
+            }
         }
     },
     newSubject = { strategy ->
         val game = strategy.game as DefaultGame
-        DefaultInitiativePhase(game, game.state.addTurn())
+        DefaultInitiativePhase(game, game.turn.id)
     }
 )

@@ -15,20 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package mechabellum.server.game.api.core.participant
+package mechabellum.server.game.api.core.phases
 
-/** A team participating in a game. */
-enum class Team {
-    ATTACKER {
-        override val opponent: Team
-            get() = DEFENDER
-    },
+import mechabellum.server.game.api.core.Phase
+import mechabellum.server.game.api.core.participant.Team
 
-    DEFENDER {
-        override val opponent: Team
-            get() = ATTACKER
-    };
-
-    /** The team that opposes this team. */
-    abstract val opponent: Team
+/**
+ * The third phase within a turn in which all Mechs attack with weapons. This phase is split into one sub-phase per
+ * Mech.
+ */
+interface WeaponAttackPhase : Phase {
+    /** The team that may attack during this phase. */
+    val team: Team
 }

@@ -29,27 +29,39 @@ open class StatelessMovementCommand<R : Any>(
 ) : StatelessCommand<MovementPhase, R>(MovementPhase::class, action)
 
 /**
- * Command that moves a Mech to change its position.
+ * Command that moves the selected Mech to change its position.
  *
- * When executed, throws [IllegalArgumentException] if the Mech is not part of the game; or if the Mech does not belong
- * to the team being moved.
+ * When executed, throws [IllegalStateException] if a Mech is not selected.
  *
- * @param mech The Mech to move.
- * @param displacement The displacement by which the Mech will be moved.
+ * @param displacement The displacement by which the selected Mech will be moved.
  */
-class MoveCommand(mech: Mech, displacement: Displacement) : StatelessMovementCommand<Unit>({
-    it.move(mech, displacement)
+class MoveCommand(displacement: Displacement) : StatelessMovementCommand<Unit>({
+    it.move(displacement)
 })
 
 /**
- * Command that turns a Mech to change its facing.
+ * Command that selects the Mech to move during the movement phase.
  *
- * When executed, throws [IllegalArgumentException] if the Mech is not part of this game; if the Mech does not belong
- * to the team being moved; or if the Mech has insufficient movement points to turn the specified angle.
+ * When executed, throws [IllegalArgumentException] if the Mech is not part of the game; if the Mech does not belong to
+ * the team being moved; or if the Mech already has a movement selection for the current turn.
+ * When executed, throws [IllegalStateException] if a Mech has already been selected for movement in the movement
+ * phase.
  *
- * @param mech The Mech to turn.
- * @param angle The angle by which the Mech will be turned.
+ * @param mech The Mech to manipulate during the movement phase.
  */
-class TurnCommand(mech: Mech, angle: Angle) : StatelessMovementCommand<Unit>({
-    it.turn(mech, angle)
+class SelectCommand(mech: Mech) : StatelessMovementCommand<Unit>({
+    it.select(mech)
+})
+
+/**
+ * Command that turns the selected Mech to change its facing.
+ *
+ * When executed, throws [IllegalArgumentException] if the selected Mech has insufficient movement points to turn the
+ * specified angle.
+ * When executed, throws [IllegalStateException] if a Mech is not selected.
+ *
+ * @param angle The angle by which the selected Mech will be turned.
+ */
+class TurnCommand(angle: Angle) : StatelessMovementCommand<Unit>({
+    it.turn(angle)
 })
