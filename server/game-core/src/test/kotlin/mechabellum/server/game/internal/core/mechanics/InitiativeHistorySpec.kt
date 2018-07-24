@@ -32,7 +32,7 @@ object InitiativeHistorySpec : Spek({
     describe("constructor") {
         it("should throw exception when iterations is empty") {
             // when: constructing an instance with no iterations
-            val operation = { InitiativeHistory(listOf()) }
+            val operation = { InitiativeHistory(emptyList()) }
 
             // then: it should throw an exception
             operation shouldThrow IllegalArgumentException::class withMessage "expected iterations to not be empty but was empty"
