@@ -227,6 +227,25 @@ abstract class MovementPhaseSpec(
             strategy.getMech(mech.id).position shouldEqual Option.some(Position(2, 1))
         }
 
+        it("should reduce Mech's available movement points by one per cell moved") {
+            // given: a Mech associated with the moving team and having six movement points
+            val mech = strategy.newMech(
+                newTestMechSpecification().copy(
+                    team = team,
+                    type = newTestMechType().copy(movementPoints = 6)
+                )
+            )
+            strategy.deploy(mech, Position(0, 0), Direction.SOUTH)
+            // and: the Mech has been selected for movement
+            subject.select(mech)
+
+            // when: moving the Mech forward 2 cells
+            subject.move(Displacement(2, Direction.SOUTH))
+
+            // then: it should have four movement points
+            strategy.getMech(mech.id).movementPoints shouldEqual 4
+        }
+
         it("should throw exception when no Mech selected for movement") {
             // given: a Mech associated with the moving team
             val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
@@ -238,6 +257,26 @@ abstract class MovementPhaseSpec(
 
             // then: it should throw an exception
             operation shouldThrow IllegalStateException::class withMessage "no active movement selection"
+        }
+
+        it("should throw exception when Mech has insufficient movement points") {
+            // given: a Mech associated with the moving team and having one movement point
+            val mech = strategy.newMech(
+                newTestMechSpecification().copy(
+                    team = team,
+                    type = newTestMechType().copy(movementPoints = 1)
+                )
+            )
+            strategy.deploy(mech, Position(0, 0), Direction.SOUTH)
+            // and: the Mech has been selected for movement
+            subject.select(mech)
+
+            // when: moving the Mech forward 2 cells
+            val operation = { subject.move(Displacement(2, Direction.SOUTH)) }
+
+            // then: it should throw an exception
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain "movement points"
         }
     }
 

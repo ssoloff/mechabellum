@@ -58,9 +58,18 @@ internal class DefaultMovementPhase(
         val movementSelection = checkMovementSelectionIsActive()
 
         game.state.modifyMech(movementSelection.mechId) { mech ->
-            mech.setPosition(mech.position.getOrThrow() + displacement)
+            checkMechHasSufficientMovementPointsForMove(mech, displacement)
+
+            mech
+                .setPosition(mech.position.getOrThrow() + displacement)
+                .setMovementPoints(mech.movementPoints - displacement.magnitude)
         }
     }
+
+    private fun checkMechHasSufficientMovementPointsForMove(mech: Mech, displacement: Displacement) =
+        require(mech.movementPoints >= displacement.magnitude) {
+            "expected Mech to have at least ${displacement.magnitude} movement points but was ${mech.movementPoints}"
+        }
 
     override fun select(mech: Mech) {
         checkMechExists(mech)
