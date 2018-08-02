@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jmailen.gradle.kotlinter.tasks.LintTask
 
 buildscript {
-    val kotlinVersion by extra { "1.2.51" }
+    val kotlinVersion by extra { "1.2.60" }
 
     repositories {
         jcenter()
