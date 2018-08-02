@@ -47,7 +47,7 @@ val junitVersion by extra { "5.2.0" }
 val kluentVersion by extra { "1.40" }
 val kotlinVersion: String by extra
 val mockitoVersion by extra { "2.21.0" }
-val spekVersion by extra { "1.1.5" }
+val spekVersion by extra { "1.2.0" }
 
 allprojects {
     group = "mechabellum-server"
