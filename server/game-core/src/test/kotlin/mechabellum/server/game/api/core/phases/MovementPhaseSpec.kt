@@ -278,6 +278,21 @@ abstract class MovementPhaseSpec(
             val exceptionResult = operation shouldThrow IllegalArgumentException::class
             exceptionResult.exceptionMessage shouldContain "movement points"
         }
+
+        it("should throw exception when final position of Mech is outside grid bounds") {
+            // given: a Mech associated with the moving team
+            val mech = strategy.newMech(newTestMechSpecification().copy(team = team))
+            strategy.deploy(mech, Position(0, 0), Direction.NORTH)
+            // and: the Mech has been selected for movement
+            subject.select(mech)
+
+            // when: moving the Mech outside the grid bounds
+            val operation = { subject.move(Displacement(1, Direction.NORTH)) }
+
+            // then: it should throw an exception
+            val exceptionResult = operation shouldThrow IllegalArgumentException::class
+            exceptionResult.exceptionMessage shouldContain "outside grid bounds"
+        }
     }
 
     describe("select") {

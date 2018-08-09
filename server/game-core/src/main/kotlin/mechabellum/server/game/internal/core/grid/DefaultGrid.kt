@@ -36,6 +36,9 @@ internal class DefaultGrid(specification: GridSpecification) : Grid {
 
     private val deploymentPositionsByTeam = specification.deploymentPositionsByTeam
 
+    override val positions: PositionRange =
+        Position(0, 0)..Position(specification.type.cols - 1, specification.type.rows - 1)
+
     override val type = specification.type
 
     override fun getCell(position: Position): Cell {

@@ -37,7 +37,7 @@ interface MovementPhase : Phase {
      * Changes the position of the selected Mech by moving it the specified [displacement].
      *
      * @throws IllegalArgumentException If the selected Mech has insufficient movement points to move the specified
-     * [displacement].
+     * [displacement]; or if the final position of the selected Mech would be outside the grid bounds.
      * @throws IllegalStateException If a Mech is not selected.
      */
     fun move(displacement: Displacement)

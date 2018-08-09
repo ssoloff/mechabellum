@@ -29,6 +29,9 @@ import mechabellum.server.game.api.core.participant.Team
  * "Vertical" layout means each cell is a flat-topped hex (rather than a pointy-topped hex).
  */
 interface Grid {
+    /** The possible positions on the grid. */
+    val positions: PositionRange
+
     /** The grid type. */
     val type: GridType
 

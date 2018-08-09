@@ -32,6 +32,12 @@ abstract class GridSpec(newSubject: (GridSpecification) -> Grid) : SubjectSpek<G
 
     subject { newSubject(gridSpecification) }
 
+    describe("positions") {
+        it("should return positions based on bounds from grid specification") {
+            subject.positions shouldEqual Position(0, 0)..Position(4, 7)
+        }
+    }
+
     describe("type") {
         it("should return type from grid specification") {
             subject.type shouldEqual gridSpecification.type

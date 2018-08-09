@@ -32,7 +32,7 @@ open class StatelessMovementCommand<R : Any>(
  * Command that moves the selected Mech to change its position.
  *
  * When executed, throws [IllegalArgumentException] if the selected Mech has insufficient movement points to move the
- * specified displacement.
+ * specified displacement; or if the final position of the selected Mech would be outside the grid bounds.
  * When executed, throws [IllegalStateException] if a Mech is not selected.
  *
  * @param displacement The displacement by which the selected Mech will be moved.

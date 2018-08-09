@@ -21,6 +21,7 @@ import mechabellum.server.common.api.core.util.getOrThrow
 import mechabellum.server.game.api.core.TurnId
 import mechabellum.server.game.api.core.grid.Angle
 import mechabellum.server.game.api.core.grid.Displacement
+import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.MovementPhase
 import mechabellum.server.game.api.core.unit.Mech
@@ -59,9 +60,11 @@ internal class DefaultMovementPhase(
 
         game.state.modifyMech(movementSelection.mechId) { mech ->
             checkMechHasSufficientMovementPointsForMove(mech, displacement)
+            val newPosition = mech.position.getOrThrow() + displacement
+            checkPositionIsWithinGridBounds(newPosition)
 
             mech
-                .setPosition(mech.position.getOrThrow() + displacement)
+                .setPosition(newPosition)
                 .setMovementPoints(mech.movementPoints - displacement.magnitude)
         }
     }
@@ -70,6 +73,10 @@ internal class DefaultMovementPhase(
         require(mech.movementPoints >= displacement.magnitude) {
             "expected Mech to have at least ${displacement.magnitude} movement points but was ${mech.movementPoints}"
         }
+
+    private fun checkPositionIsWithinGridBounds(position: Position) = require(position in game.grid.positions) {
+        "expected final position of Mech to be within grid bounds but was outside grid bounds ($position)"
+    }
 
     override fun select(mech: Mech) {
         checkMechExists(mech)
