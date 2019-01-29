@@ -145,5 +145,12 @@ val lintBuildScripts = task<LintTask>("lintBuildScripts") {
     }
 }
 
-val check by tasks
-check.dependsOn(lintBuildScripts)
+tasks {
+    withType<Wrapper> {
+        distributionType = Wrapper.DistributionType.ALL
+    }
+
+    "check" {
+        dependsOn(lintBuildScripts)
+    }
+}
