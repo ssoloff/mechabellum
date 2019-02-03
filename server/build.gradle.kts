@@ -27,13 +27,12 @@ buildscript {
     val kotlinVersion by extra { "1.2.60" }
 
     repositories {
-        jcenter()
         gradlePluginPortal()
     }
 
     dependencies {
         classpath(kotlin("gradle-plugin", kotlinVersion))
-        classpath("gradle.plugin.org.jmailen.gradle:kotlinter-gradle:1.15.1")
+        classpath("org.jmailen.gradle:kotlinter-gradle:1.19.0")
     }
 }
 
