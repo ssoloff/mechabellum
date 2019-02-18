@@ -6,21 +6,27 @@
         <compilerSettings />
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/../../../game-core/build/classes/kotlin/test" />
+          <option name="classpath" value="$MODULE_DIR$/../../../game-core/build/classes/kotlin/main:/home/ssoloff/Projects/mechabellum/server/game-core/build/resources/main:/home/ssoloff/Projects/mechabellum/server/common-core/build/classes/kotlin/main:/home/ssoloff/Projects/mechabellum/server/common-test/build/classes/kotlin/main:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.amshove.kluent/kluent/1.48/29d4922c64c230e2a3b022e510ca7c853363b397/kluent-1.48.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.3.21/d0634d54452abc421db494ad32dd215e6591c49f/kotlin-stdlib-jdk8-1.3.21.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.3.21/d0d5ff2ac2ebd8a42697af41e20fc225a23c5d3b/kotlin-reflect-1.3.21.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.spek/spek-data-driven-extension/1.2.1/1bfc659366100554f9ad63690a960f4b428c9479/spek-data-driven-extension-1.2.1.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.spek/spek-subject-extension/1.2.1/915b0819a45df09c5e1d60b3ccbcc53e89afdb23/spek-subject-extension-1.2.1.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.spek/spek-api/1.2.1/83fb8b60aa496b6a488238bf185bd1c66feb9fcd/spek-api-1.2.1.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/com.nhaarman.mockitokotlin2/mockito-kotlin/2.0.0/e79eb73300930d157fac293073a84fb1e41264ab/mockito-kotlin-2.0.0.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/2.24.5/599509fe319bd9e39559b8f987bee5d4b77167e4/mockito-core-2.24.5.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.3.21/d207ce2c9bcf17dc8e51bab4dbfdac4d013e7138/kotlin-stdlib-jdk7-1.3.21.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test/1.3.10/7368899d8ac7ee456562cbd73cc823b093937f9f/kotlin-test-1.3.10.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.21/4bcc2012b84840e19e1e28074284cac908be0295/kotlin-stdlib-1.3.21.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.amshove.kluent/kluent-common/1.48/7ca57406b4690c71b83278fb8aba20625e2b8950/kluent-common-1.48.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.9.7/8fea78fea6449e1738b675cb155ce8422661e237/byte-buddy-1.9.7.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.9.7/8e7d1b599f4943851ffea125fd9780e572727fc0/byte-buddy-agent-1.9.7.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.6/639033469776fd37c08358c6b92a4761feb2af4b/objenesis-2.6.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-test-common/1.3.10/332c0a35ba6948a03ea2e8a1d34b1906cf30b7cf/kotlin-test-common-1.3.10.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.21/f30e4a9897913e53d778f564110bafa1fef46643/kotlin-stdlib-common-1.3.21.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/home/ssoloff/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="game-core" />
           <option name="jvmTarget" value="1.8" />
           <option name="addCompilerBuiltIns" value="true" />
           <option name="loadBuiltInsFromDependencies" value="true" />
-          <option name="languageVersion" value="1.2" />
-          <option name="apiVersion" value="1.2" />
+          <option name="friendPaths">
+            <array>
+              <option value="$MODULE_DIR$/../../../game-core/build/classes/kotlin/main" />
+              <option value="$MODULE_DIR$/../../../game-core/build/classes/java/main" />
+            </array>
+          </option>
+          <option name="languageVersion" value="1.3" />
+          <option name="apiVersion" value="1.3" />
           <option name="pluginOptions">
             <array />
           </option>
           <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="coroutinesState" value="enable" />
           <option name="errors">
             <ArgumentParseErrors />
           </option>
