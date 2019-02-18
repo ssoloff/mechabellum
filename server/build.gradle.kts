@@ -40,10 +40,10 @@ plugins {
 }
 
 val javaVersion by extra { JavaVersion.VERSION_1_8 }
-val junitVersion by extra { "5.3.2" }
-val kluentVersion by extra { "1.42" }
+val junitVersion by extra { "5.4.0" }
+val kluentVersion by extra { "1.48" }
 val kotlinVersion: String by extra
-val mockitoVersion by extra { "2.24.0" }
+val mockitoVersion by extra { "2.24.5" }
 val spekVersion by extra { "1.2.1" }
 
 allprojects {

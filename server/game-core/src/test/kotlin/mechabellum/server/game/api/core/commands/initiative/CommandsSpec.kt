@@ -20,8 +20,8 @@
 
 package mechabellum.server.game.api.core.commands.initiative
 
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import mechabellum.server.game.api.core.mechanics.Initiative
 import mechabellum.server.game.api.core.participant.Team
 import mechabellum.server.game.api.core.phases.InitiativePhase

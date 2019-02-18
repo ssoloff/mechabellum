@@ -20,7 +20,7 @@
 
 package mechabellum.server.game.api.core.commands.deployment
 
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockitokotlin2.mock
 import mechabellum.server.game.api.core.grid.Direction
 import mechabellum.server.game.api.core.grid.Position
 import mechabellum.server.game.api.core.phases.DeploymentPhase

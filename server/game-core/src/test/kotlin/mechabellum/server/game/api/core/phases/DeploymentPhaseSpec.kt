@@ -17,8 +17,8 @@
 
 package mechabellum.server.game.api.core.phases
 
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.mock
 import mechabellum.server.common.api.core.util.Option
 import mechabellum.server.game.api.core.Game
 import mechabellum.server.game.api.core.GameSpecification
