@@ -19,14 +19,14 @@ plugins {
     application
 }
 
-val ktorVersion by extra { "0.9.3" }
+val ktorVersion by extra { "1.1.2" }
 
 repositories {
     maven("https://dl.bintray.com/kotlin/ktor")
 }
 
 dependencies {
-    compile("ch.qos.logback", "logback-classic", "1.2.1")
+    compile("ch.qos.logback", "logback-classic", "1.2.3")
     compile("io.ktor", "ktor-server-netty", ktorVersion)
     testCompile("io.ktor", "ktor-server-test-host", ktorVersion)
 }

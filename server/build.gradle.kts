@@ -94,7 +94,7 @@ subprojects {
                 rule {
                     limit {
                         counter = "INSTRUCTION"
-                        minimum = if (project.name == "app") BigDecimal(0.7) else BigDecimal(0.9)
+                        minimum = if (project.name == "app") BigDecimal(0.79) else BigDecimal(0.9)
                     }
                 }
             }
