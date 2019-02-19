@@ -3,8 +3,10 @@
 build/
 
 # IntelliJ IDEA
-.idea/**/gradle.xml
-.idea/**/tasks.xml
-.idea/**/workspace.xml
-.idea/**/libraries/
+.idea/gradle.xml
+.idea/modules.xml
+.idea/tasks.xml
+.idea/workspace.xml
+.idea/libraries/
+.idea/**/*.iml
 out/
