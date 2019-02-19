@@ -43,6 +43,7 @@ val javaVersion by extra { JavaVersion.VERSION_1_8 }
 val junitVersion by extra { "5.4.0" }
 val kluentVersion by extra { "1.48" }
 val kotlinVersion: String by extra
+val mockitoKotlinVersion by extra { "2.1.0" }
 val mockitoVersion by extra { "2.24.5" }
 val spekVersion by extra { "1.2.1" }
 
@@ -66,6 +67,7 @@ subprojects {
     dependencies {
         "api"(kotlin("stdlib-jdk8", kotlinVersion))
         "api"(kotlin("reflect", kotlinVersion))
+        "testImplementation"("com.nhaarman.mockitokotlin2", "mockito-kotlin", mockitoKotlinVersion)
         "testImplementation"("org.amshove.kluent", "kluent", kluentVersion)
         "testImplementation"("org.jetbrains.spek", "spek-api", spekVersion) {
             exclude("org.jetbrains.kotlin")
@@ -94,7 +96,7 @@ subprojects {
                 rule {
                     limit {
                         counter = "INSTRUCTION"
-                        minimum = if (project.name == "app") BigDecimal(0.79) else BigDecimal(0.9)
+                        minimum = if (project.name == "app") BigDecimal(0.68) else BigDecimal(0.9)
                     }
                 }
             }
