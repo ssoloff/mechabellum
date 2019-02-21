@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Mechabellum contributors
+ * Copyright (C) 2019 Mechabellum contributors
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
